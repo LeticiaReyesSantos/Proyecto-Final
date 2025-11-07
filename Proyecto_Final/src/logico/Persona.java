@@ -1,20 +1,20 @@
 package logico;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-public class Persona {
+public class Persona1 {
 	
 	private String cedula;
 	private String nombres;
 	private String apellidos;
-	private Date fechaNacimiento;
+	private LocalDate fechaNacimiento;
 	private int edad;
 	private char genero;
 	private String telefono;
 	private String direccion;
 	private String email;
 	
-	public Persona(String cedula, String nombres, String apellidos, Date fechaNacimiento, int edad, char genero,
+	public Persona1(String cedula, String nombres, String apellidos, LocalDate fechaNacimiento, int edad, char genero,
 			String telefono, String direccion, String email) {
 		super();
 		this.cedula = cedula;
@@ -52,11 +52,11 @@ public class Persona {
 		this.apellidos = apellidos;
 	}
 
-	public Date getFechaNacimiento() {
+	public LocalDate getFechaNacimiento() {
 		return fechaNacimiento;
 	}
 
-	public void setFechaNacimiento(Date fechaNacimiento) {
+	public void setFechaNacimiento(LocalDate fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 
