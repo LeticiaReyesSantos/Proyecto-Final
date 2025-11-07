@@ -24,7 +24,6 @@ import javax.swing.JTextField;
 import javax.swing.JSeparator;
 
 public class Login extends JFrame {
-	//prueba 2
 	private JPanel contentPane;
 	private JPanel cerrarPanel;
 	private JPanel barraPanel;
