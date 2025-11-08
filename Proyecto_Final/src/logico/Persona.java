@@ -1,22 +1,26 @@
 package logico;
 
-public class Persona {
+import java.time.LocalDate;
+
+public class Persona1 {
 	
 	private String cedula;
-	private String nombre;
-	private String apellido;
+	private String nombres;
+	private String apellidos;
+	private LocalDate fechaNacimiento;
 	private int edad;
 	private char genero;
 	private String telefono;
 	private String direccion;
 	private String email;
 	
-	public Persona(String cedula, String nombre, String apellido, int edad, char genero, String telefono,
-			String direccion, String email) {
+	public Persona1(String cedula, String nombres, String apellidos, LocalDate fechaNacimiento, int edad, char genero,
+			String telefono, String direccion, String email) {
 		super();
 		this.cedula = cedula;
-		this.nombre = nombre;
-		this.apellido = apellido;
+		this.nombres = nombres;
+		this.apellidos = apellidos;
+		this.fechaNacimiento = fechaNacimiento;
 		this.edad = edad;
 		this.genero = genero;
 		this.telefono = telefono;
@@ -32,20 +36,28 @@ public class Persona {
 		this.cedula = cedula;
 	}
 
-	public String getNombre() {
-		return nombre;
+	public String getNombres() {
+		return nombres;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setNombres(String nombres) {
+		this.nombres = nombres;
 	}
 
-	public String getApellido() {
-		return apellido;
+	public String getApellidos() {
+		return apellidos;
 	}
 
-	public void setApellido(String apellido) {
-		this.apellido = apellido;
+	public void setApellidos(String apellidos) {
+		this.apellidos = apellidos;
+	}
+
+	public LocalDate getFechaNacimiento() {
+		return fechaNacimiento;
+	}
+
+	public void setFechaNacimiento(LocalDate fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
 	}
 
 	public int getEdad() {
@@ -87,4 +99,5 @@ public class Persona {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
 }
