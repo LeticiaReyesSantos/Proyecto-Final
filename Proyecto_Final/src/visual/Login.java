@@ -26,7 +26,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JToggleButton;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -43,7 +42,6 @@ public class Login extends JFrame {
 	private ImageIcon icon;
 	private JLabel imagenPrincipal;
 	private JLabel lblNewLabel_1;
-	private JLabel lblNewLabel_2;
 	private JPanel loginPanel;
 	private JLabel lblLogo;
 	private JPanel usuarioPanel;
@@ -61,6 +59,7 @@ public class Login extends JFrame {
 	private char ocultar;
 	private boolean borradoUsuario = false;
 	private boolean borradoContra = false;
+	private JLabel lblNewLabel_5;
 
 	/**
 	 * Launch the application.
@@ -123,12 +122,6 @@ public class Login extends JFrame {
 		lblLogo.setBounds(166, 76, 134, 16);
 		fondo.add(lblLogo);
 
-		lblNewLabel_2 = new JLabel("texto de ejemplo");
-		lblNewLabel_2.setFont(new Font("Verdana", Font.BOLD, 13));
-		lblNewLabel_2.setForeground(new Color(255, 255, 255));
-		lblNewLabel_2.setBounds(115, 290, 134, 16);
-		fondo.add(lblNewLabel_2);
-
 		lblNewLabel_1 = new JLabel("BIENVENIDO");
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
 		lblNewLabel_1.setFont(new Font("Verdana", Font.PLAIN, 48));
@@ -175,7 +168,7 @@ public class Login extends JFrame {
 		loginPanel = new JPanel();
 		loginPanel.setBackground(new Color(240, 248, 255));
 		loginPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		loginPanel.setBounds(430, 62, 467, 443);
+		loginPanel.setBounds(444, 103, 467, 402);
 		fondo.add(loginPanel);
 		loginPanel.setLayout(null);
 
@@ -292,11 +285,13 @@ public class Login extends JFrame {
 					icon = new ImageIcon(getClass().getResource("/imagenes/iconoCandadoAbierto.png"));
 					img = icon.getImage().getScaledInstance(contraIcono.getWidth(), contraIcono.getHeight(), Image.SCALE_SMOOTH);
 					contraIcono.setIcon(new ImageIcon(img));
+					contraCheck.setText("Ocultar contraseña");
 				}else {
 					passwordField.setEchoChar(ocultar);
 					icon = new ImageIcon(getClass().getResource("/imagenes/iconoCandado.jpg"));
 					img = icon.getImage().getScaledInstance(contraIcono.getWidth(), contraIcono.getHeight(), Image.SCALE_SMOOTH);
 					contraIcono.setIcon(new ImageIcon(img));
+					contraCheck.setText("Mostra contraseña");
 				}
 			}
 		});
@@ -317,6 +312,12 @@ public class Login extends JFrame {
 		lblUsuario.setFont(new Font("Verdana", Font.BOLD, 24));
 		lblUsuario.setBounds(179, 59, 116, 28);
 		loginPanel.add(lblUsuario);
+		
+		lblNewLabel_5 = new JLabel("LOGIN");
+		lblNewLabel_5.setForeground(new Color(147, 112, 219));
+		lblNewLabel_5.setFont(new Font("Verdana", Font.BOLD, 38));
+		lblNewLabel_5.setBounds(617, 52, 145, 44);
+		fondo.add(lblNewLabel_5);
 
 	}
 }
