@@ -2,7 +2,7 @@ package logico;
 
 import java.time.LocalDate;
 
-public class Persona1 {
+public class Persona {
 	
 	private String cedula;
 	private String nombres;
@@ -14,7 +14,7 @@ public class Persona1 {
 	private String direccion;
 	private String email;
 	
-	public Persona1(String cedula, String nombres, String apellidos, LocalDate fechaNacimiento, int edad, char genero,
+	public Persona(String cedula, String nombres, String apellidos, LocalDate fechaNacimiento, int edad, char genero,
 			String telefono, String direccion, String email) {
 		super();
 		this.cedula = cedula;
