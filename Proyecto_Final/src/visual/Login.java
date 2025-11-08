@@ -70,7 +70,7 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
-		setUndecorated(true);
+		setUndecorated(true);//prueba
 	
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 923, 518);
