@@ -70,8 +70,8 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
-		setUndecorated(true);//Elimina cualquier decoracion de la ventana, por ejemplo la barra superior
-		
+		setUndecorated(true);
+	
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 923, 518);
 		contentPane = new JPanel();
