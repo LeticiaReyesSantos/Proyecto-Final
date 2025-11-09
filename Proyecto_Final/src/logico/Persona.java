@@ -123,8 +123,11 @@ public class Persona {
 	
 	
 	public int calcEdad(LocalDate fecha) {
-		int edad = 0;
-		
-		return edad;
+		LocalDate act = LocalDate.now();
+		if(fecha.isAfter(act)) {
+			return -1;
+		}
+		int age = act.getYear() - fecha.getYear();
+		return age;
 	}
 }

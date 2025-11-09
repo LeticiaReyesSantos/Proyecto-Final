@@ -15,7 +15,7 @@ public class Enfermedad extends Diagnostico {
 		
 		this.nombre = nombre;
 		this.tipo = tipo;
-		this.controlada = controlada;
+		this.controlada = false; //no esta controlada hasta que se indique lo contrario
 	}
 
 	public String getNombre() {

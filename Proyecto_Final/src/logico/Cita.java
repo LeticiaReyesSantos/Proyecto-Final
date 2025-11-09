@@ -15,7 +15,7 @@ public class Cita {
 		this.persona = persona;
 		this.medico = medico;
 		this.fecha = fecha;
-		this.estado = estado;
+		this.estado = true; //true, hasta indicar que fue cancelada
 	}
 
 	public String getCodigo() {
