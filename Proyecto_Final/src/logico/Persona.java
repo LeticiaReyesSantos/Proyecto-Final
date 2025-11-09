@@ -1,22 +1,26 @@
 package logico;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Persona {
 	
-	private String cedula;
-	private String nombres;
-	private String apellidos;
-	private LocalDate fechaNacimiento;
-	private int edad;
-	private char genero;
-	private String telefono;
-	private String direccion;
-	private String email;
+	protected String codigo;
+	protected String cedula;
+	protected String nombres;
+	protected String apellidos;
+	protected LocalDate fechaNacimiento;
+	protected int edad;
+	protected char genero;
+	protected String telefono;
+	protected String direccion;
+	protected String email;
+	protected ArrayList<Cita> historial;
 	
-	public Persona(String cedula, String nombres, String apellidos, LocalDate fechaNacimiento, int edad, char genero,
+	public Persona(String codigo,String cedula, String nombres, String apellidos, LocalDate fechaNacimiento, int edad, char genero,
 			String telefono, String direccion, String email) {
 		super();
+		this.codigo = codigo;
 		this.cedula = cedula;
 		this.nombres = nombres;
 		this.apellidos = apellidos;
@@ -26,6 +30,15 @@ public class Persona {
 		this.telefono = telefono;
 		this.direccion = direccion;
 		this.email = email;
+		historial = new ArrayList<>();
+	}
+	
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.cedula = codigo;
 	}
 
 	public String getCedula() {
@@ -98,6 +111,14 @@ public class Persona {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public ArrayList<Cita> getHistorial() {
+		return historial;
+	}
+	
+	public void addHistorial(Cita aux) {
+		historial.add(aux);
 	}
 	
 }
