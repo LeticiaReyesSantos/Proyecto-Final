@@ -17,7 +17,7 @@ public class Persona {
 	protected String email;
 	protected ArrayList<Cita> historial;
 	
-	public Persona(String codigo,String cedula, String nombres, String apellidos, LocalDate fechaNacimiento, int edad, char genero,
+	public Persona(String codigo,String cedula, String nombres, String apellidos, LocalDate fechaNacimiento,char genero,
 			String telefono, String direccion, String email) {
 		super();
 		this.codigo = codigo;
@@ -25,7 +25,7 @@ public class Persona {
 		this.nombres = nombres;
 		this.apellidos = apellidos;
 		this.fechaNacimiento = fechaNacimiento;
-		this.edad = edad;
+		this.edad = calcEdad(fechaNacimiento);
 		this.genero = genero;
 		this.telefono = telefono;
 		this.direccion = direccion;
@@ -121,4 +121,10 @@ public class Persona {
 		historial.add(aux);
 	}
 	
+	
+	public int calcEdad(LocalDate fecha) {
+		int edad = 0;
+		
+		return edad;
+	}
 }

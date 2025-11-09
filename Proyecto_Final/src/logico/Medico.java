@@ -10,9 +10,9 @@ public class Medico extends Persona {
 	private ArrayList<Paciente> pacientes;
 	private Horario horario;
 	
-	public Medico(String codigo, String cedula, String nombres, String apellidos, LocalDate fechaNacimiento, int edad,
+	public Medico(String codigo, String cedula, String nombres, String apellidos, LocalDate fechaNacimiento,
 			char genero, String telefono, String direccion, String email, String especialidad, int maxCitas, Horario horario) {
-		super(codigo, cedula, nombres, apellidos, fechaNacimiento, edad, genero, telefono, direccion, email);
+		super(codigo, cedula, nombres, apellidos, fechaNacimiento, genero, telefono, direccion, email);
 		
 		this.especialidad = especialidad;
 		this.maxCitas = maxCitas;
