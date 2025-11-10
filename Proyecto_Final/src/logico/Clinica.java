@@ -132,12 +132,12 @@ public class Clinica {
 		Medico med = disponible(fecha);
 		if(aux == null && med != null) {
 			aux = new Persona("", cedula, nombre, apellido, null, ' ', "", "", "");
-			Cita cita = new Cita("Ci-"+genCita, aux, med , fecha, true);
+			Cita cita = new Cita("Ci-"+genCita, aux, med , fecha);
 			citas.add(cita); 
 			med.addHistorial(cita);
 			realizado = true;
 		}else if(aux != null && med != null) {
-			Cita cita = new Cita("Ci-"+genCita, aux, med , fecha, true); //cambie a true para indicar que esta activa
+			Cita cita = new Cita("Ci-"+genCita, aux, med , fecha); //cambie a true para indicar que esta activa
 			citas.add(cita); //modifique para que se agregue a la lista de citas
 			med.addHistorial(cita);
 			aux.addHistorial(cita);

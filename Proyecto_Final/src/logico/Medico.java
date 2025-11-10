@@ -1,6 +1,7 @@
 package logico;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Medico extends Persona {
@@ -50,6 +51,11 @@ public class Medico extends Persona {
 
 	public void setHorario(Horario horario) {
 		this.horario = horario;
+	}
+	
+	public boolean disponibilidadCita(LocalDateTime fecha) {
+		//Desarrollar funcion
+		return false;
 	}
 	
 }

@@ -9,7 +9,7 @@ public class Cita {
 	protected LocalDateTime fecha;
 	protected boolean estado;
 	
-	public Cita(String codigo, Persona persona, Medico medico, LocalDateTime fecha, boolean estado) {
+	public Cita(String codigo, Persona persona, Medico medico, LocalDateTime fecha) {
 		super();
 		this.codigo = codigo;
 		this.persona = persona;

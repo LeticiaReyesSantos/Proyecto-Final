@@ -11,9 +11,9 @@ public class Consulta extends Cita {
 	private Diagnostico diagonistco;
 	private ArrayList<Vacuna> vacunas;
 
-	public Consulta(String codigo, Persona persona, Medico medico, LocalDateTime fecha, boolean estado, Double precio,
+	public Consulta(String codigo, Persona persona, Medico medico, LocalDateTime fecha, Double precio,
 			Paciente paciente, boolean visibilidad, Diagnostico diagonistco) {
-		super(codigo, persona, medico, fecha, estado);
+		super(codigo, persona, medico, fecha);
 		this.precio = precio;
 		this.paciente = paciente;
 		this.visibilidad = visibilidad;
