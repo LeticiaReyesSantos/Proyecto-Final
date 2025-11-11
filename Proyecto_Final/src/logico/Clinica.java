@@ -223,4 +223,56 @@ public class Clinica {
 		return esPaciente;
 	}
 	
+	/*Funcion: marcarEnfermedadControlada
+	 * Parametro: codigo de enfermedad
+	 * Retorna: Boolean*/
+	public boolean marcarEnfermedadControlada(String code) {
+		for (Enfermedad enf : enfermedades) {
+			if(enf.getCodigo().equalsIgnoreCase(code)) {
+				enf.setControlada(true);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/*Funcion: marcarVacunaControlada
+	 * Parametro: codigo de vacuna
+	 * Retorna: Boolean*/
+	
+	public boolean marcarVacunaControlada(String code) {
+		for (Vacuna vac : vacunas) {
+			if(vac.getCodigo().equalsIgnoreCase(code)) {
+				vac.setControlada(true);
+				return true;
+			}
+			
+		}
+		return false;
+	}
+	
+	/*Funcion: marcarVacunaAplicada
+	 * Parametro: codigo de vacuna
+	 * Retorna: Boolean*/
+	public boolean marcarVacunaAplicada(String code) {
+		for (Vacuna aplicada : vacunas) {
+			if(aplicada.getCodigo().equalsIgnoreCase(code)) {
+				aplicada.setAplicada(true);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/*Funcion: getEnfermedadesControladas
+	 * Retorna: Lista de enfb controladas*/
+	public ArrayList<Enfermedad> getEnfermedadesControladas(){
+		ArrayList<Enfermedad> lista = new ArrayList<>();
+		for (Enfermedad enf : enfermedades) {
+			if(enf.isControlada()== true) {
+				lista.add(enf);
+			}
+		}
+		return lista;
+	}
 }

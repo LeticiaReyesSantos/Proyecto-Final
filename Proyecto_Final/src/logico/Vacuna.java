@@ -6,14 +6,24 @@ public class Vacuna {
 	private Enfermedad enfermedad;
 	private String descripcion;
 	private boolean aplicada;
+	private boolean controlada;
 	
-	public Vacuna(String codigo, String nombre, Enfermedad enfermedad, String descripcion, boolean aplicada) {
+	public Vacuna(String codigo, String nombre, Enfermedad enfermedad, String descripcion, boolean aplicada, boolean controlada) {
 		super();
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.enfermedad = enfermedad;
 		this.descripcion = descripcion;
-		this.aplicada = aplicada;
+		this.aplicada = false;
+		this.controlada = false;
+	}
+
+	public boolean isControlada() {
+		return controlada;
+	}
+
+	public void setControlada(boolean controlada) {
+		this.controlada = controlada;
 	}
 
 	public String getCodigo() {
