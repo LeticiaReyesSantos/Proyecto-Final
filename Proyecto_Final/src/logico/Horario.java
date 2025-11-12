@@ -24,10 +24,7 @@ public class Horario {
 	
 	//verifica si en ese dia hay un horario definido, si hay entonces se trabaja
 	public boolean trabajaDia(DayOfWeek dia) {
-		boolean verificar = false;
-		if(horario.containsKey(dia)) verificar = true;
-		
-		return verificar;
+		return horario.containsKey(dia);
 	}
 	//Retorna la hora de inicio y fin de un dia
 	public LocalTime[] horarioByDia(DayOfWeek dia) {

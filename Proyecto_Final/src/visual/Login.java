@@ -13,6 +13,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Image;
 import java.awt.event.MouseMotionAdapter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -20,6 +26,10 @@ import javax.swing.JDialog;
 import java.awt.Font;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
+
+import logico.User;
+import logico.Control;
+
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
 import javax.swing.JPasswordField;
@@ -67,6 +77,40 @@ public class Login extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				FileInputStream clinicaLectura;
+				FileOutputStream clinicaEscritura;
+				ObjectInputStream clinicaReader;
+				ObjectOutputStream clinicaWritter;
+				
+				try {
+					clinicaLectura = new FileInputStream("clinica.dat");
+					clinicaReader = new ObjectInputStream (clinicaLectura);
+					Control temporal = (Control)clinicaReader.readObject();
+					Control.setControl(temporal);
+					clinicaLectura.close();
+					clinicaReader.close();
+					
+				}catch(FileNotFoundException e){
+					try {
+						clinicaEscritura = new  FileOutputStream("clinica.dat");
+						clinicaWritter = new ObjectOutputStream(clinicaEscritura);
+						User aux = new User("Administrador", "Admin", "Admin");
+						Control.getInstance().regUser(aux);
+						clinicaWritter.writeObject(Control.getInstance());
+						clinicaEscritura.close();
+						clinicaWritter.close();
+						
+					}catch (FileNotFoundException e1) {
+					}catch (IOException e1) {
+						// TODO: handle exception
+					}
+					
+				}catch (IOException e) {
+					
+				}catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				
 				try {
 					Login frame = new Login();
 					frame.setVisible(true);
@@ -125,7 +169,7 @@ public class Login extends JFrame {
 		lblNewLabel_1 = new JLabel("BIENVENIDO");
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
 		lblNewLabel_1.setFont(new Font("Verdana", Font.PLAIN, 48));
-		lblNewLabel_1.setBounds(24, 177, 378, 82);
+		lblNewLabel_1.setBounds(43, 177, 329, 82);
 		fondo.add(lblNewLabel_1);
 		barraPanel.setBounds(0, 0, 923, 25);
 		fondo.add(barraPanel);
@@ -267,6 +311,17 @@ public class Login extends JFrame {
 		contraPanel.add(passwordField);
 
 		loginF = new JPanel();
+		loginF.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(Control.getInstance().confirmarLogin(usuarioField.getText(), passwordField.getText())) {
+					Principal principal = new Principal();
+					dispose();
+					principal.setVisible(true);
+					
+				}
+			}
+		});
 		loginF.setBackground(new Color(138, 43, 226));
 		loginF.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		loginF.setBounds(68, 331, 339, 51);
