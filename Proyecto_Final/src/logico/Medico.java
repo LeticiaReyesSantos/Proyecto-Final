@@ -53,6 +53,9 @@ public class Medico extends Persona {
 		this.horario = horario;
 	}
 	
+	public boolean puedeEjercer() {
+		return getEdad() >=24;
+	}
 	public boolean disponibilidadCita(LocalDateTime fecha) {
 		//Desarrollar funcion
 		return false;

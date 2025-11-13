@@ -1,6 +1,5 @@
 package logico;
 
-import java.net.InterfaceAddress;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -323,4 +322,55 @@ public class Clinica {
 		return lista;
 	}
 	
+	/*Funcion: cancelarCita
+	 * Parametros:codigo
+	 * Retorna: boolean -> true cancelada, false-> no se pudo cancelar*/
+	
+	public boolean cancelarCita(String code) {
+		Cita c = buscarCitaByCode(code);
+		if(c == null || !c.isEstado()|| c.getFecha().isBefore(LocalDateTime.now())) {
+			return false;
+		}
+		c.setEstado(false);
+		return true;
+	}
+	
+	/*Funcion: citasActivas
+	 * Retorna: lista*/
+	public ArrayList<Cita> citasActivas(){
+		ArrayList<Cita> lista = new ArrayList<>();
+		for (Cita cita : citas) {
+			if(cita.isEstado()) {
+				lista.add(cita);
+			}
+		}
+		return lista;
+	}
+	
+	/*Funcion: citasCanceladas
+	 * Retorna: lista*/
+	public ArrayList<Cita> citasCanceladas(){
+		ArrayList<Cita> lista = new ArrayList<>();
+		for (Cita cita : citas) {
+			if(!cita.isEstado()) {
+				lista.add(cita);
+			}
+		}
+		return lista;
+	}
+	
+	/*Funcion: historialConsultasByPaciente
+	 * Parametros: Paciente
+	 * Retorna: lista*/
+	public ArrayList<Consulta> historialConsultaByPaciente(Paciente pac){
+		ArrayList<Consulta> historial = new ArrayList<>(); //el historial se ira desarrollando a medida que se creen las consultas
+		for (Cita cita : pac.getHistorial()) {
+			if(cita instanceof Consulta) {
+				Consulta cons = (Consulta) cita;
+				historial.add(cons);
+			}
+		}
+		return historial;
+	}
+
 }

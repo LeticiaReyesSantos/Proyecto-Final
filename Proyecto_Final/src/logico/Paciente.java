@@ -32,4 +32,13 @@ public class Paciente extends Persona {
 		this.tipoSangre = tipoSangre;
 	}
 
+	public boolean esMayorDeEdad() {
+		return getEdad() >= 18;
+	}
+	
+	public boolean requiereAcompanante() {
+		if(!esMayorDeEdad())
+			return true;
+		return false;
+	}
 }
