@@ -1,5 +1,7 @@
 package logico;
 
+import java.net.InterfaceAddress;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -269,10 +271,56 @@ public class Clinica {
 	public ArrayList<Enfermedad> getEnfermedadesControladas(){
 		ArrayList<Enfermedad> lista = new ArrayList<>();
 		for (Enfermedad enf : enfermedades) {
-			if(enf.isControlada()== true) {
+			if(enf.isControlada()) {
 				lista.add(enf);
 			}
 		}
 		return lista;
 	}
+	
+	/*Funcion: getEnfermedadesSinControlar
+	 * Retorna: Lista de enfb sin controlar*/
+	public ArrayList<Enfermedad> getEnfermedadesSinControlar(){
+		ArrayList<Enfermedad> lista = new ArrayList<>();
+		for (Enfermedad enf : enfermedades) {
+			if(!enf.isControlada()) {
+				lista.add(enf);
+			}
+		}
+		return lista;
+	}
+	
+	/*Funcion: dispCitaByFecha
+	 * Parametros: Fecha a buscar
+	 * Retorna: Lista de cita disponibles para la fecha*/
+	public ArrayList<Cita> dispCitaByFecha(LocalDate fecha){
+		ArrayList<Cita> disponibles = new ArrayList<>();
+		for (Cita cita : citas) {
+			LocalDate date = cita.getFecha().toLocalDate();
+			if(date.equals(fecha) && cita.isEstado()) {
+				disponibles.add(cita);
+			}
+		}
+		return disponibles;
+	}
+	
+	/*Funcion: pacientesByMedico
+	 * Parametros: Medico med
+	 * Retorna: Pacientes de ese medico*/
+	public ArrayList<Paciente> pacientesByMedico(Medico med){
+		ArrayList<Paciente> lista = new ArrayList<>();
+		for (Cita c : citas) {
+			if( c instanceof Consulta) {
+				Consulta cons = (Consulta) c;
+				if(cons.getMedico().equals(med)) {
+					Paciente p = cons.getPaciente();
+					if(!lista.contains(p)) {
+						lista.add(p);
+					}
+				}
+			}
+		}
+		return lista;
+	}
+	
 }
