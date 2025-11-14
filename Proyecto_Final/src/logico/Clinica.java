@@ -2,6 +2,7 @@ package logico;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 
 public class Clinica {
@@ -192,7 +193,7 @@ public class Clinica {
 		}
 		return found;
 	}
-	
+
 	/*Funcion: getCitasMedico
 	 * Parametro: Medico medico
 	 * Retorna: ArrayList de todas las citas de ese medico*/
@@ -207,7 +208,7 @@ public class Clinica {
 		}
 		return todasLasCitas;
 	}
-	
+
 	/*Funcion: personaEsPaciente
 	 * Parametro: Persona p
 	 * Retorna: Boolean*/
@@ -223,7 +224,7 @@ public class Clinica {
 		}
 		return esPaciente;
 	}
-	
+
 	/*Funcion: marcarEnfermedadControlada
 	 * Parametro: codigo de enfermedad
 	 * Retorna: Boolean*/
@@ -236,22 +237,22 @@ public class Clinica {
 		}
 		return false;
 	}
-	
+
 	/*Funcion: marcarVacunaControlada
 	 * Parametro: codigo de vacuna
 	 * Retorna: Boolean*/
-	
+
 	public boolean marcarVacunaControlada(String code) {
 		for (Vacuna vac : vacunas) {
 			if(vac.getCodigo().equalsIgnoreCase(code)) {
 				vac.setControlada(true);
 				return true;
 			}
-			
+
 		}
 		return false;
 	}
-	
+
 	/*Funcion: marcarVacunaAplicada
 	 * Parametro: codigo de vacuna
 	 * Retorna: Boolean*/
@@ -264,7 +265,7 @@ public class Clinica {
 		}
 		return false;
 	}
-	
+
 	/*Funcion: getEnfermedadesControladas
 	 * Retorna: Lista de enfb controladas*/
 	public ArrayList<Enfermedad> getEnfermedadesControladas(){
@@ -276,7 +277,7 @@ public class Clinica {
 		}
 		return lista;
 	}
-	
+
 	/*Funcion: getEnfermedadesSinControlar
 	 * Retorna: Lista de enfb sin controlar*/
 	public ArrayList<Enfermedad> getEnfermedadesSinControlar(){
@@ -288,7 +289,7 @@ public class Clinica {
 		}
 		return lista;
 	}
-	
+
 	/*Funcion: dispCitaByFecha
 	 * Parametros: Fecha a buscar
 	 * Retorna: Lista de cita disponibles para la fecha*/
@@ -302,7 +303,7 @@ public class Clinica {
 		}
 		return disponibles;
 	}
-	
+
 	/*Funcion: pacientesByMedico
 	 * Parametros: Medico med
 	 * Retorna: Pacientes de ese medico*/
@@ -321,11 +322,11 @@ public class Clinica {
 		}
 		return lista;
 	}
-	
+
 	/*Funcion: cancelarCita
 	 * Parametros:codigo
 	 * Retorna: boolean -> true cancelada, false-> no se pudo cancelar*/
-	
+
 	public boolean cancelarCita(String code) {
 		Cita c = buscarCitaByCode(code);
 		if(c == null || !c.isEstado()|| c.getFecha().isBefore(LocalDateTime.now())) {
@@ -334,7 +335,7 @@ public class Clinica {
 		c.setEstado(false);
 		return true;
 	}
-	
+
 	/*Funcion: citasActivas
 	 * Retorna: lista*/
 	public ArrayList<Cita> citasActivas(){
@@ -346,7 +347,7 @@ public class Clinica {
 		}
 		return lista;
 	}
-	
+
 	/*Funcion: citasCanceladas
 	 * Retorna: lista*/
 	public ArrayList<Cita> citasCanceladas(){
@@ -358,7 +359,7 @@ public class Clinica {
 		}
 		return lista;
 	}
-	
+
 	/*Funcion: historialConsultasByPaciente
 	 * Parametros: Paciente
 	 * Retorna: lista*/
@@ -373,4 +374,53 @@ public class Clinica {
 		return historial;
 	}
 
+	//REVISAR
+	/*Funcion: historialPacienteByMed
+	 * Parametro: Paciente, Medico
+	 * Retorna: lista*/
+	public ArrayList<Consulta> historialPacienteByMed(Paciente p, Medico med){
+		ArrayList<Consulta> lista = new ArrayList<>();
+		for (Cita cita : p.getHistorial()) {
+			if(cita instanceof Consulta) {
+				Consulta cons = (Consulta) cita;
+				if(cons.getMedico().equals(med)) {
+					lista.add(cons);
+				}
+			}
+		}
+		return lista;
+	}
+
+	/*Funcion: historialPacienteByMed
+	 * Parametro: Paciente, Medico
+	 * Retorna: lista*/
+	public ArrayList<Consulta> consultasMedicoByMes(Medico med, LocalDateTime fecha){
+		ArrayList<Consulta> consultasMensuales = new ArrayList<>();
+		Month month = fecha.getMonth();
+		int year = fecha.getYear();
+		for (Cita cita : med.getHistorial()) {
+			if(cita instanceof Consulta) {
+				Consulta cons = (Consulta) cita;
+				if(cita.getFecha().getMonth() == month && cita.getFecha().getYear() == year) {
+					consultasMensuales.add(cons);
+				}
+			}
+		}
+		return consultasMensuales;
+	}//se le agrega las consultas al historial y el usuario las busca por mes de ese annio
+	
+
+	/*Funcion: getVacunasControladas
+	 * Retorna: Lista*/
+	public ArrayList<Vacuna> getVacunasControladas(){
+		ArrayList<Vacuna> controladas = new ArrayList<>();
+		for (Vacuna vacuna : vacunas) {
+			if(vacuna.isControlada()) {
+				controladas.add(vacuna);
+			}
+		}
+		return controladas;
+	}
+	
+	
 }
