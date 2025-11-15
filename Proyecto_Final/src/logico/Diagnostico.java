@@ -25,7 +25,7 @@ public class Diagnostico {
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
-
+	
 	public LocalDateTime getFecha() {
 		return fecha;
 	}

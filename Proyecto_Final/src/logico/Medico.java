@@ -12,12 +12,12 @@ public class Medico extends Persona {
 	private Horario horario;
 	
 	public Medico(String codigo, String cedula, String nombres, String apellidos, LocalDate fechaNacimiento,
-			char genero, String telefono, String direccion, String email, String especialidad, int maxCitas, Horario horario) {
+			char genero, String telefono, String direccion, String email, String especialidad, int maxCitas) {
 		super(codigo, cedula, nombres, apellidos, fechaNacimiento, genero, telefono, direccion, email);
 		
 		this.especialidad = especialidad;
 		this.maxCitas = maxCitas;
-		this.horario = horario;
+		this.horario =  new Horario();
 		pacientes = new ArrayList<>();
 	}
 
@@ -53,9 +53,25 @@ public class Medico extends Persona {
 		this.horario = horario;
 	}
 	
+	//Falta desarrollo
 	public boolean disponibilidadCita(LocalDateTime fecha) {
-		//Desarrollar funcion
-		return false;
+		boolean disponible = false;
+		if(horario.fechaEnHorarioLaboral(fecha) && UnicaCita(fecha)) {
+			disponible = true;
+		}
+		return disponible;
+	}
+	
+	public boolean UnicaCita(LocalDateTime fecha) {
+		boolean disponible = true;
+		int i = 0; 
+		while(i< historial.size() && disponible) {
+			if(historial.get(i).getFecha().equals(fecha)) {
+				disponible = false;
+			}
+			i++;
+		}
+		return disponible;
 	}
 	
 }
