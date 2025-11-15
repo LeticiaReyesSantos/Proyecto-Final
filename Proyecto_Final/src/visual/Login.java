@@ -321,8 +321,17 @@ public class Login extends JFrame {
 					
 				}
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				loginF.setBackground(new Color(102, 0, 204));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				loginF.setBackground(new Color(138, 43, 226));
+			}
 		});
 		loginF.setBackground(new Color(138, 43, 226));
+		loginF.setCursor(getCursor().getPredefinedCursor(Cursor.HAND_CURSOR));
 		loginF.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		loginF.setBounds(68, 331, 339, 51);
 		loginPanel.add(loginF);
@@ -333,6 +342,7 @@ public class Login extends JFrame {
 		loginF.add(lblNewLabel_3);
 
 		contraCheck = new JCheckBox("Mostra contrase\u00F1a");
+		contraCheck.setCursor(getCursor().getPredefinedCursor(Cursor.HAND_CURSOR));
 		contraCheck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(contraCheck.isSelected()) {

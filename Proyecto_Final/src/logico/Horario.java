@@ -3,6 +3,7 @@ package logico;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -38,7 +39,7 @@ public class Horario {
 		LocalTime hora = fecha.toLocalTime();
 		
 		if(trabajaDia(dia)) {
-			if(horaEnRango(hora, horarioByDia(dia))) {
+			if(horaEnRangoLaboral(hora, horarioByDia(dia))) {
 				valido = true;
 			}
 		}
@@ -46,8 +47,18 @@ public class Horario {
 		return valido;
 	}
 	
-	private boolean horaEnRango(LocalTime hora, LocalTime[]rango) {
-		return((hora.isAfter(rango[0]) || hora.equals(rango[0])) && (hora.isBefore(rango[1]) && hora.equals(rango[1])));
+	private boolean horaEnRangoLaboral(LocalTime hora, LocalTime[]rango) {
+		return((hora.isAfter(rango[0])|| hora.equals(rango[0])) && (hora.isBefore(rango[1])));
+	}
+	
+	
+	public long duracionDeHorario(DayOfWeek dia) {
+		LocalTime[] rango = horarioByDia(dia);
+		return ChronoUnit.MINUTES.between(rango[0], rango[1]);
+	}
+	
+	public int intervaloMinimoEntreCita(DayOfWeek dia, int cantidadMaxima) {
+		return (int)duracionDeHorario(dia)/cantidadMaxima;
 	}
 	
 }

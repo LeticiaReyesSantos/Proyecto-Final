@@ -87,6 +87,11 @@ public class Clinica {
 	public ArrayList<Cita> getCitas() {
 		return citas;
 	}
+	
+	public void addCita(Cita aux) {
+		citas.add(aux);
+		genCita++;
+	}
 
 	public void setCitas(ArrayList<Cita> citas) {
 		this.citas = citas;
@@ -122,27 +127,31 @@ public class Clinica {
 		return MedicosEspecialidad;
 	}
 
-	public Medico disponible(LocalDateTime fecha) {
-		Medico aux = null;
-
-		return aux;
+	public ArrayList<Medico> disponible(String especialidad ,LocalDateTime fecha) {
+		ArrayList<Medico> meddisp = new ArrayList<>();
+		ArrayList<Medico> MedEsp = medicosByEspecialidad(especialidad);
+		for (Medico med : MedEsp) {
+			if(med.disponibilidadCita(fecha)) {
+				meddisp.add(med);
+			}
+		}
+		return meddisp;
 	}
 
-	public boolean hacerCita (String cedula, String nombre, String apellido,String especialidad,LocalDateTime fecha) {
+	public boolean hacerCita (String cedula, String nombre, String apellido,Medico med,LocalDateTime fecha) {
 		boolean realizado = false;
 		Persona aux = buscarPacienteByCedula(cedula);
-		Medico med = disponible(fecha);
-		if(aux == null && med != null) {
-			aux = new Persona("", cedula, nombre, apellido, null, ' ', "", "", "");
-			Cita cita = new Cita("Ci-"+genCita, aux, med , fecha);
-			citas.add(cita); 
-			med.addHistorial(cita);
-			realizado = true;
-		}else if(aux != null && med != null) {
-			Cita cita = new Cita("Ci-"+genCita, aux, med , fecha); //cambie a true para indicar que esta activa
-			citas.add(cita); //modifique para que se agregue a la lista de citas
+		if(aux != null) {
+			Cita cita = new Cita("Ci-"+genCita, aux, med , fecha); 
+			addCita(cita);
 			med.addHistorial(cita);
 			aux.addHistorial(cita);
+			realizado = true;
+		}else if(aux == null){
+			aux = new Persona("", cedula, nombre, apellido, null, ' ', "", "", "");
+			Cita cita = new Cita("Ci-"+genCita, aux, med , fecha);
+			addCita(cita); 
+			med.addHistorial(cita);
 			realizado = true;
 		}
 		return realizado;
@@ -224,6 +233,7 @@ public class Clinica {
 		}
 		return esPaciente;
 	}
+
 
 	/*Funcion: marcarEnfermedadControlada
 	 * Parametro: codigo de enfermedad
