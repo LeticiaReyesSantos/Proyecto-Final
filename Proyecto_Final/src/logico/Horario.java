@@ -47,7 +47,7 @@ public class Horario {
 	}
 	
 	private boolean horaEnRango(LocalTime hora, LocalTime[]rango) {
-		return((hora.isAfter(rango[0])|| hora.equals(rango[0])) && (hora.isBefore(rango[1]) || hora.equals(rango[1])));
+		return((hora.isAfter(rango[0]) || hora.equals(rango[0])) && (hora.isBefore(rango[1]) && hora.equals(rango[1])));
 	}
 	
 }
