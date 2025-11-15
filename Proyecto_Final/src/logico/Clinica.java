@@ -377,6 +377,7 @@ public class Clinica {
 		return false;
 	}
 	
+	
 	/*Funcion: crearConsulta boolean o consulta
 	 * Parametros: Fecha, Diagnostico, Cita, Precio, Vacunas
 	 * Retorna: Lista*/
