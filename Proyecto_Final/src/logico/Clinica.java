@@ -101,7 +101,7 @@ public class Clinica {
 	public Paciente buscarPacienteByCedula(String cedula) {
 		Paciente aux = null ;
 		int i = 0;
-		while(i < pacientes.size() && aux != null){
+		while(i < pacientes.size() && aux == null){
 			if(cedula.equalsIgnoreCase(pacientes.get(i).getCedula())) {
 				aux = pacientes.get(i);
 			}
@@ -164,66 +164,32 @@ public class Clinica {
 		return found;
 	}
 
-	/*Funcion: buscarCitaByMedico
+	/*Funcion: buscarCitasByMedico
 	 * Parametro: Medico medico
-	 * Retorna: Cita*/
-	public Cita buscarCitaByMedico(Medico medico) {
-		int index = 0;
-		Cita found = null;
-		while(index < citas.size() && found == null) {
-			if(citas.get(index).getMedico().equals(medico)) {
-				found = citas.get(index);
-			}
-			index++;
-		}
-		return found;
-	}
-
-	/*Funcion: buscarCitaByPaciente
-	 * Parametro: Paciente paciente
-	 * Retorna: Cita*/
-	public Cita buscarCitaByPaciente(Paciente paciente) {
-		int index = 0;
-		Cita found = null;
-		while(index < citas.size() && found == null) {
-			if(citas.get(index).getPersona().equals(paciente)) {
-				found = citas.get(index);
-			}
-			index++;
-		}
-		return found;
-	}
-
-	/*Funcion: getCitasMedico
-	 * Parametro: Medico medico
-	 * Retorna: ArrayList de todas las citas de ese medico*/
-	public ArrayList<Cita> getCitasMedico(Medico med){
-		int index=0;
+	 * Retorna: Citas*/
+	public ArrayList<Cita> buscarCitasByMedico(Medico medico) {
 		ArrayList<Cita> todasLasCitas = new ArrayList<>();
-		while(index < citas.size()) {
-			if(citas.get(index).getMedico().equals(med)) {
-				todasLasCitas.add(citas.get(index));
+		for (Cita cita : citas) {
+			if(cita.getMedico().equals(medico)) {
+				todasLasCitas.add(cita);
 			}
-			index++;
 		}
 		return todasLasCitas;
 	}
 
-	/*Funcion: personaEsPaciente
-	 * Parametro: Persona p
-	 * Retorna: Boolean*/
-	public boolean personaEsPaciente(Persona p) {
-		int index = 0;
-		boolean esPaciente = false;
-		while(index < citas.size() && esPaciente == false) {
-			Cita c = citas.get(index);
-			if(c instanceof Consulta && c.getPersona().equals(p)) {
-				esPaciente = true;
+	/*Funcion: buscarCitasByPaciente
+	 * Parametro: Paciente paciente
+	 * Retorna: todas las citas*/
+	public ArrayList<Cita> buscarCitasByPaciente(Paciente paciente) {
+		ArrayList<Cita> todasLasCitas = new ArrayList<>();
+		for (Cita cita : citas) {
+			if(cita.getPersona().equals(paciente)) {
+				todasLasCitas.add(cita);
 			}
-			index++;
 		}
-		return esPaciente;
+		return todasLasCitas;
 	}
+
 
 	/*Funcion: marcarEnfermedadControlada
 	 * Parametro: codigo de enfermedad
@@ -253,18 +219,6 @@ public class Clinica {
 		return false;
 	}
 
-	/*Funcion: marcarVacunaAplicada
-	 * Parametro: codigo de vacuna
-	 * Retorna: Boolean*/
-	public boolean marcarVacunaAplicada(String code) {
-		for (Vacuna aplicada : vacunas) {
-			if(aplicada.getCodigo().equalsIgnoreCase(code)) {
-				aplicada.setAplicada(true);
-				return true;
-			}
-		}
-		return false;
-	}
 
 	/*Funcion: getEnfermedadesControladas
 	 * Retorna: Lista de enfb controladas*/
@@ -329,31 +283,19 @@ public class Clinica {
 
 	public boolean cancelarCita(String code) {
 		Cita c = buscarCitaByCode(code);
-		if(c == null || !c.isEstado()|| c.getFecha().isBefore(LocalDateTime.now())) {
-			return false;
+		if(c != null && !c.isEstado()) {
+			citas.remove(c);
+			return true;
 		}
-		c.setEstado(false);
-		return true;
+		return false;
 	}
 
-	/*Funcion: citasActivas
+	/*Funcion: citasPendientes
 	 * Retorna: lista*/
-	public ArrayList<Cita> citasActivas(){
+	public ArrayList<Cita> citasPendientes(){
 		ArrayList<Cita> lista = new ArrayList<>();
 		for (Cita cita : citas) {
-			if(cita.isEstado()) {
-				lista.add(cita);
-			}
-		}
-		return lista;
-	}
-
-	/*Funcion: citasCanceladas
-	 * Retorna: lista*/
-	public ArrayList<Cita> citasCanceladas(){
-		ArrayList<Cita> lista = new ArrayList<>();
-		for (Cita cita : citas) {
-			if(!cita.isEstado()) {
+			if(!(cita.isEstado())) {
 				lista.add(cita);
 			}
 		}
@@ -422,5 +364,34 @@ public class Clinica {
 		return controladas;
 	}
 	
+	/*Funcion: marcarVacunaAplicada
+	 * Parametro: codigo de vacuna
+	 * Retorna: Boolean*/
+	public boolean marcarVacunaAplicada(String code) {
+		for (Vacuna aplicada : vacunas) {
+			if(aplicada.getCodigo().equals(code)) {
+				aplicada.setAplicada(true);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/*Funcion: crearConsulta boolean o consulta
+	 * Parametros: Fecha, Diagnostico, Cita, Precio, Vacunas
+	 * Retorna: Lista*/
+	public boolean crearConsulta(LocalDateTime fechaConsulta, Double precio, Diagnostico diag, String code) {
+		boolean realizado = false;
+		Cita c = buscarCitaByCode(code);
+		if(c!= null && !(c.isEstado())) {
+			Paciente paciente = (Paciente) c.getPersona();
+			Consulta cons = new Consulta("CON-"+genCita,paciente, c.getMedico(), fechaConsulta, precio, paciente, true, diag);
+			cons.setEstado(true);
+			
+			paciente.addHistorial(cons);
+			realizado = true;
+		}
+		return realizado;
+	}
 	
 }
