@@ -59,12 +59,12 @@ public class Paciente extends Persona {
 	/*Funcion: getVacunasPaciente
 	 * Retorna: list*/
 	public ArrayList<Vacuna> getVacunasPaciente(){
-		ArrayList<Vacuna> vacunas = new ArrayList<>();
-		for (Vacuna vacuna : vacunas) {
-			if(vacuna.isAplicada()) {
-				vacunas.add(vacuna);
+		ArrayList<Vacuna> vacap = new ArrayList<>();
+		for (Vacuna vac : vacunas) {
+			if(vac.isAplicada()) {
+				vacap.add(vac);
 			}
 		}
-		return vacunas;
+		return vacap;
 	}
 }

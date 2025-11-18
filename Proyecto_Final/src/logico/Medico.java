@@ -57,10 +57,9 @@ public class Medico extends Persona {
 		return getEdad() >=24;
 	}
 
-	//Falta desarrollo
 	public boolean disponibilidadCita(LocalDateTime fecha) {
 		boolean disponible = false;
-		if(horario.fechaEnHorarioLaboral(fecha) && UnicaCita(fecha)) {
+		if(horario.fechaEnHorarioLaboral(fecha) && UnicaCita(fecha) && isPosible(fecha.toLocalDate())) {
 			disponible = true;
 		}
 		return disponible;
@@ -96,4 +95,17 @@ public class Medico extends Persona {
 		return valido;
 	}
 	
+	public boolean isPosible(LocalDate fecha){
+		return cantCitasDia(fecha) < maxCitas;
+	}
+	
+	public int cantCitasDia(LocalDate fecha) {
+		int cant = 0;
+		for (Cita cita : historial) {
+			if(!cita.estado && cita.fecha.toLocalDate().equals(fecha)) {
+				cant++;
+			}
+		}
+		return cant;
+	}
 }

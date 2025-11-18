@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import com.toedter.calendar.JDayChooser;
 
 public class Calendario extends JDialog {
 
@@ -34,6 +35,10 @@ public class Calendario extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		
+		JDayChooser dayChooser = new JDayChooser();
+		dayChooser.setBounds(12, 13, 376, 133);
+		contentPanel.add(dayChooser);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -51,5 +56,4 @@ public class Calendario extends JDialog {
 			}
 		}
 	}
-
 }
