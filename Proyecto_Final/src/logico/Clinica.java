@@ -126,7 +126,8 @@ public class Clinica {
 		}
 		return MedicosEspecialidad;
 	}
-
+	
+	//Busca los medicos disponibles para la fecha solicitada
 	public ArrayList<Medico> disponible(String especialidad ,LocalDateTime fecha) {
 		ArrayList<Medico> meddisp = new ArrayList<>();
 		ArrayList<Medico> MedEsp = medicosByEspecialidad(especialidad);

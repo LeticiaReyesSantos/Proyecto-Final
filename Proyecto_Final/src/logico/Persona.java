@@ -1,6 +1,7 @@
 package logico;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 
 public class Persona {
@@ -25,7 +26,7 @@ public class Persona {
 		this.nombres = nombres;
 		this.apellidos = apellidos;
 		this.fechaNacimiento = fechaNacimiento;
-		this.edad = calcEdad(fechaNacimiento);
+		this.edad = calcEdad();
 		this.genero = genero;
 		this.telefono = telefono;
 		this.direccion = direccion;
@@ -122,12 +123,8 @@ public class Persona {
 	}
 	
 	
-	public int calcEdad(LocalDate fecha) {
-		LocalDate act = LocalDate.now();
-		if(fecha.isAfter(act)) {
-			return -1;
-		}
-		int age = act.getYear() - fecha.getYear();
-		return age;
+	public int calcEdad() {
+		Period edad = Period.between(fechaNacimiento, LocalDate.now());
+		return edad.getYears();
 	}
 }

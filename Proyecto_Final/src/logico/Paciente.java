@@ -46,13 +46,14 @@ public class Paciente extends Persona {
 	 * Parametro: codigo de vacuna
 	 * Retorna: Boolean*/
 	public boolean marcarVacunaAplicada(String code) {
-		for (Vacuna aplicada : vacunas) {
-			if(aplicada.getCodigo().equals(code)) {
-				aplicada.setAplicada(true);
-				return true;
+		boolean aplicada = false;
+		for (Vacuna vac : vacunas) {
+			if(vac.getCodigo().equals(code)) {
+				vac.setAplicada(true);
+				aplicada = true;
 			}
 		}
-		return false;
+		return aplicada;
 	}
 	
 	/*Funcion: getVacunasPaciente
