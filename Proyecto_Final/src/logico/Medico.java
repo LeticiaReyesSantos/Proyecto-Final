@@ -70,7 +70,7 @@ public class Medico extends Persona {
 		boolean disponible = true;
 		int i = 0; 
 		while(i< historial.size() && disponible) {
-			if(historial.get(i).getFecha().equals(fecha)) {
+			if(historial.get(i).getFecha().equals(fecha) && rangoDefinidoCita(fecha)) {
 				disponible = false;
 			}
 			i++;
