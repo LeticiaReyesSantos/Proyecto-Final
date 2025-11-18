@@ -87,7 +87,7 @@ public class Clinica {
 	public ArrayList<Cita> getCitas() {
 		return citas;
 	}
-	
+
 	public void addCita(Cita aux) {
 		citas.add(aux);
 		genCita++;
@@ -106,7 +106,7 @@ public class Clinica {
 	public Paciente buscarPacienteByCedula(String cedula) {
 		Paciente aux = null ;
 		int i = 0;
-		while(i < pacientes.size() && aux != null){
+		while(i < pacientes.size() && aux == null){
 			if(cedula.equalsIgnoreCase(pacientes.get(i).getCedula())) {
 				aux = pacientes.get(i);
 			}
@@ -173,35 +173,32 @@ public class Clinica {
 		return found;
 	}
 
-	/*Funcion: buscarCitaByMedico
+	/*Funcion: buscarCitasByMedico
 	 * Parametro: Medico medico
-	 * Retorna: Cita*/
-	public Cita buscarCitaByMedico(Medico medico) {
-		int index = 0;
-		Cita found = null;
-		while(index < citas.size() && found == null) {
-			if(citas.get(index).getMedico().equals(medico)) {
-				found = citas.get(index);
+	 * Retorna: Citas*/
+	public ArrayList<Cita> buscarCitasByMedico(Medico medico) {
+		ArrayList<Cita> todasLasCitas = new ArrayList<>();
+		for (Cita cita : citas) {
+			if(cita.getMedico().equals(medico)) {
+				todasLasCitas.add(cita);
 			}
-			index++;
 		}
-		return found;
+		return todasLasCitas;
 	}
 
-	/*Funcion: buscarCitaByPaciente
+	/*Funcion: buscarCitasByPaciente
 	 * Parametro: Paciente paciente
-	 * Retorna: Cita*/
-	public Cita buscarCitaByPaciente(Paciente paciente) {
-		int index = 0;
-		Cita found = null;
-		while(index < citas.size() && found == null) {
-			if(citas.get(index).getPersona().equals(paciente)) {
-				found = citas.get(index);
+	 * Retorna: todas las citas*/
+	public ArrayList<Cita> buscarCitasByPaciente(Paciente paciente) {
+		ArrayList<Cita> todasLasCitas = new ArrayList<>();
+		for (Cita cita : citas) {
+			if(cita.getPersona().equals(paciente)) {
+				todasLasCitas.add(cita);
 			}
-			index++;
 		}
-		return found;
+		return todasLasCitas;
 	}
+
 
 	/*Funcion: getCitasMedico
 	 * Parametro: Medico medico
@@ -217,23 +214,6 @@ public class Clinica {
 		}
 		return todasLasCitas;
 	}
-
-	/*Funcion: personaEsPaciente
-	 * Parametro: Persona p
-	 * Retorna: Boolean*/
-	public boolean personaEsPaciente(Persona p) {
-		int index = 0;
-		boolean esPaciente = false;
-		while(index < citas.size() && esPaciente == false) {
-			Cita c = citas.get(index);
-			if(c instanceof Consulta && c.getPersona().equals(p)) {
-				esPaciente = true;
-			}
-			index++;
-		}
-		return esPaciente;
-	}
-
 
 	/*Funcion: marcarEnfermedadControlada
 	 * Parametro: codigo de enfermedad
@@ -263,18 +243,6 @@ public class Clinica {
 		return false;
 	}
 
-	/*Funcion: marcarVacunaAplicada
-	 * Parametro: codigo de vacuna
-	 * Retorna: Boolean*/
-	public boolean marcarVacunaAplicada(String code) {
-		for (Vacuna aplicada : vacunas) {
-			if(aplicada.getCodigo().equalsIgnoreCase(code)) {
-				aplicada.setAplicada(true);
-				return true;
-			}
-		}
-		return false;
-	}
 
 	/*Funcion: getEnfermedadesControladas
 	 * Retorna: Lista de enfb controladas*/
@@ -339,31 +307,19 @@ public class Clinica {
 
 	public boolean cancelarCita(String code) {
 		Cita c = buscarCitaByCode(code);
-		if(c == null || !c.isEstado()|| c.getFecha().isBefore(LocalDateTime.now())) {
-			return false;
+		if(c != null && !c.isEstado()) {
+			citas.remove(c);
+			return true;
 		}
-		c.setEstado(false);
-		return true;
+		return false;
 	}
 
-	/*Funcion: citasActivas
+	/*Funcion: citasPendientes
 	 * Retorna: lista*/
-	public ArrayList<Cita> citasActivas(){
+	public ArrayList<Cita> citasPendientes(){
 		ArrayList<Cita> lista = new ArrayList<>();
 		for (Cita cita : citas) {
-			if(cita.isEstado()) {
-				lista.add(cita);
-			}
-		}
-		return lista;
-	}
-
-	/*Funcion: citasCanceladas
-	 * Retorna: lista*/
-	public ArrayList<Cita> citasCanceladas(){
-		ArrayList<Cita> lista = new ArrayList<>();
-		for (Cita cita : citas) {
-			if(!cita.isEstado()) {
+			if(!(cita.isEstado())) {
 				lista.add(cita);
 			}
 		}
@@ -418,7 +374,7 @@ public class Clinica {
 		}
 		return consultasMensuales;
 	}//se le agrega las consultas al historial y el usuario las busca por mes de ese annio
-	
+
 
 	/*Funcion: getVacunasControladas
 	 * Retorna: Lista*/
@@ -431,6 +387,6 @@ public class Clinica {
 		}
 		return controladas;
 	}
-	
-	
+
+
 }
