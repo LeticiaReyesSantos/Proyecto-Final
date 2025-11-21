@@ -3,6 +3,8 @@ package logico;
 import java.time.LocalDateTime;
 
 public class Cita {
+	
+	//Prueba
 	protected String codigo;
 	protected Persona persona;
 	protected Medico medico;
@@ -58,9 +60,4 @@ public class Cita {
 		this.estado = estado;
 	}
 	
-	
-	
-	
-	
-
 }

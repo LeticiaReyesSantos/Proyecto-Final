@@ -41,4 +41,30 @@ public class Paciente extends Persona {
 			return true;
 		return false;
 	}
+	
+	/*Funcion: marcarVacunaAplicada
+	 * Parametro: codigo de vacuna
+	 * Retorna: Boolean*/
+	public boolean marcarVacunaAplicada(String code) {
+		boolean aplicada = false;
+		for (Vacuna vac : vacunas) {
+			if(vac.getCodigo().equals(code)) {
+				vac.setAplicada(true);
+				aplicada = true;
+			}
+		}
+		return aplicada;
+	}
+	
+	/*Funcion: getVacunasPaciente
+	 * Retorna: list*/
+	public ArrayList<Vacuna> getVacunasPaciente(){
+		ArrayList<Vacuna> vacap = new ArrayList<>();
+		for (Vacuna vac : vacunas) {
+			if(vac.isAplicada()) {
+				vacap.add(vac);
+			}
+		}
+		return vacap;
+	}
 }
