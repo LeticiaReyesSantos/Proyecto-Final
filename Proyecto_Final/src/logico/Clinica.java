@@ -7,8 +7,7 @@ import java.util.ArrayList;
 
 public class Clinica {
 
-	private ArrayList <Medico> medicos;
-	private ArrayList <Paciente> pacientes;
+	private ArrayList<Persona> personas;
 	private ArrayList <Diagnostico> diagnosticos;
 	private ArrayList <Enfermedad> enfermedades;
 	private ArrayList <Vacuna> vacunas;
@@ -26,8 +25,7 @@ public class Clinica {
 
 	public Clinica() {
 		super();
-		medicos = new ArrayList<>();
-		pacientes = new ArrayList<>();
+		personas = new ArrayList<>();
 		diagnosticos = new ArrayList<>();
 		enfermedades = new ArrayList<>();
 		vacunas = new ArrayList<>();
@@ -41,24 +39,18 @@ public class Clinica {
 		return clinica;
 	}
 
-	public ArrayList<Medico> getMedicos() {
-		return medicos;
+	public ArrayList<Persona> getPersonas() {
+		return personas;
 	}
 
-	public void addMedico(Medico aux) {
-		medicos.add(aux);
-		genMedico++;
+	public void addPersona(Persona aux) {
+		personas.add(aux);
+		if(aux instanceof Medico) {
+			genMedico++;
+		}else if (aux instanceof Paciente) {
+			genPaciente++;
+		}
 	}
-
-	public ArrayList<Paciente> getPacientes() {
-		return pacientes;
-	}
-
-	public void addPaciente(Paciente aux) {
-		pacientes.add(aux);
-		genPaciente++;
-	}
-
 
 	public ArrayList<Diagnostico> getDiagnosticos() {
 		return diagnosticos;
@@ -104,29 +96,31 @@ public class Clinica {
 
 
 	public Paciente buscarPacienteByCedula(String cedula) {
-		Paciente aux = null ;
-		int i = 0;
-		while(i < pacientes.size() && aux == null){
-			if(cedula.equalsIgnoreCase(pacientes.get(i).getCedula())) {
-				aux = pacientes.get(i);
+		for (Persona p : personas) {
+			if(p instanceof Paciente) {
+				Paciente pac = (Paciente) p;
+				if(pac.getCedula().equalsIgnoreCase(cedula)) {
+					return pac;
+				}
 			}
-			i++;
 		}
-		return aux;
+		return null;
 	}
 
 	//Buscar los medicos de la misma especialidad para buscar cual se adapta a la fecha de la persona
 	public ArrayList<Medico> medicosByEspecialidad(String especialidad){
-		ArrayList<Medico> MedicosEspecialidad;
-		MedicosEspecialidad = new ArrayList<>();
-		for (Medico med : medicos) {
-			if(med.getEspecialidad().equalsIgnoreCase(especialidad)) {
-				MedicosEspecialidad.add(med);
+		ArrayList<Medico> MedicosEspecialidad = new ArrayList<>();
+		for (Persona p: personas) {
+			if(p instanceof Medico) {
+				Medico med = (Medico) p;
+				if(med.getEspecialidad().equalsIgnoreCase(especialidad)) {
+					MedicosEspecialidad.add(med);
+				}
 			}
 		}
 		return MedicosEspecialidad;
 	}
-	
+
 	//Busca los medicos disponibles para la fecha solicitada
 	public ArrayList<Medico> disponible(String especialidad ,LocalDateTime fecha) {
 		ArrayList<Medico> meddisp = new ArrayList<>();
