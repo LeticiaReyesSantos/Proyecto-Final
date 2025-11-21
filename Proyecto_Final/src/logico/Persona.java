@@ -136,7 +136,6 @@ public class Persona implements Serializable {
 		this.user = user;
 	}
 	
-	
 	public int calcEdad() {
 		Period edad = Period.between(fechaNacimiento, LocalDate.now());
 		return edad.getYears();
