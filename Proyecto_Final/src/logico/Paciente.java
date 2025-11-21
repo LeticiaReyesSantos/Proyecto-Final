@@ -9,8 +9,8 @@ public class Paciente extends Persona {
 	private String tipoSangre;
 
 	public Paciente(String codigo, String cedula, String nombres, String apellidos, LocalDate fechaNacimiento,
-			char genero, String telefono, String direccion, String email, String tipoSangre) {
-		super(codigo, cedula, nombres, apellidos, fechaNacimiento,genero, telefono, direccion, email);
+			char genero, String telefono, String direccion, String email, String tipoSangre, User user) {
+		super(codigo, cedula, nombres, apellidos, fechaNacimiento,genero, telefono, direccion, email, user);
 		
 		this.tipoSangre = tipoSangre;
 		vacunas = new ArrayList<>();

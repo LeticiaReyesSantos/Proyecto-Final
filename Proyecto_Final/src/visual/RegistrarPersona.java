@@ -1,0 +1,480 @@
+package visual;
+
+import java.awt.BorderLayout;
+
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import java.awt.Color;
+import java.awt.Cursor;
+
+import javax.swing.border.BevelBorder;
+import javax.swing.JLabel;
+import java.awt.Font;
+import java.awt.Image;
+
+import javax.swing.JTextField;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+
+import javax.swing.JRadioButton;
+import com.toedter.calendar.JDateChooser;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JSeparator;
+
+import logico.Clinica;
+import logico.Control;
+import logico.Horario;
+import logico.Medico;
+import logico.Persona;
+import logico.User;
+
+import javax.swing.JSpinner;
+import javax.swing.ImageIcon;
+
+public class RegistrarPersona extends JDialog {
+
+	private final JPanel contentPanel = new JPanel();
+	private JTextField cedulaField;
+	private JTextField nombreField;
+	private JTextField apellidoField;
+	private JTextField telefonoField;
+	private JTextField direccionField;
+	private JTextField correoField;
+	private JRadioButton fRadioBt;
+	private JRadioButton mRadioBt;
+	private int x1;
+	private int x2;
+	private int y1;
+	private int y2;
+	private Image img;
+	private ImageIcon icon;
+	private Calendar calendario = Calendar.getInstance();
+	private JTextField especialidadField;
+	private JPanel showHorarioPanel;
+	private JDateChooser dateChooser;
+
+	private User user = Control.getLoginUser().getUser();
+	Horario horario;
+	private JSpinner maxCitasSpinner;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			RegistrarPersona dialog = new RegistrarPersona();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public RegistrarPersona() {
+		setUndecorated(true);
+		setBounds(100, 100, 845, 664);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+
+		JPanel fondo = new JPanel();
+		fondo.setBackground(new Color(255, 255, 255));
+		fondo.setBounds(0, 0, 844, 664);
+		contentPanel.add(fondo);
+		fondo.setLayout(null);
+
+		JPanel generalPanel = new JPanel();
+		generalPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		generalPanel.setBackground(new Color(240, 248, 255));
+		generalPanel.setBounds(53, 83, 746, 296);
+		fondo.add(generalPanel);
+		generalPanel.setLayout(null);
+
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setForeground(new Color(72, 61, 139));
+		separator_1.setBackground(new Color(72, 61, 139));
+		separator_1.setBounds(12, 128, 181, 2);
+		generalPanel.add(separator_1);
+
+		JSeparator separator = new JSeparator();
+		separator.setBackground(new Color(72, 61, 139));
+		separator.setForeground(new Color(72, 61, 139));
+		separator.setBounds(12, 66, 181, 2);
+		generalPanel.add(separator);
+
+		JLabel lblNewLabel_1 = new JLabel("Cedula");
+		lblNewLabel_1.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblNewLabel_1.setBounds(12, 13, 63, 16);
+		generalPanel.add(lblNewLabel_1);
+
+		cedulaField = new JTextField();
+		cedulaField.setBorder(null);
+		cedulaField.setBounds(12, 43, 181, 22);
+		generalPanel.add(cedulaField);
+		cedulaField.setColumns(10);
+
+		JLabel lblNombres = new JLabel("Nombres");
+		lblNombres.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblNombres.setBounds(12, 78, 79, 16);
+		generalPanel.add(lblNombres);
+
+		JLabel lblApellidos = new JLabel("Apellidos");
+		lblApellidos.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblApellidos.setBounds(12, 139, 79, 16);
+		generalPanel.add(lblApellidos);
+
+		JLabel lblGenero = new JLabel("Genero:");
+		lblGenero.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblGenero.setBounds(12, 225, 79, 16);
+		generalPanel.add(lblGenero);
+
+		JLabel lblTelefono = new JLabel("Telefono");
+		lblTelefono.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblTelefono.setBounds(451, 78, 79, 16);
+		generalPanel.add(lblTelefono);
+
+		JLabel lblDireccion = new JLabel("Direccion");
+		lblDireccion.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblDireccion.setBounds(451, 139, 79, 16);
+		generalPanel.add(lblDireccion);
+
+		JLabel lblCorreo = new JLabel("Correo");
+		lblCorreo.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblCorreo.setBounds(451, 221, 79, 16);
+		generalPanel.add(lblCorreo);
+
+		nombreField = new JTextField();
+		nombreField.setColumns(10);
+		nombreField.setBorder(null);
+		nombreField.setBounds(12, 104, 181, 22);
+		generalPanel.add(nombreField);
+
+		apellidoField = new JTextField();
+		apellidoField.setColumns(10);
+		apellidoField.setBorder(null);
+		apellidoField.setBounds(12, 167, 181, 22);
+		generalPanel.add(apellidoField);
+
+		telefonoField = new JTextField();
+		telefonoField.setColumns(10);
+		telefonoField.setBorder(null);
+		telefonoField.setBounds(451, 107, 181, 22);
+		generalPanel.add(telefonoField);
+
+		direccionField = new JTextField();
+		direccionField.setColumns(10);
+		direccionField.setBorder(null);
+		direccionField.setBounds(451, 167, 181, 22);
+		generalPanel.add(direccionField);
+
+		correoField = new JTextField();
+		correoField.setColumns(10);
+		correoField.setBorder(null);
+		correoField.setBounds(451, 250, 181, 22);
+		generalPanel.add(correoField);
+
+		mRadioBt = new JRadioButton("Masculino");
+		mRadioBt.setSelected(true);
+		mRadioBt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(mRadioBt.isSelected())
+					fRadioBt.setSelected(false);
+				mRadioBt.setSelected(true);
+			}
+		});
+		mRadioBt.setBackground(new Color(123, 104, 238));
+		mRadioBt.setFont(new Font("Verdana", Font.PLAIN, 14));
+		mRadioBt.setBounds(99, 221, 99, 25);
+		generalPanel.add(mRadioBt);
+
+		fRadioBt = new JRadioButton("Femenino");
+		fRadioBt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(fRadioBt.isSelected())
+					mRadioBt.setSelected(false);
+
+				fRadioBt.setSelected(true);
+			}
+		});
+		fRadioBt.setBackground(new Color(123, 104, 238));
+		fRadioBt.setFont(new Font("Verdana", Font.PLAIN, 14));
+		fRadioBt.setBounds(99, 251, 99, 25);
+		generalPanel.add(fRadioBt);
+
+		JLabel lblNewLabel_2 = new JLabel("Fecha de nacimiento");
+		lblNewLabel_2.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblNewLabel_2.setBounds(451, 14, 181, 16);
+		generalPanel.add(lblNewLabel_2);
+
+		JLabel calenderIcon = new JLabel("");
+		calenderIcon.setBounds(635, 46, 56, 16);
+		generalPanel.add(calenderIcon);
+
+		calendario.set(1900, Calendar.JANUARY, 1);
+
+		dateChooser = new JDateChooser();
+		dateChooser.getCalendarButton().setFont(new Font("Verdana", Font.PLAIN, 13));
+		dateChooser.setMinSelectableDate(calendario.getTime());
+
+		calendario.set(LocalDate.now().getYear(), LocalDate.now().getMonthValue()-1, LocalDate.now().getDayOfMonth());
+		dateChooser.setMaxSelectableDate(calendario.getTime());
+
+		dateChooser.setBorder(null);
+		dateChooser.setBounds(451, 43, 181, 22);
+		generalPanel.add(dateChooser);
+
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setForeground(new Color(72, 61, 139));
+		separator_2.setBackground(new Color(72, 61, 139));
+		separator_2.setBounds(12, 190, 181, 2);
+		generalPanel.add(separator_2);
+
+		JSeparator separator_3 = new JSeparator();
+		separator_3.setForeground(new Color(72, 61, 139));
+		separator_3.setBackground(new Color(72, 61, 139));
+		separator_3.setBounds(451, 130, 181, 2);
+		generalPanel.add(separator_3);
+
+		JSeparator separator_4 = new JSeparator();
+		separator_4.setForeground(new Color(72, 61, 139));
+		separator_4.setBackground(new Color(72, 61, 139));
+		separator_4.setBounds(451, 190, 181, 2);
+		generalPanel.add(separator_4);
+
+		JSeparator separator_5 = new JSeparator();
+		separator_5.setForeground(new Color(72, 61, 139));
+		separator_5.setBackground(new Color(72, 61, 139));
+		separator_5.setBounds(451, 273, 181, 2);
+		generalPanel.add(separator_5);
+
+		JPanel barPanel = new JPanel();
+		barPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				x1= e.getX();
+				y1 = e.getY();
+			}
+		});
+		barPanel.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				//toma la posicion actual de la ventana
+				x2= arg0.getXOnScreen();
+				y2 = arg0.getYOnScreen();
+				//actualiza la posicion de la ventana
+				setLocation(x2-x1, y2-y1);
+			}
+		});
+		barPanel.setLayout(null);
+		barPanel.setBackground(new Color(102, 0, 204));
+		barPanel.setBounds(0, 0, 854, 25);
+		fondo.add(barPanel);
+
+		JPanel cerrarPanel = new JPanel();
+		cerrarPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				cerrarPanel.setBackground(Color.RED);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cerrarPanel.setBackground(new Color(102, 0, 204));
+			}
+		});
+		cerrarPanel.setForeground(Color.BLACK);
+		cerrarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		cerrarPanel.setBackground(new Color(102, 0, 204));
+		cerrarPanel.setBounds(805, 0, 39, 26);
+		barPanel.add(cerrarPanel);
+
+		JLabel label = new JLabel("X");
+
+		cerrarPanel.add(label);
+
+		JLabel lblNewLabel = new JLabel("Datos Generales");
+		lblNewLabel.setForeground(new Color(102, 0, 204));
+		lblNewLabel.setFont(new Font("Verdana", Font.BOLD, 28));
+		lblNewLabel.setBounds(291, 38, 278, 25);
+		fondo.add(lblNewLabel);
+
+		JPanel medicoPanel = new JPanel();
+		medicoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		medicoPanel.setBackground(new Color(240, 248, 255));
+		medicoPanel.setBounds(53, 456, 746, 140);
+		fondo.add(medicoPanel);
+		medicoPanel.setLayout(null);
+
+		JPanel horarioPanel = new JPanel();
+		horarioPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				HorarioChooser horarioChooser = new HorarioChooser();
+				horarioChooser.setModal(true);
+				horarioChooser.setVisible(true);
+				horario = horarioChooser.createHorario();
+
+
+
+			}
+		});
+		horarioPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		horarioPanel.setBackground(new Color(138, 43, 226));
+		horarioPanel.setBounds(557, 23, 147, 28);
+		medicoPanel.add(horarioPanel);
+
+		JLabel lblNewLabel_3 = new JLabel("Seleccionar horario");
+		lblNewLabel_3.setFont(new Font("Verdana", Font.PLAIN, 14));
+		lblNewLabel_3.setForeground(Color.WHITE);
+		horarioPanel.add(lblNewLabel_3);
+
+		maxCitasSpinner = new JSpinner();
+		maxCitasSpinner.setBounds(162, 48, 118, 22);
+		medicoPanel.add(maxCitasSpinner);
+
+		JLabel lblCanitdadMaximasDe = new JLabel("Citas maximas");
+		lblCanitdadMaximasDe.setForeground(Color.BLACK);
+		lblCanitdadMaximasDe.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblCanitdadMaximasDe.setBounds(32, 49, 118, 18);
+		medicoPanel.add(lblCanitdadMaximasDe);
+
+		JLabel lblNewLabel_4 = new JLabel("Especialidad");
+		lblNewLabel_4.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblNewLabel_4.setBounds(32, 93, 118, 16);
+		medicoPanel.add(lblNewLabel_4);
+
+		especialidadField = new JTextField();
+		especialidadField.setColumns(10);
+		especialidadField.setBorder(null);
+		especialidadField.setBounds(162, 83, 181, 22);
+		medicoPanel.add(especialidadField);
+
+		JSeparator separator_6 = new JSeparator();
+		separator_6.setForeground(new Color(72, 61, 139));
+		separator_6.setBackground(new Color(72, 61, 139));
+		separator_6.setBounds(162, 106, 181, 2);
+		medicoPanel.add(separator_6);
+
+		showHorarioPanel = new JPanel();
+		showHorarioPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		});
+		showHorarioPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		showHorarioPanel.setBackground(new Color(138, 43, 226));
+		showHorarioPanel.setBounds(557, 81, 147, 28);
+		medicoPanel.add(showHorarioPanel);
+
+		JLabel lblVerHorario = new JLabel("Ver horario");
+		lblVerHorario.setForeground(Color.WHITE);
+		lblVerHorario.setFont(new Font("Verdana", Font.PLAIN, 14));
+		showHorarioPanel.add(lblVerHorario);
+		icon = new ImageIcon(Login.class.getResource("/imagenes/iconoCalendario.png"));
+
+		JLabel lblDatosDelMedico = new JLabel("Datos del Medico");
+		lblDatosDelMedico.setForeground(new Color(102, 0, 204));
+		lblDatosDelMedico.setFont(new Font("Verdana", Font.BOLD, 28));
+		lblDatosDelMedico.setBounds(291, 418, 278, 25);
+		fondo.add(lblDatosDelMedico);
+
+		JPanel aceptarPanel = new JPanel();
+		aceptarPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(!camposGeneralesVacios()) {
+					Persona aux = null;
+					String codigo ="Me-"+Clinica.getInstance().genMedico;
+					String nombres = nombreField.getText();
+					String apellidos = apellidoField.getText();
+					String cedula = cedulaField.getText();
+					String direccion = direccionField.getText();
+					String telefono = telefonoField.getText();
+					String email = correoField.getText();
+					char genero = genero();
+					LocalDate fechaNacimiento = dateToLocalDate();
+
+
+
+					if(user.getTipo().equals("Administrador")) {
+
+						if(!camposMedicoVacios()) {
+							String especialidad= especialidadField.getText();
+							int maxCitas = (int) maxCitasSpinner.getValue();
+							User usuario = new User("Medico", codigo, Control.getInstance().genAutoPassword());
+
+							aux = new Medico(codigo, cedula, nombres, apellidos, 
+									fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario);
+							
+							
+							Clinica.getInstance().addMedico((Medico)aux);
+							
+						}
+						
+						
+
+					}
+					if(aux!= null)
+						Control.getInstance().regUser(aux);
+				}
+			}
+		});
+		aceptarPanel.setBackground(new Color(138, 43, 226));
+		aceptarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		aceptarPanel.setBounds(565, 609, 85, 28);
+		fondo.add(aceptarPanel);
+
+		JLabel Registrar = new JLabel("Registrar");
+		Registrar.setForeground(new Color(255, 255, 255));
+		Registrar.setFont(new Font("Verdana", Font.PLAIN, 14));
+		aceptarPanel.add(Registrar);
+
+		JPanel cancelarPanel = new JPanel();
+		cancelarPanel.setBackground(new Color(138, 43, 226));
+		cancelarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		cancelarPanel.setBounds(686, 609, 85, 28);
+		fondo.add(cancelarPanel);
+
+		JLabel lblCancelar = new JLabel("Cancelar");
+		lblCancelar.setForeground(Color.WHITE);
+		lblCancelar.setFont(new Font("Verdana", Font.PLAIN, 14));
+		cancelarPanel.add(lblCancelar);
+	}
+
+	private boolean camposGeneralesVacios() {
+
+		return nombreField.getText().trim().isEmpty() || apellidoField.getText().trim().isEmpty() || cedulaField.getText().trim().isEmpty()  ||
+				telefonoField.getText().trim().isEmpty() || direccionField.getText().trim().isEmpty() 
+				|| correoField.getText().trim().isEmpty() || dateChooser.getDate() == null;
+	}
+
+	private boolean camposMedicoVacios() {
+		return especialidadField.getText().trim().isEmpty() || horario == null || horario.isEmpty();
+	}
+
+	private char genero() {
+		char gender = 'M';
+
+		if(fRadioBt.isSelected())
+			gender= 'F';
+
+		return gender;
+	}
+
+	private LocalDate dateToLocalDate() {
+		return dateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	}
+}

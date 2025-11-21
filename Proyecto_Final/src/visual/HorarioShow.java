@@ -8,7 +8,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class Calendario extends JDialog {
+public class HorarioShow extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 
@@ -17,7 +17,7 @@ public class Calendario extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			Calendario dialog = new Calendario();
+			HorarioShow dialog = new HorarioShow();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -28,7 +28,8 @@ public class Calendario extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public Calendario() {
+	public HorarioShow() {
+		setUndecorated(true);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setLayout(new FlowLayout());

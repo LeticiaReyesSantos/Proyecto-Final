@@ -61,4 +61,9 @@ public class Horario {
 		return (int)duracionDeHorario(dia)/cantidadMaxima;
 	}
 	
+	public boolean isEmpty() {
+		return horario.isEmpty();
+	}
+	
+	
 }

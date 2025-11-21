@@ -2,6 +2,7 @@ package visual;
 
 import java.awt.EventQueue;
 
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -9,6 +10,8 @@ import java.awt.Color;
 import java.awt.Cursor;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Image;
@@ -19,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.LocalDate;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -29,6 +33,7 @@ import javax.swing.border.SoftBevelBorder;
 
 import logico.User;
 import logico.Control;
+import logico.Persona;
 
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
@@ -38,6 +43,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.SwingConstants;
 
 public class Login extends JFrame {
 	private JPanel contentPane;
@@ -60,7 +66,7 @@ public class Login extends JFrame {
 	private JLabel usuarioIcon;
 	private JLabel contraIcono;
 	private JTextField usuarioField;
-	private JSeparator separator_1;
+	private JSeparator separator1;
 	private JPanel loginF;
 	private JLabel lblNewLabel_3;
 	private JPasswordField passwordField;
@@ -70,6 +76,9 @@ public class Login extends JFrame {
 	private boolean borradoUsuario = false;
 	private boolean borradoContra = false;
 	private JLabel lblNewLabel_5;
+	private JSeparator separator2;
+	private JLabel campoObligatorio;
+	private JLabel campoObligatorio2;
 
 	/**
 	 * Launch the application.
@@ -81,7 +90,7 @@ public class Login extends JFrame {
 				FileOutputStream clinicaEscritura;
 				ObjectInputStream clinicaReader;
 				ObjectOutputStream clinicaWritter;
-				
+
 				try {
 					clinicaLectura = new FileInputStream("clinica.dat");
 					clinicaReader = new ObjectInputStream (clinicaLectura);
@@ -89,28 +98,31 @@ public class Login extends JFrame {
 					Control.setControl(temporal);
 					clinicaLectura.close();
 					clinicaReader.close();
-					
+
 				}catch(FileNotFoundException e){
 					try {
 						clinicaEscritura = new  FileOutputStream("clinica.dat");
 						clinicaWritter = new ObjectOutputStream(clinicaEscritura);
 						User aux = new User("Administrador", "Admin", "Admin");
-						Control.getInstance().regUser(aux);
+						Persona person = new Persona("Ad-01","","Admin","",LocalDate.now(), 'N', "000000", "", "", aux);
+						Control.getInstance().regUser(person);
 						clinicaWritter.writeObject(Control.getInstance());
 						clinicaEscritura.close();
 						clinicaWritter.close();
 						
+						
+
 					}catch (FileNotFoundException e1) {
 					}catch (IOException e1) {
 						// TODO: handle exception
 					}
-					
+
 				}catch (IOException e) {
-					
+
 				}catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				}
-				
+
 				try {
 					Login frame = new Login();
 					frame.setVisible(true);
@@ -163,7 +175,7 @@ public class Login extends JFrame {
 		lblLogo = new JLabel("logo");
 		lblLogo.setForeground(Color.WHITE);
 		lblLogo.setFont(new Font("Verdana", Font.BOLD, 13));
-		lblLogo.setBounds(166, 76, 134, 16);
+		lblLogo.setBounds(166, 76, 70, 16);
 		fondo.add(lblLogo);
 
 		lblNewLabel_1 = new JLabel("BIENVENIDO");
@@ -215,6 +227,20 @@ public class Login extends JFrame {
 		loginPanel.setBounds(444, 103, 467, 402);
 		fondo.add(loginPanel);
 		loginPanel.setLayout(null);
+		
+		campoObligatorio2 = new JLabel("*");
+		campoObligatorio2.setVisible(false);
+		campoObligatorio2.setFont(new Font("Tahoma", Font.BOLD, 13));
+		campoObligatorio2.setBounds(389, 230, 55, 36);
+		loginPanel.add(campoObligatorio2);
+		campoObligatorio2.setForeground(Color.RED);
+		
+		campoObligatorio = new JLabel("*");
+		campoObligatorio.setFont(new Font("Tahoma", Font.BOLD, 13));
+		campoObligatorio.setBounds(384, 100, 39, 37);
+		loginPanel.add(campoObligatorio);
+		campoObligatorio.setVisible(false);
+		campoObligatorio.setForeground(Color.RED);
 
 		usuarioPanel = new JPanel();
 		usuarioPanel.setBackground(new Color(255, 255, 255));
@@ -237,6 +263,9 @@ public class Login extends JFrame {
 		usuarioPanel.add(usuarioIcon);
 
 		usuarioField = new JTextField();
+		usuarioField.addActionListener(e -> {
+			passwordField.requestFocusInWindow();
+		});
 		usuarioField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -248,8 +277,27 @@ public class Login extends JFrame {
 						usuarioField.setForeground(Color.black);
 						borradoUsuario = true;
 					}
+
+				}
+				
+				
+				if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+					passwordField.requestFocusInWindow();
 				}
 
+			}
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				if(usuarioField.getText().trim().isEmpty()) {
+					separator1.setForeground(Color.red);
+					separator1.setBackground(Color.red);
+					campoObligatorio.setVisible(true);
+				}else {
+					separator1.setForeground(Color.black);
+					separator1.setBackground(Color.black);
+					campoObligatorio.setVisible(false);
+				}
+				
 			}
 		});
 		usuarioField.setForeground(Color.LIGHT_GRAY);
@@ -260,11 +308,11 @@ public class Login extends JFrame {
 		usuarioField.setBounds(59, 6, 268, 24);
 		usuarioPanel.add(usuarioField);
 
-		separator_1 = new JSeparator();
-		separator_1.setForeground(Color.DARK_GRAY);
-		separator_1.setBackground(Color.DARK_GRAY);
-		separator_1.setBounds(59, 30, 268, 2);
-		usuarioPanel.add(separator_1);
+		separator1 = new JSeparator();
+		separator1.setForeground(Color.DARK_GRAY);
+		separator1.setBackground(Color.DARK_GRAY);
+		separator1.setBounds(59, 30, 268, 2);
+		usuarioPanel.add(separator1);
 
 		contraPanel = new JPanel();
 		contraPanel.setBackground(Color.WHITE);
@@ -280,13 +328,24 @@ public class Login extends JFrame {
 		contraIcono.setIcon(new ImageIcon(img));
 		contraPanel.add(contraIcono);
 
-		JSeparator separator = new JSeparator();
-		separator.setForeground(Color.DARK_GRAY);
-		separator.setBackground(Color.DARK_GRAY);
-		separator.setBounds(59, 30, 268, 24);
-		contraPanel.add(separator);
+		separator2 = new JSeparator();
+		separator2.setForeground(Color.DARK_GRAY);
+		separator2.setBackground(Color.DARK_GRAY);
+		separator2.setBounds(59, 30, 268, 24);
+		contraPanel.add(separator2);
 
 		passwordField = new JPasswordField();
+		passwordField.addActionListener(e -> {
+			if(Control.getInstance().confirmarLogin(usuarioField.getText(), passwordField.getText())) {
+				Principal2 principal = new Principal2();
+				dispose();
+				principal.setVisible(true);
+
+			}else {
+				JOptionPane.showMessageDialog(null, "Usuario no encontrado");
+			}
+
+		});
 		passwordField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -300,6 +359,23 @@ public class Login extends JFrame {
 					}
 				}
 				
+				
+				if(e.getKeyCode() == KeyEvent.VK_UP) {
+					usuarioField.requestFocusInWindow();
+				}
+
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(passwordField.getText().trim().isEmpty()) {
+					separator2.setForeground(Color.red);
+					separator2.setBackground(Color.red);
+					campoObligatorio2.setVisible(true);
+				}else {
+					separator2.setForeground(Color.black);
+					separator2.setBackground(Color.black);
+					campoObligatorio2.setVisible(false);
+				}
 			}
 		});
 		ocultar = passwordField.getEchoChar();
@@ -315,11 +391,13 @@ public class Login extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if(Control.getInstance().confirmarLogin(usuarioField.getText(), passwordField.getText())) {
-					Principal principal = new Principal();
+					Principal2 principal = new Principal2();
 					dispose();
 					principal.setVisible(true);
-					
-				}
+
+				}else
+					JOptionPane.showMessageDialog(null, "Usuario no encontrado");
+				
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -361,7 +439,6 @@ public class Login extends JFrame {
 			}
 		});
 		contraCheck.setFont(new Font("Verdana", Font.PLAIN, 13));
-		contraCheck.setBorder(null);
 		contraCheck.setBackground(new Color(240, 248, 255));
 		contraCheck.setBounds(78, 279, 167, 25);
 		loginPanel.add(contraCheck);
@@ -377,11 +454,11 @@ public class Login extends JFrame {
 		lblUsuario.setFont(new Font("Verdana", Font.BOLD, 24));
 		lblUsuario.setBounds(179, 59, 116, 28);
 		loginPanel.add(lblUsuario);
-		
-		lblNewLabel_5 = new JLabel("LOGIN");
-		lblNewLabel_5.setForeground(new Color(147, 112, 219));
+
+		lblNewLabel_5 = new JLabel("Iniciar Sesion");
+		lblNewLabel_5.setForeground(new Color(138, 43, 226));
 		lblNewLabel_5.setFont(new Font("Verdana", Font.BOLD, 38));
-		lblNewLabel_5.setBounds(617, 52, 145, 44);
+		lblNewLabel_5.setBounds(553, 52, 294, 44);
 		fondo.add(lblNewLabel_5);
 
 	}

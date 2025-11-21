@@ -148,7 +148,7 @@ public class Clinica {
 			aux.addHistorial(cita);
 			realizado = true;
 		}else if(aux == null){
-			aux = new Persona("", cedula, nombre, apellido, null, ' ', "", "", "");
+			aux = new Persona("", cedula, nombre, apellido, null, ' ', "", "", "", null);
 			Cita cita = new Cita("Ci-"+genCita, aux, med , fecha);
 			addCita(cita); 
 			med.addHistorial(cita);

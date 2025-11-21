@@ -1,9 +1,12 @@
 package logico;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Persona {
+public class Persona implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	protected String codigo;
 	protected String cedula;
@@ -16,9 +19,11 @@ public class Persona {
 	protected String direccion;
 	protected String email;
 	protected ArrayList<Cita> historial;
+	protected User user;
+	
 	
 	public Persona(String codigo,String cedula, String nombres, String apellidos, LocalDate fechaNacimiento,char genero,
-			String telefono, String direccion, String email) {
+			String telefono, String direccion, String email, User user) {
 		super();
 		this.codigo = codigo;
 		this.cedula = cedula;
@@ -31,6 +36,7 @@ public class Persona {
 		this.direccion = direccion;
 		this.email = email;
 		historial = new ArrayList<>();
+		this.user = user;
 	}
 	
 	public String getCodigo() {
@@ -119,6 +125,14 @@ public class Persona {
 	
 	public void addHistorial(Cita aux) {
 		historial.add(aux);
+	}
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 	
