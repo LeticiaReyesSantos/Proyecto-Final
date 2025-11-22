@@ -1,9 +1,7 @@
 package visual;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -14,19 +12,17 @@ import java.awt.Color;
 import java.awt.Cursor;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.border.BevelBorder;
 import java.awt.Font;
 import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JCheckBox;
@@ -35,14 +31,25 @@ import java.awt.event.MouseMotionAdapter;
 public class HorarioChooser extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	Horario horario = new Horario();
-	Set<DayOfWeek> dias = new HashSet<>();
+	private Horario horario = new Horario();
+	private Set<DayOfWeek> dias = new HashSet<>();
 	private int x1;
 	private int x2;
 	private int y1;
 	private int y2;
 	private JComboBox finalBox;
 	private JComboBox inicioBox;
+	private JPanel addPanel;
+	private JPanel cancelPanel;
+	private DateTimeFormatter fmt = DateTimeFormatter.ofPattern("H:mm");
+	private JCheckBox lunes;
+	private JCheckBox martes;
+	private JCheckBox miercoles;
+	private JCheckBox jueves;
+	private JCheckBox viernes;
+	private JCheckBox sabado;
+	private JCheckBox domingo;
+	private JPanel estandarPanel;
 	private JPanel guardarPanel;
 
 	/**
@@ -70,7 +77,7 @@ public class HorarioChooser extends JDialog {
 		contentPanel.setLayout(null);
 		
 		JPanel fondo = new JPanel();
-		fondo.setBackground(Color.WHITE);
+		fondo.setBackground(new Color(240, 248, 255));
 		fondo.setBounds(0, 0, 530, 323);
 		contentPanel.add(fondo);
 		fondo.setLayout(null);
@@ -123,69 +130,118 @@ public class HorarioChooser extends JDialog {
 		JLabel label = new JLabel("X");
 		cerrarPanel.add(label);
 		
-		guardarPanel = new JPanel();
-		guardarPanel.addMouseListener(new MouseAdapter() {
+		addPanel = new JPanel();
+		addPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				String inicio = (String)inicioBox.getSelectedItem();
-				String fin = (String)finalBox.getSelectedItem();
-				LocalTime horaIni = LocalTime.parse(inicio);
-				LocalTime horaFin = LocalTime.parse(fin);
 				
-				for (DayOfWeek d : dias) 
-					horario.addDia(d, horaIni, horaFin);
+				if(!dias.isEmpty()) {
+					String inicio = (String)inicioBox.getSelectedItem();
+					String fin = (String)finalBox.getSelectedItem();
+					LocalTime horaIni = LocalTime.parse(inicio, fmt);
+					LocalTime horaFin = LocalTime.parse(fin, fmt);
 				
+					for (DayOfWeek d : dias) 
+						horario.addDia(d, horaIni, horaFin);
+				
+					JOptionPane.showMessageDialog(null, "Horario agregado con exito");
+				}
 				
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				addPanel.setBackground(new Color(102, 0, 204));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				addPanel.setBackground(new Color(138, 43, 226));
+			}
 		});
-		guardarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		guardarPanel.setBackground(new Color(138, 43, 226));
-		guardarPanel.setBounds(256, 259, 85, 28);
-		fondo.add(guardarPanel);
+		addPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		addPanel.setBackground(new Color(138, 43, 226));
+		addPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		addPanel.setBounds(152, 259, 85, 28);
+		fondo.add(addPanel);
 		
-		JLabel lblGuardar = new JLabel("Guardar");
+		JLabel lblGuardar = new JLabel("A\u00F1adir");
 		lblGuardar.setForeground(Color.WHITE);
 		lblGuardar.setFont(new Font("Verdana", Font.PLAIN, 14));
-		guardarPanel.add(lblGuardar);
+		addPanel.add(lblGuardar);
 		
-		JPanel panel_3 = new JPanel();
-		panel_3.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_3.setBackground(new Color(138, 43, 226));
-		panel_3.setBounds(353, 259, 85, 28);
-		fondo.add(panel_3);
-		
-		JLabel lblCancelar = new JLabel("Cancelar");
-		lblCancelar.setForeground(Color.WHITE);
-		lblCancelar.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_3.add(lblCancelar);
-		
-		JPanel panel_4 = new JPanel();
-		panel_4.addMouseListener(new MouseAdapter() {
+		cancelPanel = new JPanel();
+		cancelPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				dispose();
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				cancelPanel.setBackground(new Color(102, 0, 204));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cancelPanel.setBackground(new Color(138, 43, 226));
+			}
 		});
-		panel_4.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_4.setBackground(new Color(138, 43, 226));
-		panel_4.setBounds(152, 259, 97, 28);
-		fondo.add(panel_4);
+		cancelPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		cancelPanel.setBackground(new Color(138, 43, 226));
+		cancelPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		cancelPanel.setBounds(353, 259, 85, 28);
+		fondo.add(cancelPanel);
 		
-		JLabel lblSeleccionar = new JLabel("Crear horario");
+		JLabel lblCancelar = new JLabel("Cancelar");
+		lblCancelar.setForeground(Color.WHITE);
+		lblCancelar.setFont(new Font("Verdana", Font.PLAIN, 14));
+		cancelPanel.add(lblCancelar);
+		
+		guardarPanel = new JPanel();
+		guardarPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(!horario.isEmpty())
+					dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				guardarPanel.setBackground(new Color(102, 0, 204));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				guardarPanel.setBackground(new Color(138, 43, 226));
+			}
+		});
+		guardarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		guardarPanel.setBackground(new Color(138, 43, 226));
+		guardarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		guardarPanel.setBounds(249, 259, 97, 28);
+		fondo.add(guardarPanel);
+		
+		JLabel lblSeleccionar = new JLabel("Guardar");
 		lblSeleccionar.setForeground(Color.WHITE);
 		lblSeleccionar.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_4.add(lblSeleccionar);
+		guardarPanel.add(lblSeleccionar);
 		
-		JPanel panel_5 = new JPanel();
-		panel_5.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_5.setBackground(new Color(138, 43, 226));
-		panel_5.setBounds(10, 259, 130, 28);
-		fondo.add(panel_5);
+		estandarPanel = new JPanel();
+		estandarPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				estandarPanel.setBackground(new Color(102, 0, 204));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				estandarPanel.setBackground(new Color(138, 43, 226));
+			}
+		});
+		estandarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		estandarPanel.setBackground(new Color(138, 43, 226));
+		estandarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		estandarPanel.setBounds(10, 259, 130, 28);
+		fondo.add(estandarPanel);
 		
 		JLabel lblModeloEstandar = new JLabel("Modelo estandar");
 		lblModeloEstandar.setForeground(Color.WHITE);
 		lblModeloEstandar.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_5.add(lblModeloEstandar);
+		estandarPanel.add(lblModeloEstandar);
 		
 		inicioBox = new JComboBox();
 		cargarHorasInicio();
@@ -228,7 +284,7 @@ public class HorarioChooser extends JDialog {
 		lblSeleccioneLosDias.setBounds(76, 42, 362, 25);
 		fondo.add(lblSeleccioneLosDias);
 		
-		JCheckBox lunes = new JCheckBox("L");
+		lunes = new JCheckBox("L");
 		lunes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(lunes.isSelected()) 
@@ -241,7 +297,7 @@ public class HorarioChooser extends JDialog {
 		lunes.setBounds(50, 94, 35, 25);
 		fondo.add(lunes);
 		
-		JCheckBox martes = new JCheckBox("M");
+		martes = new JCheckBox("M");
 		martes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(martes.isSelected()) 
@@ -254,7 +310,7 @@ public class HorarioChooser extends JDialog {
 		martes.setBounds(100, 94, 39, 25);
 		fondo.add(martes);
 		
-		JCheckBox miercoles = new JCheckBox("W");
+		miercoles = new JCheckBox("W");
 		miercoles.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(miercoles.isSelected())
@@ -267,7 +323,7 @@ public class HorarioChooser extends JDialog {
 		miercoles.setBounds(150, 94, 40, 25);
 		fondo.add(miercoles);
 		
-		JCheckBox jueves = new JCheckBox("J");
+		jueves = new JCheckBox("J");
 		jueves.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(jueves.isSelected())
@@ -280,7 +336,7 @@ public class HorarioChooser extends JDialog {
 		jueves.setBounds(200, 94, 35, 25);
 		fondo.add(jueves);
 		
-		JCheckBox viernes = new JCheckBox("V");
+		viernes = new JCheckBox("V");
 		viernes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(viernes.isSelected())
@@ -293,7 +349,7 @@ public class HorarioChooser extends JDialog {
 		viernes.setBounds(250, 94, 39, 25);
 		fondo.add(viernes);
 		
-		JCheckBox sabado = new JCheckBox("S");
+		sabado = new JCheckBox("S");
 		sabado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(sabado.isSelected())
@@ -306,7 +362,7 @@ public class HorarioChooser extends JDialog {
 		sabado.setBounds(300, 94, 38, 25);
 		fondo.add(sabado);
 		
-		JCheckBox domingo = new JCheckBox("D");
+		domingo = new JCheckBox("D");
 		domingo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(domingo.isSelected())
@@ -336,7 +392,7 @@ public class HorarioChooser extends JDialog {
 	
 	private void cargarHorasFinal() {
 		finalBox.removeAllItems();
-		DateTimeFormatter fmt = DateTimeFormatter.ofPattern("H:mm");
+		
 		
 		String horaInicio = (String) inicioBox.getSelectedItem();
 		
@@ -352,8 +408,12 @@ public class HorarioChooser extends JDialog {
 	    }
 	} 
 	
-	public Horario createHorario () {
-		return horario;
+	public Horario getHorario () {
+		if(!horario.isEmpty())
+			return horario;
+		else
+			return null;
 	}
+	
 
 }

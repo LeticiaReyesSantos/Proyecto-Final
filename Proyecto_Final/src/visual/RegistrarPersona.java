@@ -10,6 +10,8 @@ import java.awt.Cursor;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Image;
 
@@ -88,7 +90,7 @@ public class RegistrarPersona extends JDialog {
 		contentPanel.setLayout(null);
 
 		JPanel fondo = new JPanel();
-		fondo.setBackground(new Color(255, 255, 255));
+		fondo.setBackground(new Color(248, 248, 255));
 		fondo.setBounds(0, 0, 844, 664);
 		contentPanel.add(fondo);
 		fondo.setLayout(null);
@@ -325,14 +327,24 @@ public class RegistrarPersona extends JDialog {
 				HorarioChooser horarioChooser = new HorarioChooser();
 				horarioChooser.setModal(true);
 				horarioChooser.setVisible(true);
-				horario = horarioChooser.createHorario();
+				horario = horarioChooser.getHorario();
 
 
 
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				horarioPanel.setBackground(new Color(102, 0, 204));
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				horarioPanel.setBackground(new Color(138, 43, 226));
+			}
 		});
 		horarioPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		horarioPanel.setBackground(new Color(138, 43, 226));
+		horarioPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		horarioPanel.setBounds(557, 23, 147, 28);
 		medicoPanel.add(horarioPanel);
 
@@ -372,10 +384,21 @@ public class RegistrarPersona extends JDialog {
 		showHorarioPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if(horario!= null && !horario.isEmpty())
+					System.out.println("No esta vacio");
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				showHorarioPanel.setBackground(new Color(102, 0, 204));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				showHorarioPanel.setBackground(new Color(138, 43, 226));
 			}
 		});
 		showHorarioPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		showHorarioPanel.setBackground(new Color(138, 43, 226));
+		showHorarioPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		showHorarioPanel.setBounds(557, 81, 147, 28);
 		medicoPanel.add(showHorarioPanel);
 
@@ -419,21 +442,29 @@ public class RegistrarPersona extends JDialog {
 							aux = new Medico(codigo, cedula, nombres, apellidos, 
 									fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario);
 							
+							Control.getInstance().regUser(aux);
+							Clinica.getInstance().addPersona(aux);
 							
-							Clinica.getInstance().addMedico((Medico)aux);
-							
+							JOptionPane.showMessageDialog(null, "Se ha registrado con exito");
 						}
 						
-						
-
 					}
-					if(aux!= null)
-						Control.getInstance().regUser(aux);
+					
+						
 				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				aceptarPanel.setBackground(new Color(102, 0, 204));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				aceptarPanel.setBackground(new Color(138, 43, 226));
 			}
 		});
 		aceptarPanel.setBackground(new Color(138, 43, 226));
 		aceptarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		aceptarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		aceptarPanel.setBounds(565, 609, 85, 28);
 		fondo.add(aceptarPanel);
 
@@ -443,7 +474,23 @@ public class RegistrarPersona extends JDialog {
 		aceptarPanel.add(Registrar);
 
 		JPanel cancelarPanel = new JPanel();
+		cancelarPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+				
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				cancelarPanel.setBackground(new Color(102, 0, 204));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cancelarPanel.setBackground(new Color(138, 43, 226));
+			}
+		});
 		cancelarPanel.setBackground(new Color(138, 43, 226));
+		cancelarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		cancelarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		cancelarPanel.setBounds(686, 609, 85, 28);
 		fondo.add(cancelarPanel);

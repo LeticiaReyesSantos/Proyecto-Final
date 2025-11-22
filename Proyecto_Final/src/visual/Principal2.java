@@ -125,7 +125,7 @@ public class Principal2 extends JFrame {
 		cerrarPanel.add(label);
 		
 		JPanel bienvenidoPanel = new JPanel();
-		bienvenidoPanel.setBackground(new Color(148, 0, 211));
+		bienvenidoPanel.setBackground(new Color(102, 0, 204));
 		bienvenidoPanel.setBounds(249, 24, 1839, 67);
 		fondo.add(bienvenidoPanel);
 		bienvenidoPanel.setLayout(null);
@@ -143,7 +143,7 @@ public class Principal2 extends JFrame {
 		bienvenidoPanel.add(label_1);
 		
 		JPanel menuPanel = new JPanel();
-		menuPanel.setBackground(new Color(148, 0, 211));
+		menuPanel.setBackground(new Color(102, 0, 204));
 		menuPanel.setBounds(0, 24, 251, 1080);
 		fondo.add(menuPanel);
 		menuPanel.setLayout(null);
@@ -160,6 +160,14 @@ public class Principal2 extends JFrame {
 		menuPanel.add(separator);
 		
 		JPanel panel = new JPanel();
+		panel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				RegistrarPersona regiP = new RegistrarPersona();
+				regiP.setModal(true);
+				regiP.setVisible(true);
+			}
+		});
 		panel.setBackground(new Color(102, 0, 153));
 		panel.setBounds(0, 177, 251, 35);
 		menuPanel.add(panel);
@@ -168,6 +176,24 @@ public class Principal2 extends JFrame {
 		lblNewLabel_2.setForeground(new Color(255, 255, 255));
 		lblNewLabel_2.setFont(new Font("Verdana", Font.BOLD, 16));
 		panel.add(lblNewLabel_2);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ListarPersonas listPerson = new ListarPersonas();
+				listPerson.setModal(true);
+				listPerson.setVisible(true);
+			}
+		});
+		panel_1.setBackground(new Color(102, 0, 153));
+		panel_1.setBounds(0, 225, 251, 35);
+		menuPanel.add(panel_1);
+		
+		JLabel lblListar = new JLabel("Listar");
+		lblListar.setForeground(Color.WHITE);
+		lblListar.setFont(new Font("Verdana", Font.BOLD, 16));
+		panel_1.add(lblListar);
 		
 	}
 
