@@ -5,6 +5,10 @@ import java.util.ArrayList;
 
 public class Consulta extends Cita {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Double precio;
 	private Paciente paciente;
 	private boolean visibilidad;

@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import logico.Clinica;
-import logico.Control;
 import logico.Persona;
 
 import java.awt.Color;
@@ -24,7 +23,7 @@ import javax.swing.border.BevelBorder;
 public class ListarPersonas extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private Persona user = Control.getInstance().getLoginUser();
+	private Persona user = Clinica.getInstance().getLoginUser();
 	private JTable table;
 	private JLabel tituloLabel;
 	private DefaultTableModel model;

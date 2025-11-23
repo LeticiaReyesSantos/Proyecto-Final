@@ -6,6 +6,10 @@ import java.util.ArrayList;
 
 public class Medico extends Persona {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String especialidad;
 	private int maxCitas;
 	private ArrayList<Paciente> pacientes;

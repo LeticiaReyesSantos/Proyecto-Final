@@ -1,12 +1,23 @@
 package logico;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 
-public class Clinica {
+public class Clinica implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Persona> personas;
 	private ArrayList <Diagnostico> diagnosticos;
 	private ArrayList <Enfermedad> enfermedades;
@@ -22,6 +33,7 @@ public class Clinica {
 
 
 	private static Clinica clinica = null;
+	private static transient Persona personaLogueada;
 
 	public Clinica() {
 		super();
@@ -30,6 +42,10 @@ public class Clinica {
 		enfermedades = new ArrayList<>();
 		vacunas = new ArrayList<>();
 		citas = new ArrayList<>();
+	}
+	
+	public static void setClinica(Clinica aux) {
+		Clinica.clinica = aux;
 	}
 
 	public static Clinica getInstance() {
@@ -382,6 +398,82 @@ public class Clinica {
 		}
 		return controladas;
 	}
+	
+	public static Persona getLoginUser() {
+		return personaLogueada;
+	}
 
+	public static void setLoginUser(Persona personaLogueada) {
+		Clinica.personaLogueada = personaLogueada;
+	}
+	
+	public boolean confirmarLogin(String usuario, String pass) {
+		boolean valido = false;
+		int i = 0;
+		
+		while(i<personas.size() && !valido) {
+			User user = personas.get(i).getUser();
+			if(user.getUserName().equals(usuario) && user.getPass().equals(pass)) {
+				personaLogueada = personas.get(i);
+				valido = true;
+			}
+			
+			i++;
+		}
+		
+	return valido;
+	}
+	
+	public String genAutoPassword() {
+		
+	    String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	    StringBuilder pass = new StringBuilder();
 
+	    for(int i = 0; i < 8; i++) {
+	        int rnd = (int)(Math.random() * chars.length());
+	        pass.append(chars.charAt(rnd));
+	    }
+
+	    return pass.toString();
+
+	}
+	
+	public void save() {
+		ObjectOutputStream objeto;
+		FileOutputStream file;
+		try {
+			file = new FileOutputStream("clinica.dat");
+			objeto = new ObjectOutputStream(file);
+			objeto.writeObject(Clinica.getInstance());;
+			objeto.close();
+			file.close();
+		}catch (FileNotFoundException e) {
+			// TODO: handle exception
+		}catch (IOException e1) {
+			// TODO: handle exception
+		}
+	}
+	
+	public static boolean load() {
+		ObjectInputStream objeto;
+		FileInputStream file;
+		boolean val= false;
+		
+		try {
+			file = new FileInputStream("clinica.dat");
+			objeto = new ObjectInputStream(file);
+			Clinica aux = (Clinica)objeto.readObject();
+			Clinica.setClinica(aux);
+			objeto.close();
+			file.close();
+			val = true;
+		}catch (FileNotFoundException e) {
+			// TODO: handle exception
+		}catch (IOException e) {
+
+		}catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return val;
+	}
 }

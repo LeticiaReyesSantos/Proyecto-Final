@@ -1,9 +1,14 @@
 package logico;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Cita {
+public class Cita implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//Prueba
 	protected String codigo;
 	protected Persona persona;

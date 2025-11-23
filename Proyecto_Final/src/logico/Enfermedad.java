@@ -5,6 +5,10 @@ import java.util.ArrayList;
 
 public class Enfermedad extends Diagnostico {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String nombre;
 	private String tipo;
 	private boolean controlada;

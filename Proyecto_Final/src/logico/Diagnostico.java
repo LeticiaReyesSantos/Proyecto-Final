@@ -1,10 +1,12 @@
 package logico;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Diagnostico {
+public class Diagnostico implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
 	protected String codigo;
 	protected LocalDateTime fecha;
 	protected ArrayList <String> sintomas;

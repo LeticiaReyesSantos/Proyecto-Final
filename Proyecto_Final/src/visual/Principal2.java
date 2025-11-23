@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
-import logico.Control;
+import logico.Clinica;
 import logico.Persona;
 import logico.User;
 
@@ -31,7 +31,7 @@ public class Principal2 extends JFrame {
 	private JPanel contentPane;
 	DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
 	private Dimension dim;
-	private Persona usuario = Control.getLoginUser();
+	private Persona usuario = Clinica.getLoginUser();
 	private int x1;
 	private int x2;
 	private int y1;
@@ -57,6 +57,7 @@ public class Principal2 extends JFrame {
 	 * Create the frame.
 	 */
 	public Principal2() {
+		//Clinica.getInstance().load();
 		setResizable(false);
 		dim = getToolkit().getScreenSize();
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -105,6 +106,7 @@ public class Principal2 extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				dispose();
+				Clinica.getInstance().save();
 			}
 			@Override
 			public void mouseEntered(MouseEvent arg0) {

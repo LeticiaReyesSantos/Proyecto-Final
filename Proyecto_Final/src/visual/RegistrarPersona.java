@@ -30,7 +30,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 
 import logico.Clinica;
-import logico.Control;
 import logico.Horario;
 import logico.Medico;
 import logico.Persona;
@@ -61,7 +60,7 @@ public class RegistrarPersona extends JDialog {
 	private JPanel showHorarioPanel;
 	private JDateChooser dateChooser;
 
-	private User user = Control.getLoginUser().getUser();
+	private User user = Clinica.getLoginUser().getUser();
 	Horario horario;
 	private JSpinner maxCitasSpinner;
 
@@ -384,8 +383,12 @@ public class RegistrarPersona extends JDialog {
 		showHorarioPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(horario!= null && !horario.isEmpty())
-					System.out.println("No esta vacio");
+				if(horario!= null && !horario.isEmpty()) {
+					HorarioShow hs = new HorarioShow(horario);
+					hs.setModal(true);
+					hs.setVisible(true);
+				}
+					
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -437,12 +440,12 @@ public class RegistrarPersona extends JDialog {
 						if(!camposMedicoVacios()) {
 							String especialidad= especialidadField.getText();
 							int maxCitas = (int) maxCitasSpinner.getValue();
-							User usuario = new User("Medico", codigo, Control.getInstance().genAutoPassword());
+							User usuario = new User("Medico", codigo, Clinica.getInstance().genAutoPassword());
 
 							aux = new Medico(codigo, cedula, nombres, apellidos, 
 									fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario);
 							
-							Control.getInstance().regUser(aux);
+							
 							Clinica.getInstance().addPersona(aux);
 							
 							JOptionPane.showMessageDialog(null, "Se ha registrado con exito");

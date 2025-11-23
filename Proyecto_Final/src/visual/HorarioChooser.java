@@ -382,8 +382,6 @@ public class HorarioChooser extends JDialog {
 		LocalTime hora = LocalTime.of(7, 0);
 	    LocalTime fin = LocalTime.of(14, 0);
 
-	    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("H:mm");
-
 	    while (hora.isBefore(fin)) {
 	        inicioBox.addItem(hora.format(fmt));
 	        hora = hora.plusHours(1);

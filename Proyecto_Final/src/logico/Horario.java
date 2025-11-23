@@ -1,5 +1,6 @@
 package logico;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -7,7 +8,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Horario {
+public class Horario implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Map <DayOfWeek, LocalTime[]> horario;
 
 	public Horario() {
@@ -17,6 +23,10 @@ public class Horario {
 	
 	public void addDia(DayOfWeek dia, LocalTime horaIni, LocalTime horaFin) {
 		horario.put(dia, new LocalTime[] {horaIni, horaFin});
+	}
+	
+	public Map<DayOfWeek, LocalTime[]> getHorario() {
+		return horario;
 	}
 	
 	public void eliminarDia (DayOfWeek dia) {

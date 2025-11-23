@@ -32,7 +32,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
 import logico.User;
-import logico.Control;
+import logico.Clinica;
 import logico.Persona;
 
 import javax.swing.JTextField;
@@ -86,42 +86,27 @@ public class Login extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				FileInputStream clinicaLectura;
 				FileOutputStream clinicaEscritura;
-				ObjectInputStream clinicaReader;
 				ObjectOutputStream clinicaWritter;
 
-				try {
-					clinicaLectura = new FileInputStream("clinica.dat");
-					clinicaReader = new ObjectInputStream (clinicaLectura);
-					Control temporal = (Control)clinicaReader.readObject();
-					Control.setControl(temporal);
-					clinicaLectura.close();
-					clinicaReader.close();
-
-				}catch(FileNotFoundException e){
+				
+				if(!Clinica.getInstance().load()) {
 					try {
 						clinicaEscritura = new  FileOutputStream("clinica.dat");
 						clinicaWritter = new ObjectOutputStream(clinicaEscritura);
 						User aux = new User("Administrador", "Admin", "Admin");
 						Persona person = new Persona("Ad-01","","Admin","",LocalDate.now(), 'N', "000000", "", "", aux);
-						Control.getInstance().regUser(person);
-						clinicaWritter.writeObject(Control.getInstance());
+						Clinica.getInstance().addPersona(person);
+						clinicaWritter.writeObject(Clinica.getInstance());
 						clinicaEscritura.close();
 						clinicaWritter.close();
 						
-						
-
 					}catch (FileNotFoundException e1) {
 					}catch (IOException e1) {
 						// TODO: handle exception
 					}
-
-				}catch (IOException e) {
-
-				}catch (ClassNotFoundException e) {
-					e.printStackTrace();
 				}
+
 
 				try {
 					Login frame = new Login();
@@ -336,7 +321,7 @@ public class Login extends JFrame {
 
 		passwordField = new JPasswordField();
 		passwordField.addActionListener(e -> {
-			if(Control.getInstance().confirmarLogin(usuarioField.getText(), passwordField.getText())) {
+			if(Clinica.getInstance().confirmarLogin(usuarioField.getText(), passwordField.getText())) {
 				Principal2 principal = new Principal2();
 				dispose();
 				principal.setVisible(true);
@@ -390,7 +375,7 @@ public class Login extends JFrame {
 		loginF.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(Control.getInstance().confirmarLogin(usuarioField.getText(), passwordField.getText())) {
+				if(Clinica.getInstance().confirmarLogin(usuarioField.getText(), passwordField.getText())) {
 					Principal2 principal = new Principal2();
 					dispose();
 					principal.setVisible(true);
