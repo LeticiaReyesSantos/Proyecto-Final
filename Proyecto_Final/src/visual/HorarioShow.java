@@ -1,9 +1,6 @@
 package visual;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -21,9 +18,13 @@ import java.awt.event.MouseMotionAdapter;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 
 public class HorarioShow extends JDialog {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private final JPanel contentPanel = new JPanel();
 	
@@ -70,6 +71,7 @@ public class HorarioShow extends JDialog {
 	public HorarioShow(Horario horario) {
 		this.horario = horario;
 		setUndecorated(true);
+		setLocation(1320, 450);
 		setBounds(100, 100, 447, 345);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(248, 248, 255));

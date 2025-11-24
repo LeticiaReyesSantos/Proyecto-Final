@@ -24,16 +24,16 @@ public class Clinica implements Serializable {
 	private ArrayList <Vacuna> vacunas;
 	private ArrayList <Cita> citas;
 
-	public static int genMedico = 1;
-	public static int genPaciente = 1;
-	public static int genDiagnostico = 1;
-	public static int genEnfermedad = 1;
-	public static int genVacuna = 1;
-	public static int genCita = 1;
+	public int genMedico = 1;
+	public int genPaciente = 1;
+	public int genDiagnostico = 1;
+	public int genEnfermedad = 1;
+	public int genVacuna = 1;
+	public int genCita = 1;
 
 
 	private static Clinica clinica = null;
-	private static transient Persona personaLogueada;
+	private static Persona personaLogueada;
 
 	public Clinica() {
 		super();
@@ -121,6 +121,35 @@ public class Clinica implements Serializable {
 			}
 		}
 		return null;
+	}
+	
+	public Persona personaById(String id) {
+		Persona aux = null;
+		boolean val = false;
+		int i = 0;
+		
+		while(i<personas.size() && !val) {
+			if(personas.get(i).getCodigo().equals(id)) {
+				aux = personas.get(i);
+				val = true;
+			}
+			
+			i++;
+		}
+		return aux;
+	}
+	
+	public boolean cedulaUnica(String cedula) {
+		boolean unico = true;
+		int i = 0;
+		
+		while(i<personas.size() && unico) {
+			if(personas.get(i).getCedula().equals(cedula))
+				unico = false;
+			
+			i++;
+		}
+		return unico;
 	}
 
 	//Buscar los medicos de la misma especialidad para buscar cual se adapta a la fecha de la persona
@@ -476,4 +505,7 @@ public class Clinica implements Serializable {
 		}
 		return val;
 	}
+	
+
+
 }

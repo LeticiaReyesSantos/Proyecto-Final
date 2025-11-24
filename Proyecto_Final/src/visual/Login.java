@@ -16,11 +16,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Image;
 import java.awt.event.MouseMotionAdapter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 
@@ -43,12 +41,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.SwingConstants;
 
 public class Login extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel cerrarPanel;
-	private JPanel barraPanel;
+	private JPanel barPanel;
 	private JPanel fondo;
 	private int x1;
 	private int x2;
@@ -90,7 +91,7 @@ public class Login extends JFrame {
 				ObjectOutputStream clinicaWritter;
 
 				
-				if(!Clinica.getInstance().load()) {
+				if(!Clinica.load()) {
 					try {
 						clinicaEscritura = new  FileOutputStream("clinica.dat");
 						clinicaWritter = new ObjectOutputStream(clinicaEscritura);
@@ -137,8 +138,8 @@ public class Login extends JFrame {
 		contentPane.add(fondo);
 		fondo.setLayout(null);
 
-		barraPanel = new JPanel();
-		barraPanel.addMouseMotionListener(new MouseMotionAdapter() {
+		barPanel = new JPanel();
+		barPanel.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
 				//toma la posicion actual de la ventana
@@ -148,7 +149,7 @@ public class Login extends JFrame {
 				setLocation(x2-x1, y2-y1);
 			}
 		});
-		barraPanel.addMouseListener(new MouseAdapter() {
+		barPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				//Toma la posicion actual del panel
@@ -168,14 +169,14 @@ public class Login extends JFrame {
 		lblNewLabel_1.setFont(new Font("Verdana", Font.PLAIN, 48));
 		lblNewLabel_1.setBounds(43, 177, 329, 82);
 		fondo.add(lblNewLabel_1);
-		barraPanel.setBounds(0, 0, 923, 25);
-		fondo.add(barraPanel);
-		barraPanel.setBackground(new Color(102, 0, 204));
-		barraPanel.setLayout(null);
+		barPanel.setBounds(0, 0, 923, 25);
+		fondo.add(barPanel);
+		barPanel.setBackground(new Color(102, 0, 204));
+		barPanel.setLayout(null);
 
 		cerrarPanel = new JPanel();
 		cerrarPanel.setBounds(883, 0, 39, 26);
-		barraPanel.add(cerrarPanel);
+		barPanel.add(cerrarPanel);
 		cerrarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -394,7 +395,7 @@ public class Login extends JFrame {
 			}
 		});
 		loginF.setBackground(new Color(138, 43, 226));
-		loginF.setCursor(getCursor().getPredefinedCursor(Cursor.HAND_CURSOR));
+		loginF.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		loginF.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		loginF.setBounds(68, 331, 339, 51);
 		loginPanel.add(loginF);
@@ -405,7 +406,7 @@ public class Login extends JFrame {
 		loginF.add(lblNewLabel_3);
 
 		contraCheck = new JCheckBox("Mostra contrase\u00F1a");
-		contraCheck.setCursor(getCursor().getPredefinedCursor(Cursor.HAND_CURSOR));
+		contraCheck.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		contraCheck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(contraCheck.isSelected()) {

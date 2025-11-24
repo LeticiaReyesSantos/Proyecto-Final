@@ -30,6 +30,10 @@ import java.awt.event.MouseMotionAdapter;
 
 public class HorarioChooser extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private Horario horario = new Horario();
 	private Set<DayOfWeek> dias = new HashSet<>();
@@ -37,8 +41,8 @@ public class HorarioChooser extends JDialog {
 	private int x2;
 	private int y1;
 	private int y2;
-	private JComboBox finalBox;
-	private JComboBox inicioBox;
+	private JComboBox<String> finalBox;
+	private JComboBox<String> inicioBox;
 	private JPanel addPanel;
 	private JPanel cancelPanel;
 	private DateTimeFormatter fmt = DateTimeFormatter.ofPattern("H:mm");
@@ -71,6 +75,7 @@ public class HorarioChooser extends JDialog {
 	public HorarioChooser() {
 		setUndecorated(true);
 		setBounds(100, 100, 450, 300);
+		setLocation(1320, 550);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -243,7 +248,7 @@ public class HorarioChooser extends JDialog {
 		lblModeloEstandar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		estandarPanel.add(lblModeloEstandar);
 		
-		inicioBox = new JComboBox();
+		inicioBox = new JComboBox<String>();
 		cargarHorasInicio();
 		inicioBox.setSelectedIndex(0);
 		
@@ -260,7 +265,7 @@ public class HorarioChooser extends JDialog {
 		
 		fondo.add(inicioBox);
 		
-		finalBox = new JComboBox();
+		finalBox = new JComboBox<String>();
 		
 		finalBox.setBackground(new Color(240, 248, 255));
 		finalBox.setBounds(256, 177, 173, 22);

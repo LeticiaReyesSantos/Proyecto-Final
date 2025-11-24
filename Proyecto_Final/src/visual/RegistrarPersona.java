@@ -2,6 +2,7 @@ package visual;
 
 import java.awt.BorderLayout;
 
+
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -13,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
-import java.awt.Image;
+
 
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
@@ -36,10 +37,15 @@ import logico.Persona;
 import logico.User;
 
 import javax.swing.JSpinner;
-import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
+
 
 public class RegistrarPersona extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField cedulaField;
 	private JTextField nombreField;
@@ -53,8 +59,6 @@ public class RegistrarPersona extends JDialog {
 	private int x2;
 	private int y1;
 	private int y2;
-	private Image img;
-	private ImageIcon icon;
 	private Calendar calendario = Calendar.getInstance();
 	private JTextField especialidadField;
 	private JPanel showHorarioPanel;
@@ -83,6 +87,7 @@ public class RegistrarPersona extends JDialog {
 	public RegistrarPersona() {
 		setUndecorated(true);
 		setBounds(100, 100, 845, 664);
+		setLocation(420, 250);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -97,7 +102,7 @@ public class RegistrarPersona extends JDialog {
 		JPanel generalPanel = new JPanel();
 		generalPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		generalPanel.setBackground(new Color(240, 248, 255));
-		generalPanel.setBounds(53, 83, 746, 296);
+		generalPanel.setBounds(53, 93, 746, 336);
 		fondo.add(generalPanel);
 		generalPanel.setLayout(null);
 
@@ -141,17 +146,17 @@ public class RegistrarPersona extends JDialog {
 
 		JLabel lblTelefono = new JLabel("Telefono");
 		lblTelefono.setFont(new Font("Verdana", Font.BOLD, 14));
-		lblTelefono.setBounds(451, 78, 79, 16);
+		lblTelefono.setBounds(497, 77, 79, 16);
 		generalPanel.add(lblTelefono);
 
 		JLabel lblDireccion = new JLabel("Direccion");
 		lblDireccion.setFont(new Font("Verdana", Font.BOLD, 14));
-		lblDireccion.setBounds(451, 139, 79, 16);
+		lblDireccion.setBounds(497, 138, 79, 16);
 		generalPanel.add(lblDireccion);
 
 		JLabel lblCorreo = new JLabel("Correo");
 		lblCorreo.setFont(new Font("Verdana", Font.BOLD, 14));
-		lblCorreo.setBounds(451, 221, 79, 16);
+		lblCorreo.setBounds(497, 220, 79, 16);
 		generalPanel.add(lblCorreo);
 
 		nombreField = new JTextField();
@@ -169,22 +174,23 @@ public class RegistrarPersona extends JDialog {
 		telefonoField = new JTextField();
 		telefonoField.setColumns(10);
 		telefonoField.setBorder(null);
-		telefonoField.setBounds(451, 107, 181, 22);
+		telefonoField.setBounds(497, 106, 181, 22);
 		generalPanel.add(telefonoField);
 
 		direccionField = new JTextField();
 		direccionField.setColumns(10);
 		direccionField.setBorder(null);
-		direccionField.setBounds(451, 167, 181, 22);
+		direccionField.setBounds(497, 166, 181, 22);
 		generalPanel.add(direccionField);
 
 		correoField = new JTextField();
 		correoField.setColumns(10);
 		correoField.setBorder(null);
-		correoField.setBounds(451, 250, 181, 22);
+		correoField.setBounds(497, 249, 181, 22);
 		generalPanel.add(correoField);
 
 		mRadioBt = new JRadioButton("Masculino");
+		mRadioBt.setForeground(Color.WHITE);
 		mRadioBt.setSelected(true);
 		mRadioBt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -199,6 +205,7 @@ public class RegistrarPersona extends JDialog {
 		generalPanel.add(mRadioBt);
 
 		fRadioBt = new JRadioButton("Femenino");
+		fRadioBt.setForeground(Color.WHITE);
 		fRadioBt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(fRadioBt.isSelected())
@@ -209,12 +216,12 @@ public class RegistrarPersona extends JDialog {
 		});
 		fRadioBt.setBackground(new Color(123, 104, 238));
 		fRadioBt.setFont(new Font("Verdana", Font.PLAIN, 14));
-		fRadioBt.setBounds(99, 251, 99, 25);
+		fRadioBt.setBounds(202, 221, 99, 25);
 		generalPanel.add(fRadioBt);
 
 		JLabel lblNewLabel_2 = new JLabel("Fecha de nacimiento");
 		lblNewLabel_2.setFont(new Font("Verdana", Font.BOLD, 14));
-		lblNewLabel_2.setBounds(451, 14, 181, 16);
+		lblNewLabel_2.setBounds(497, 13, 181, 16);
 		generalPanel.add(lblNewLabel_2);
 
 		JLabel calenderIcon = new JLabel("");
@@ -231,7 +238,7 @@ public class RegistrarPersona extends JDialog {
 		dateChooser.setMaxSelectableDate(calendario.getTime());
 
 		dateChooser.setBorder(null);
-		dateChooser.setBounds(451, 43, 181, 22);
+		dateChooser.setBounds(497, 42, 181, 22);
 		generalPanel.add(dateChooser);
 
 		JSeparator separator_2 = new JSeparator();
@@ -243,20 +250,40 @@ public class RegistrarPersona extends JDialog {
 		JSeparator separator_3 = new JSeparator();
 		separator_3.setForeground(new Color(72, 61, 139));
 		separator_3.setBackground(new Color(72, 61, 139));
-		separator_3.setBounds(451, 130, 181, 2);
+		separator_3.setBounds(497, 129, 181, 2);
 		generalPanel.add(separator_3);
 
 		JSeparator separator_4 = new JSeparator();
 		separator_4.setForeground(new Color(72, 61, 139));
 		separator_4.setBackground(new Color(72, 61, 139));
-		separator_4.setBounds(451, 190, 181, 2);
+		separator_4.setBounds(497, 189, 181, 2);
 		generalPanel.add(separator_4);
 
 		JSeparator separator_5 = new JSeparator();
 		separator_5.setForeground(new Color(72, 61, 139));
 		separator_5.setBackground(new Color(72, 61, 139));
-		separator_5.setBounds(451, 273, 181, 2);
+		separator_5.setBounds(497, 272, 181, 2);
 		generalPanel.add(separator_5);
+		
+		JLabel lblRango = new JLabel("Rango:");
+		lblRango.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblRango.setBounds(12, 277, 79, 22);
+		generalPanel.add(lblRango);
+		
+		JRadioButton adminRadio = new JRadioButton("Administrador");
+		adminRadio.setForeground(Color.WHITE);
+		adminRadio.setFont(new Font("Verdana", Font.PLAIN, 14));
+		adminRadio.setBackground(new Color(123, 104, 238));
+		adminRadio.setBounds(202, 276, 127, 25);
+		generalPanel.add(adminRadio);
+		
+		JRadioButton medicoRadio = new JRadioButton("Medico");
+		medicoRadio.setForeground(Color.WHITE);
+		medicoRadio.setSelected(true);
+		medicoRadio.setFont(new Font("Verdana", Font.PLAIN, 14));
+		medicoRadio.setBackground(new Color(123, 104, 238));
+		medicoRadio.setBounds(99, 276, 99, 25);
+		generalPanel.add(medicoRadio);
 
 		JPanel barPanel = new JPanel();
 		barPanel.addMouseListener(new MouseAdapter() {
@@ -315,7 +342,7 @@ public class RegistrarPersona extends JDialog {
 		JPanel medicoPanel = new JPanel();
 		medicoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		medicoPanel.setBackground(new Color(240, 248, 255));
-		medicoPanel.setBounds(53, 456, 746, 140);
+		medicoPanel.setBounds(53, 470, 746, 140);
 		fondo.add(medicoPanel);
 		medicoPanel.setLayout(null);
 
@@ -409,12 +436,11 @@ public class RegistrarPersona extends JDialog {
 		lblVerHorario.setForeground(Color.WHITE);
 		lblVerHorario.setFont(new Font("Verdana", Font.PLAIN, 14));
 		showHorarioPanel.add(lblVerHorario);
-		icon = new ImageIcon(Login.class.getResource("/imagenes/iconoCalendario.png"));
 
 		JLabel lblDatosDelMedico = new JLabel("Datos del Medico");
 		lblDatosDelMedico.setForeground(new Color(102, 0, 204));
 		lblDatosDelMedico.setFont(new Font("Verdana", Font.BOLD, 28));
-		lblDatosDelMedico.setBounds(291, 418, 278, 25);
+		lblDatosDelMedico.setBounds(291, 432, 278, 25);
 		fondo.add(lblDatosDelMedico);
 
 		JPanel aceptarPanel = new JPanel();
@@ -449,6 +475,7 @@ public class RegistrarPersona extends JDialog {
 							Clinica.getInstance().addPersona(aux);
 							
 							JOptionPane.showMessageDialog(null, "Se ha registrado con exito");
+							JOptionPane.showMessageDialog(null, "Usuario generado: "+usuario.getUserName()+" Contraseña: "+usuario.getPass());
 						}
 						
 					}
@@ -468,7 +495,7 @@ public class RegistrarPersona extends JDialog {
 		aceptarPanel.setBackground(new Color(138, 43, 226));
 		aceptarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		aceptarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		aceptarPanel.setBounds(565, 609, 85, 28);
+		aceptarPanel.setBounds(566, 623, 85, 28);
 		fondo.add(aceptarPanel);
 
 		JLabel Registrar = new JLabel("Registrar");
@@ -495,13 +522,20 @@ public class RegistrarPersona extends JDialog {
 		cancelarPanel.setBackground(new Color(138, 43, 226));
 		cancelarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		cancelarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		cancelarPanel.setBounds(686, 609, 85, 28);
+		cancelarPanel.setBounds(681, 623, 85, 28);
 		fondo.add(cancelarPanel);
 
 		JLabel lblCancelar = new JLabel("Cancelar");
 		lblCancelar.setForeground(Color.WHITE);
 		lblCancelar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		cancelarPanel.add(lblCancelar);
+		
+		JSeparator separator_7 = new JSeparator();
+		separator_7.setOrientation(SwingConstants.VERTICAL);
+		separator_7.setForeground(new Color(75, 0, 130));
+		separator_7.setBackground(new Color(138, 43, 226));
+		separator_7.setBounds(0, 25, 8, 639);
+		fondo.add(separator_7);
 	}
 
 	private boolean camposGeneralesVacios() {
