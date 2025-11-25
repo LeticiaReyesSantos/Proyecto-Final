@@ -115,6 +115,7 @@ public class HorarioChooser extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				dispose();
+				horario = new Horario();
 			}
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -178,6 +179,7 @@ public class HorarioChooser extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				dispose();
+				horario = new Horario();
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {

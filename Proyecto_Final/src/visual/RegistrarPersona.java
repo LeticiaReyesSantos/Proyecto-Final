@@ -305,7 +305,7 @@ public class RegistrarPersona extends JDialog {
 		});
 		barPanel.setLayout(null);
 		barPanel.setBackground(new Color(102, 0, 204));
-		barPanel.setBounds(0, 0, 854, 25);
+		barPanel.setBounds(0, 0, 844, 25);
 		fondo.add(barPanel);
 
 		JPanel cerrarPanel = new JPanel();
@@ -470,6 +470,7 @@ public class RegistrarPersona extends JDialog {
 
 							aux = new Medico(codigo, cedula, nombres, apellidos, 
 									fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario);
+							((Medico)aux).setHorario(horario);
 							
 							
 							Clinica.getInstance().addPersona(aux);
@@ -536,6 +537,19 @@ public class RegistrarPersona extends JDialog {
 		separator_7.setBackground(new Color(138, 43, 226));
 		separator_7.setBounds(0, 25, 8, 639);
 		fondo.add(separator_7);
+		
+		JSeparator separator_8 = new JSeparator();
+		separator_8.setOrientation(SwingConstants.VERTICAL);
+		separator_8.setForeground(new Color(75, 0, 130));
+		separator_8.setBackground(new Color(138, 43, 226));
+		separator_8.setBounds(842, 25, 13, 639);
+		fondo.add(separator_8);
+		
+		JSeparator separator_9 = new JSeparator();
+		separator_9.setForeground(new Color(75, 0, 130));
+		separator_9.setBackground(new Color(138, 43, 226));
+		separator_9.setBounds(0, 662, 844, 2);
+		fondo.add(separator_9);
 	}
 
 	private boolean camposGeneralesVacios() {

@@ -39,8 +39,14 @@ public class Horario implements Serializable{
 	}
 	//Retorna la hora de inicio y fin de un dia
 	public LocalTime[] horarioByDia(DayOfWeek dia) {
-		return horario.get(dia);
-	}
+	    LocalTime[] horas = horario.get(dia);
+
+	    if (horas == null) {
+	        return new LocalTime[] { null, null };
+	    }
+
+	    return horas;
+	} 
 	
 	//Valida que la fecha este en horario laborable
 	public boolean fechaEnHorarioLaboral(LocalDateTime fecha) {
@@ -67,9 +73,7 @@ public class Horario implements Serializable{
 		return ChronoUnit.MINUTES.between(rango[0], rango[1]);
 	}
 	
-	public int intervaloMinimoEntreCita(DayOfWeek dia, int cantidadMaxima) {
-		return (int)duracionDeHorario(dia)/cantidadMaxima;
-	}
+
 	
 	public boolean isEmpty() {
 		return horario.isEmpty();

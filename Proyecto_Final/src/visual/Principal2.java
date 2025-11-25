@@ -226,6 +226,24 @@ public class Principal2 extends JFrame {
 		lblListar.setFont(new Font("Verdana", Font.BOLD, 16));
 		panel_1.add(lblListar);
 		
+		JPanel panel_2 = new JPanel();
+		panel_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				RegistrarCita regCita = new RegistrarCita();
+				regCita.setModal(true);
+				regCita.setVisible(true);
+			}
+		});
+		panel_2.setBackground(new Color(102, 0, 153));
+		panel_2.setBounds(0, 273, 251, 35);
+		menuPanelAdmin.add(panel_2);
+		
+		JLabel lblHacerCita_1 = new JLabel("Hacer Cita");
+		lblHacerCita_1.setForeground(Color.WHITE);
+		lblHacerCita_1.setFont(new Font("Verdana", Font.BOLD, 16));
+		panel_2.add(lblHacerCita_1);
+		
 		menuPanelMedico = new JPanel();
 		menuPanelMedico.setLayout(null);
 		menuPanelMedico.setBackground(new Color(153, 50, 204));
