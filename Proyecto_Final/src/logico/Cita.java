@@ -1,7 +1,7 @@
 package logico;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Cita implements Serializable{
 	
@@ -13,10 +13,10 @@ public class Cita implements Serializable{
 	protected String codigo;
 	protected Persona persona;
 	protected Medico medico;
-	protected LocalDateTime fecha;
+	protected LocalDate fecha;
 	protected boolean estado;
 	
-	public Cita(String codigo, Persona persona, Medico medico, LocalDateTime fecha) {
+	public Cita(String codigo, Persona persona, Medico medico, LocalDate fecha) {
 		super();
 		this.codigo = codigo;
 		this.persona = persona;
@@ -49,11 +49,11 @@ public class Cita implements Serializable{
 		this.medico = medico;
 	}
 
-	public LocalDateTime getFecha() {
+	public LocalDate getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(LocalDateTime fecha) {
+	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
 	}
 

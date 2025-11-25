@@ -182,7 +182,7 @@ public class ListarPersonas extends JDialog {
 		});
 		panel_3.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_3.setBackground(new Color(138, 43, 226));
-		panel_3.setBounds(22, 158, 135, 28);
+		panel_3.setBounds(22, 183, 135, 28);
 		menuPanel.add(panel_3);
 
 		JLabel lblVerUsuario = new JLabel("Ver usuario");
@@ -200,7 +200,7 @@ public class ListarPersonas extends JDialog {
 		});
 		panel_4.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_4.setBackground(new Color(138, 43, 226));
-		panel_4.setBounds(22, 237, 135, 28);
+		panel_4.setBounds(22, 309, 135, 28);
 		menuPanel.add(panel_4);
 
 		JLabel lblSeleccionar = new JLabel("Seleccionar");
@@ -211,36 +211,13 @@ public class ListarPersonas extends JDialog {
 		JPanel panel_5 = new JPanel();
 		panel_5.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_5.setBackground(new Color(138, 43, 226));
-		panel_5.setBounds(22, 303, 135, 28);
+		panel_5.setBounds(22, 132, 135, 28);
 		menuPanel.add(panel_5);
 
 		JLabel lblModificar = new JLabel("Modificar");
 		lblModificar.setForeground(Color.WHITE);
 		lblModificar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		panel_5.add(lblModificar);
-
-		JPanel panel_6 = new JPanel();
-		panel_6.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int indice = table.getSelectedRow();
-				if(indice >-1) {
-					Medico aux = (Medico)Clinica.getInstance().personaById(table.getValueAt(indice, 0).toString());
-					HorarioShow hs = new HorarioShow(aux.getHorario());
-					hs.setModal(true);
-					hs.setVisible(true);
-				}
-			}
-		});
-		panel_6.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_6.setBackground(new Color(138, 43, 226));
-		panel_6.setBounds(22, 373, 135, 28);
-		menuPanel.add(panel_6);
-
-		JLabel lblVerHorario = new JLabel("Ver horario");
-		lblVerHorario.setForeground(Color.WHITE);
-		lblVerHorario.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_6.add(lblVerHorario);
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(181, 122, 796, 323);
@@ -290,11 +267,26 @@ public class ListarPersonas extends JDialog {
 		lblBuscar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		panel_1.add(lblBuscar);
 
-		actualizarTable();
+		actualizarTableMedicos();
+		
+		if(user.getUser().getTipo().equals("Medico"))
+			cargarListaPacientes();
 	}
 
 
-	private void actualizarTable() {
+	private void actualizarTableMedicos() {
+		Clinica cl = Clinica.getInstance();
+		model.setRowCount(0);
+
+		for(Persona p: cl.getPersonas()) {
+			if(p instanceof Medico) {
+				Object[] fila = {p.getCodigo(), p.getNombres(), p.getApellidos(), p.getCedula(), p.getEdad(), p.getGenero(), p.getTelefono()};
+				model.addRow(fila);
+			}
+		}
+	}
+	
+	private void actualizarTablePacientes() {
 		Clinica cl = Clinica.getInstance();
 		model.setRowCount(0);
 
@@ -310,5 +302,10 @@ public class ListarPersonas extends JDialog {
 		if(table.getSelectedRow()>-1) 
 			return Clinica.getInstance().personaById(table.getValueAt(table.getSelectedRow(), 0).toString());
 		else return null;
+	}
+	
+	private void cargarListaPacientes() {
+		tituloLabel.setText("Lista de pacientes");
+		actualizarTablePacientes();
 	}
 }

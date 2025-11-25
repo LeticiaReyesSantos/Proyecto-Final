@@ -1,6 +1,7 @@
 package logico;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 import java.util.ArrayList;
 
 public class Consulta extends Cita {
@@ -15,7 +16,7 @@ public class Consulta extends Cita {
 	private Diagnostico diagonistco;
 	private ArrayList<Vacuna> vacunas;
 
-	public Consulta(String codigo, Persona persona, Medico medico, LocalDateTime fecha, Double precio,
+	public Consulta(String codigo, Persona persona, Medico medico, LocalDate fecha, Double precio,
 			Paciente paciente, boolean visibilidad, Diagnostico diagonistco) {
 		super(codigo, persona, medico, fecha);
 		this.precio = precio;

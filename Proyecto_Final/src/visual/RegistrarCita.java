@@ -2,17 +2,18 @@ package visual;
 
 import java.awt.BorderLayout;
 
+
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
+import java.time.ZoneId;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
@@ -22,9 +23,6 @@ import logico.Medico;
 import logico.Persona;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.JComboBox;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import com.toedter.calendar.JDateChooser;
 
 public class RegistrarCita extends JDialog {
@@ -45,7 +43,7 @@ public class RegistrarCita extends JDialog {
 	private JPanel buscarPanel;
 	private JLabel mensajeLabel;
 	private JPanel agendarPanel;
-	private JComboBox<Object> horaBox;
+	private JDateChooser dateChooser;
 
 	/**
 	 * Launch the application.
@@ -192,6 +190,7 @@ public class RegistrarCita extends JDialog {
 				medico = (Medico)listPerson.objectoSeleccionado();
 
 				if(medico != null) {
+					medicoField.setText(medico.getNombres());
 				}
 
 			}
@@ -206,23 +205,13 @@ public class RegistrarCita extends JDialog {
 		label_2.setFont(new Font("Verdana", Font.PLAIN, 14));
 		buscarMedicoPanel.add(label_2);
 
-		JLabel lblHoraDeCita = new JLabel("Hora de entrada");
-		lblHoraDeCita.setFont(new Font("Verdana", Font.BOLD, 18));
-		lblHoraDeCita.setBounds(596, 111, 164, 16);
-		generalPanel.add(lblHoraDeCita);
-
 		JLabel lblHoraEstimadaDe = new JLabel("Fecha");
 		lblHoraEstimadaDe.setFont(new Font("Verdana", Font.BOLD, 18));
 		lblHoraEstimadaDe.setBounds(404, 111, 103, 16);
 		generalPanel.add(lblHoraEstimadaDe);
-
-		horaBox = new JComboBox<Object>();
-		horaBox.setEnabled(false);
-		horaBox.setBounds(596, 149, 164, 22);
-		generalPanel.add(horaBox);
 		
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(401, 146, 152, 22);
+		dateChooser = new JDateChooser();
+		dateChooser.setBounds(404, 146, 152, 22);
 		generalPanel.add(dateChooser);
 
 		buscarPanel = new JPanel();
@@ -262,8 +251,15 @@ public class RegistrarCita extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if(validarCampos()) {
-					LocalTime hora = (LocalTime)horaBox.getSelectedItem();
-					Clinica.getInstance().hacerCita(cedulaField.getText(), nombreField.getText(), apellidoField.getText(), medico, null);
+					LocalDate fecha = dateToLocalDate();
+					
+					if(Clinica.getInstance().hacerCita(cedulaField.getText(), nombreField.getText(), apellidoField.getText(), telefonoField.getText(), medico, fecha)) {
+						JOptionPane.showMessageDialog(null, "Se ha guardado la cita con exito");
+					}else {
+						JOptionPane.showMessageDialog(null, "Ha surgido un error al guardar la cita");
+					}
+				}else {
+					JOptionPane.showMessageDialog(null, "Aun hay campos por rellenar");
 				}
 
 			}
@@ -307,11 +303,6 @@ public class RegistrarCita extends JDialog {
 
 	}
 
-	private void registrarNuevaPersona() {
-		paciente = new Persona("NE", cedulaField.getText(), nombreField.getText(), apellidoField.getText(), 
-				LocalDate.now(), 'N', telefonoField.getText(), "NE", "NE", null);
-	}
-
 	private void habilitarEdicionDeCampos() {
 		nombreField.setEnabled(true);
 		apellidoField.setEnabled(true);
@@ -326,16 +317,12 @@ public class RegistrarCita extends JDialog {
 
 	private boolean validarCampos() {
 		return !nombreField.getText().isEmpty() && !apellidoField.getText().isEmpty() && !telefonoField.getText().isEmpty() &&
-				!cedulaField.getText().isEmpty() && !medicoField.getText().isEmpty();
+				!cedulaField.getText().isEmpty() && !medicoField.getText().isEmpty() && dateChooser.getDate() != null;
+	}
+	
+	private LocalDate dateToLocalDate() {
+		return dateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 
-
-	private void cargarHoras() {
-		horaBox.removeAll();
-		if(medico!= null) {
-			ArrayList<LocalTime> horas = medico.getHorasDisponibles(null);
-			for(LocalTime h: horas)
-				horaBox.addItem(h);
-		}
-	}
 }
+

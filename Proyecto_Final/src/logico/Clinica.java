@@ -167,18 +167,18 @@ public class Clinica implements Serializable {
 	}
 
 	//Busca los medicos disponibles para la fecha solicitada
-	public ArrayList<Medico> disponible(String especialidad ,LocalDateTime fecha) {
+	public ArrayList<Medico> disponible(String especialidad ,LocalDate fecha) {
 		ArrayList<Medico> meddisp = new ArrayList<>();
 		ArrayList<Medico> MedEsp = medicosByEspecialidad(especialidad);
 		for (Medico med : MedEsp) {
-			if(med.disponibilidadCita(fecha)) {
+			if(med.isPosible(fecha)) {
 				meddisp.add(med);
 			}
 		}
 		return meddisp;
 	}
 
-	public boolean hacerCita (String cedula, String nombre, String apellido,Medico med,LocalDateTime fecha) {
+	public boolean hacerCita (String cedula, String nombre, String apellido, String telefono, Medico med, LocalDate fecha) {
 		boolean realizado = false;
 		Persona aux = buscarPacienteByCedula(cedula);
 		if(aux != null) {
@@ -188,10 +188,11 @@ public class Clinica implements Serializable {
 			aux.addHistorial(cita);
 			realizado = true;
 		}else if(aux == null){
-			aux = new Persona("", cedula, nombre, apellido, null, ' ', "", "", "", null);
+			aux = new Persona("", cedula, nombre, apellido, LocalDate.now(), ' ', telefono, "", "", null);
 			Cita cita = new Cita("Ci-"+genCita, aux, med , fecha);
 			addCita(cita); 
 			med.addHistorial(cita);
+			aux.addHistorial(cita);
 			realizado = true;
 		}
 		return realizado;
@@ -314,7 +315,7 @@ public class Clinica implements Serializable {
 	public ArrayList<Cita> dispCitaByFecha(LocalDate fecha){
 		ArrayList<Cita> disponibles = new ArrayList<>();
 		for (Cita cita : citas) {
-			LocalDate date = cita.getFecha().toLocalDate();
+			LocalDate date = cita.getFecha();
 			if(date.equals(fecha) && cita.isEstado()) {
 				disponibles.add(cita);
 			}
@@ -453,19 +454,7 @@ public class Clinica implements Serializable {
 	return valido;
 	}
 	
-	public String genAutoPassword() {
-		
-	    String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	    StringBuilder pass = new StringBuilder();
 
-	    for(int i = 0; i < 8; i++) {
-	        int rnd = (int)(Math.random() * chars.length());
-	        pass.append(chars.charAt(rnd));
-	    }
-
-	    return pass.toString();
-
-	}
 	
 	public void save() {
 		ObjectOutputStream objeto;

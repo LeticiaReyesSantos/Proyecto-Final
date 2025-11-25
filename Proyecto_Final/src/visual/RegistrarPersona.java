@@ -3,6 +3,7 @@ package visual;
 import java.awt.BorderLayout;
 
 
+
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -17,6 +18,8 @@ import java.awt.Font;
 
 
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -61,12 +64,19 @@ public class RegistrarPersona extends JDialog {
 	private int y2;
 	private Calendar calendario = Calendar.getInstance();
 	private JTextField especialidadField;
-	private JPanel showHorarioPanel;
 	private JDateChooser dateChooser;
 
 	private User user = Clinica.getLoginUser().getUser();
 	Horario horario;
 	private JSpinner maxCitasSpinner;
+	private JPanel aceptarPanel;
+	private JRadioButton medicoRadio;
+	private JRadioButton adminRadio;
+	private JLabel lblDatosDelMedico;
+	private JPanel medicoPanel;
+	private JLabel lblCanitdadMaximasDe;
+	private JLabel lblNewLabel_3;
+	private JSeparator separator_6;
 
 	/**
 	 * Launch the application.
@@ -270,14 +280,33 @@ public class RegistrarPersona extends JDialog {
 		lblRango.setBounds(12, 277, 79, 22);
 		generalPanel.add(lblRango);
 		
-		JRadioButton adminRadio = new JRadioButton("Administrador");
+		adminRadio = new JRadioButton("Administrador");
+		adminRadio.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(adminRadio.isSelected()) {
+					adminRadio.setSelected(true);
+					medicoRadio.setSelected(false);
+					deshabilitarMedicoPanel();
+				}
+			}
+		});
 		adminRadio.setForeground(Color.WHITE);
 		adminRadio.setFont(new Font("Verdana", Font.PLAIN, 14));
 		adminRadio.setBackground(new Color(123, 104, 238));
 		adminRadio.setBounds(202, 276, 127, 25);
 		generalPanel.add(adminRadio);
 		
-		JRadioButton medicoRadio = new JRadioButton("Medico");
+		medicoRadio = new JRadioButton("Medico");
+		medicoRadio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(medicoRadio.isSelected()) {
+					adminRadio.setSelected(false);
+					medicoRadio.setSelected(true);
+					habilitarMedicoPanel();
+				}
+			}
+		});
 		medicoRadio.setForeground(Color.WHITE);
 		medicoRadio.setSelected(true);
 		medicoRadio.setFont(new Font("Verdana", Font.PLAIN, 14));
@@ -339,111 +368,47 @@ public class RegistrarPersona extends JDialog {
 		lblNewLabel.setBounds(291, 38, 278, 25);
 		fondo.add(lblNewLabel);
 
-		JPanel medicoPanel = new JPanel();
+		medicoPanel = new JPanel();
 		medicoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		medicoPanel.setBackground(new Color(240, 248, 255));
 		medicoPanel.setBounds(53, 470, 746, 140);
 		fondo.add(medicoPanel);
 		medicoPanel.setLayout(null);
-
-		JPanel horarioPanel = new JPanel();
-		horarioPanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				HorarioChooser horarioChooser = new HorarioChooser();
-				horarioChooser.setModal(true);
-				horarioChooser.setVisible(true);
-				horario = horarioChooser.getHorario();
-
-
-
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				horarioPanel.setBackground(new Color(102, 0, 204));
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e) {
-				horarioPanel.setBackground(new Color(138, 43, 226));
-			}
-		});
-		horarioPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		horarioPanel.setBackground(new Color(138, 43, 226));
-		horarioPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		horarioPanel.setBounds(557, 23, 147, 28);
-		medicoPanel.add(horarioPanel);
-
-		JLabel lblNewLabel_3 = new JLabel("Seleccionar horario");
-		lblNewLabel_3.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_3.setForeground(Color.WHITE);
-		horarioPanel.add(lblNewLabel_3);
-
-		maxCitasSpinner = new JSpinner();
+		
+				separator_6 = new JSeparator();
+				separator_6.setForeground(new Color(72, 61, 139));
+				separator_6.setBackground(new Color(72, 61, 139));
+				separator_6.setBounds(553, 69, 181, 2);
+				medicoPanel.add(separator_6);
+		
+		maxCitasSpinner = new JSpinner(new SpinnerNumberModel(5, 5, 30, 1));
 		maxCitasSpinner.setBounds(162, 48, 118, 22);
 		medicoPanel.add(maxCitasSpinner);
 
-		JLabel lblCanitdadMaximasDe = new JLabel("Citas maximas");
+		lblCanitdadMaximasDe = new JLabel("Citas maximas");
 		lblCanitdadMaximasDe.setForeground(Color.BLACK);
 		lblCanitdadMaximasDe.setFont(new Font("Verdana", Font.BOLD, 14));
 		lblCanitdadMaximasDe.setBounds(32, 49, 118, 18);
 		medicoPanel.add(lblCanitdadMaximasDe);
 
-		JLabel lblNewLabel_4 = new JLabel("Especialidad");
-		lblNewLabel_4.setFont(new Font("Verdana", Font.BOLD, 14));
-		lblNewLabel_4.setBounds(32, 93, 118, 16);
-		medicoPanel.add(lblNewLabel_4);
+		lblNewLabel_3 = new JLabel("Especialidad");
+		lblNewLabel_3.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblNewLabel_3.setBounds(431, 50, 118, 16);
+		medicoPanel.add(lblNewLabel_3);
 
 		especialidadField = new JTextField();
 		especialidadField.setColumns(10);
 		especialidadField.setBorder(null);
-		especialidadField.setBounds(162, 83, 181, 22);
+		especialidadField.setBounds(553, 48, 181, 22);
 		medicoPanel.add(especialidadField);
 
-		JSeparator separator_6 = new JSeparator();
-		separator_6.setForeground(new Color(72, 61, 139));
-		separator_6.setBackground(new Color(72, 61, 139));
-		separator_6.setBounds(162, 106, 181, 2);
-		medicoPanel.add(separator_6);
-
-		showHorarioPanel = new JPanel();
-		showHorarioPanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(horario!= null && !horario.isEmpty()) {
-					HorarioShow hs = new HorarioShow(horario);
-					hs.setModal(true);
-					hs.setVisible(true);
-				}
-					
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				showHorarioPanel.setBackground(new Color(102, 0, 204));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				showHorarioPanel.setBackground(new Color(138, 43, 226));
-			}
-		});
-		showHorarioPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		showHorarioPanel.setBackground(new Color(138, 43, 226));
-		showHorarioPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		showHorarioPanel.setBounds(557, 81, 147, 28);
-		medicoPanel.add(showHorarioPanel);
-
-		JLabel lblVerHorario = new JLabel("Ver horario");
-		lblVerHorario.setForeground(Color.WHITE);
-		lblVerHorario.setFont(new Font("Verdana", Font.PLAIN, 14));
-		showHorarioPanel.add(lblVerHorario);
-
-		JLabel lblDatosDelMedico = new JLabel("Datos del Medico");
+		lblDatosDelMedico = new JLabel("Datos del Medico");
 		lblDatosDelMedico.setForeground(new Color(102, 0, 204));
 		lblDatosDelMedico.setFont(new Font("Verdana", Font.BOLD, 28));
-		lblDatosDelMedico.setBounds(291, 432, 278, 25);
+		lblDatosDelMedico.setBounds(291, 442, 278, 25);
 		fondo.add(lblDatosDelMedico);
 
-		JPanel aceptarPanel = new JPanel();
+		aceptarPanel = new JPanel();
 		aceptarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -466,22 +431,19 @@ public class RegistrarPersona extends JDialog {
 						if(!camposMedicoVacios()) {
 							String especialidad= especialidadField.getText();
 							int maxCitas = (int) maxCitasSpinner.getValue();
-							User usuario = new User("Medico", codigo, Clinica.getInstance().genAutoPassword());
+							User usuario = new User("Medico", codigo, codigo);
 
 							aux = new Medico(codigo, cedula, nombres, apellidos, 
 									fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario);
-							((Medico)aux).setHorario(horario);
+							
 							
 							
 							Clinica.getInstance().addPersona(aux);
 							
 							JOptionPane.showMessageDialog(null, "Se ha registrado con exito");
 							JOptionPane.showMessageDialog(null, "Usuario generado: "+usuario.getUserName()+" Contraseña: "+usuario.getPass());
-						}
-						
-					}
-					
-						
+						}	
+					}	
 				}
 			}
 			@Override
@@ -560,7 +522,7 @@ public class RegistrarPersona extends JDialog {
 	}
 
 	private boolean camposMedicoVacios() {
-		return especialidadField.getText().trim().isEmpty() || horario == null || horario.isEmpty();
+		return especialidadField.getText().trim().isEmpty();
 	}
 
 	private char genero() {
@@ -574,5 +536,30 @@ public class RegistrarPersona extends JDialog {
 
 	private LocalDate dateToLocalDate() {
 		return dateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	}
+	
+	private void habilitarMedicoPanel() {
+		lblDatosDelMedico.setForeground(new Color(102, 0, 204));
+		medicoPanel.setBackground(new Color(240, 248, 255));
+		medicoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		maxCitasSpinner.setValue(5);
+		maxCitasSpinner.setEnabled(true);
+		especialidadField.setEnabled(true);
+		especialidadField.setText("");
+		separator_6.setForeground(new Color(72, 61, 139));
+		separator_6.setBackground(new Color(72, 61, 139));
+		
+	}
+	
+	private void deshabilitarMedicoPanel() {
+		lblDatosDelMedico.setForeground(Color.GRAY);
+		medicoPanel.setBackground(Color.LIGHT_GRAY);
+		medicoPanel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		maxCitasSpinner.setValue(5);
+		maxCitasSpinner.setEnabled(false);
+		especialidadField.setEnabled(false);
+		especialidadField.setText("");
+		separator_6.setForeground(Color.BLACK);
+		separator_6.setBackground(Color.BLACK);	
 	}
 }

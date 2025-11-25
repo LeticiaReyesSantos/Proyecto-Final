@@ -24,7 +24,7 @@ public class RegistrarEnfermedad extends JDialog {
 	private JTextField txtNombre;
 	private JTextField txtSintomas;
 	private JTextField textField_1;
-	private JComboBox cbxTipo;
+	private JComboBox<String> cbxTipo;
 	
 	/**
 	 * Launch the application.
@@ -160,7 +160,7 @@ public class RegistrarEnfermedad extends JDialog {
 		separator_5.setBounds(318, 140, 181, 2);
 		Informacion.add(separator_5);
 		
-		cbxTipo = new JComboBox();
+		cbxTipo = new JComboBox<String>();
 		cbxTipo.setModel(new DefaultComboBoxModel<>(new String[] {"<<Seleccionar>>","Virus","Parasito","Bacteria"}));
 		cbxTipo.setBounds(318, 120, 181, 22);
 		Informacion.add(cbxTipo);
