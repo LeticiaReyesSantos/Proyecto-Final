@@ -305,7 +305,7 @@ public class RegistrarPersona extends JDialog {
 		});
 		barPanel.setLayout(null);
 		barPanel.setBackground(new Color(102, 0, 204));
-		barPanel.setBounds(0, 0, 854, 25);
+		barPanel.setBounds(0, 0, 844, 25);
 		fondo.add(barPanel);
 
 		JPanel cerrarPanel = new JPanel();
