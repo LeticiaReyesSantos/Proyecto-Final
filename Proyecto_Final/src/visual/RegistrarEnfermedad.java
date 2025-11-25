@@ -7,6 +7,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import logico.Clinica;
 import logico.Enfermedad;
 
 import java.awt.Color;
@@ -22,6 +23,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class RegistrarEnfermedad extends JDialog {
 
@@ -32,13 +35,15 @@ public class RegistrarEnfermedad extends JDialog {
 	private JTextField txtSintomas;
 	private JTextField txtTratamiento;
 	private JComboBox<String> cbxTipo;
+	private JRadioButton rdbtnSi;
+	private JRadioButton rdbtnNo;
 	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistrarEnfermedad dialog = new RegistrarEnfermedad();
+			RegistrarEnfermedad dialog = new RegistrarEnfermedad(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -49,7 +54,7 @@ public class RegistrarEnfermedad extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistrarEnfermedad() {
+	public RegistrarEnfermedad(Enfermedad enf) {
 		setUndecorated(true);
 		setBounds(100, 100, 590, 540);
 		getContentPane().setLayout(new BorderLayout());
@@ -97,7 +102,17 @@ public class RegistrarEnfermedad extends JDialog {
 			}
 		}
 		{
-			JLabel Titulo = new JLabel("Registrar Enfermedad");
+			
+			JLabel Titulo;
+			if(enf == null) {
+				Titulo = new JLabel("Registrar Enfermedad");
+				txtCodigo.setText("E-"+Clinica.getInstance().genEnfermedad);
+			}
+			else{
+				Titulo = new JLabel("Modificar Enfermedad");
+				cargar(enf);
+				txtNombre.setEnabled(false);
+			}
 			Titulo.setForeground(new Color(102, 0, 204));
 			Titulo.setFont(new Font("Verdana", Font.BOLD, 28));
 			Titulo.setBounds(118, 38, 350, 35);
@@ -188,7 +203,13 @@ public class RegistrarEnfermedad extends JDialog {
 		cbxTipo.setBounds(318, 120, 181, 22);
 		Informacion.add(cbxTipo);
 		
-		JRadioButton rdbtnSi = new JRadioButton("Si");
+		rdbtnSi = new JRadioButton("Si");
+		rdbtnSi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				rdbtnNo.setSelected(false);
+				rdbtnSi.setSelected(true);
+			}
+		});
 		rdbtnSi.setSelected(true);
 		rdbtnSi.setForeground(Color.WHITE);
 		rdbtnSi.setFont(new Font("Verdana", Font.PLAIN, 14));
@@ -196,40 +217,46 @@ public class RegistrarEnfermedad extends JDialog {
 		rdbtnSi.setBounds(131, 165, 50, 25);
 		Informacion.add(rdbtnSi);
 		
-		JRadioButton rdbtnNo = new JRadioButton("No");
+		rdbtnNo = new JRadioButton("No");
+		rdbtnNo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnNo.setSelected(true);
+				rdbtnSi.setSelected(false);
+			}
+		});
 		rdbtnNo.setForeground(Color.WHITE);
 		rdbtnNo.setFont(new Font("Verdana", Font.PLAIN, 14));
 		rdbtnNo.setBackground(new Color(123, 104, 238));
 		rdbtnNo.setBounds(192, 165, 50, 25);
 		Informacion.add(rdbtnNo);
 		
-		JPanel paneltratamiento = new JPanel();
-		paneltratamiento.setLayout(null);
-		paneltratamiento.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		paneltratamiento.setBackground(new Color(240, 248, 255));
-		paneltratamiento.setBounds(28, 311, 536, 156);
-		fondo.add(paneltratamiento);
+		JPanel panelTratamiento = new JPanel();
+		panelTratamiento.setLayout(null);
+		panelTratamiento.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panelTratamiento.setBackground(new Color(240, 248, 255));
+		panelTratamiento.setBounds(28, 311, 536, 156);
+		fondo.add(panelTratamiento);
 		
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setForeground(new Color(72, 61, 139));
 		separator_2.setBackground(new Color(72, 61, 139));
 		separator_2.setBounds(28, 140, 473, 2);
-		paneltratamiento.add(separator_2);
+		panelTratamiento.add(separator_2);
 		
 		JLabel lblTratamiento = new JLabel("Tratamiento:");
 		lblTratamiento.setFont(new Font("Verdana", Font.BOLD, 14));
 		lblTratamiento.setBounds(28, 13, 118, 16);
-		paneltratamiento.add(lblTratamiento);
+		panelTratamiento.add(lblTratamiento);
 		
 		txtTratamiento = new JTextField();
 		txtTratamiento.setColumns(10);
 		txtTratamiento.setBorder(null);
 		txtTratamiento.setBounds(28, 42, 473, 100);
-		paneltratamiento.add(txtTratamiento);
+		panelTratamiento.add(txtTratamiento);
 		
 		JLabel label_5 = new JLabel("");
 		label_5.setBounds(635, 46, 56, 16);
-		paneltratamiento.add(label_5);
+		panelTratamiento.add(label_5);
 		
 		JPanel Registrar = new JPanel();
 		Registrar.addMouseListener(new MouseAdapter() {
@@ -242,6 +269,7 @@ public class RegistrarEnfermedad extends JDialog {
 				else
 					controlada = false;
 				Enfermedad aux = new Enfermedad(txtCodigo.getText(),txtNombre.getText(), txtTratamiento.getText(), tipo , controlada);
+				Clinica.getInstance().addEnfermedad(aux);
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -287,5 +315,20 @@ public class RegistrarEnfermedad extends JDialog {
 		label_1.setForeground(Color.WHITE);
 		label_1.setFont(new Font("Verdana", Font.PLAIN, 14));
 		Cancelar.add(label_1);
+	}
+	
+	
+	public void cargar(Enfermedad enf) {
+		txtCodigo.setText(enf.getCodigo());
+		txtNombre.setText(enf.getNombre());
+		txtTratamiento.setText(enf.getTratamiento());
+		cbxTipo.setSelectedItem(enf.getTipo());
+		if(enf.isControlada()) {
+			rdbtnSi.setSelected(true);
+			rdbtnNo.setSelected(false);
+		}else{
+			rdbtnNo.setSelected(true);
+			rdbtnSi.setSelected(false);
+		}
 	}
 }

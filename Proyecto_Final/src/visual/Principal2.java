@@ -8,9 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import logico.Cita;
 import logico.Clinica;
-import logico.Medico;
 import logico.Persona;
 
 import java.awt.Color;
@@ -19,20 +17,16 @@ import java.awt.Dimension;
 
 import javax.swing.JLabel;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
 
-import javax.swing.JSeparator;
-import java.awt.event.MouseMotionAdapter;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
-import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+import java.awt.event.MouseMotionAdapter;
+
+import javax.swing.border.BevelBorder;
+
 
 
 
