@@ -57,7 +57,6 @@ public class Login extends JFrame {
 	private int y2;
 	private Image img;
 	private ImageIcon icon;
-	private JLabel imagenPrincipal;
 	private JLabel lblNewLabel_1;
 	private JPanel loginPanel;
 	private JLabel lblLogo;
@@ -80,6 +79,7 @@ public class Login extends JFrame {
 	private JSeparator separator2;
 	private JLabel campoObligatorio;
 	private JLabel campoObligatorio2;
+	private JLabel imagenPrincipal;
 
 	/**
 	 * Launch the application.
@@ -90,7 +90,7 @@ public class Login extends JFrame {
 				FileOutputStream clinicaEscritura;
 				ObjectOutputStream clinicaWritter;
 
-				
+
 				if(!Clinica.load()) {
 					try {
 						clinicaEscritura = new  FileOutputStream("clinica.dat");
@@ -101,7 +101,7 @@ public class Login extends JFrame {
 						clinicaWritter.writeObject(Clinica.getInstance());
 						clinicaEscritura.close();
 						clinicaWritter.close();
-						
+
 					}catch (FileNotFoundException e1) {
 					}catch (IOException e1) {
 						// TODO: handle exception
@@ -139,6 +139,7 @@ public class Login extends JFrame {
 		fondo.setLayout(null);
 
 		barPanel = new JPanel();
+		//barPanel.setBackground(new Color(25, 25, 112));
 		barPanel.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
@@ -157,21 +158,15 @@ public class Login extends JFrame {
 				y1 = e.getY();
 			}
 		});
-
-		lblLogo = new JLabel("logo");
-		lblLogo.setForeground(Color.WHITE);
-		lblLogo.setFont(new Font("Verdana", Font.BOLD, 13));
-		lblLogo.setBounds(166, 76, 70, 16);
-		fondo.add(lblLogo);
-
-		lblNewLabel_1 = new JLabel("BIENVENIDO");
-		lblNewLabel_1.setForeground(new Color(255, 255, 255));
-		lblNewLabel_1.setFont(new Font("Verdana", Font.PLAIN, 48));
-		lblNewLabel_1.setBounds(43, 177, 329, 82);
-		fondo.add(lblNewLabel_1);
+		
+				lblNewLabel_1 = new JLabel("BIENVENIDO");
+				lblNewLabel_1.setBounds(53, 261, 329, 82);
+				fondo.add(lblNewLabel_1);
+				lblNewLabel_1.setForeground(new Color(45, 51, 107));
+				lblNewLabel_1.setFont(new Font("Verdana", Font.PLAIN, 48));
 		barPanel.setBounds(0, 0, 923, 25);
 		fondo.add(barPanel);
-		barPanel.setBackground(new Color(102, 0, 204));
+		barPanel.setBackground(new Color(45, 51, 107));
 		barPanel.setLayout(null);
 
 		cerrarPanel = new JPanel();
@@ -188,24 +183,18 @@ public class Login extends JFrame {
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				cerrarPanel.setBackground(new Color(102, 0, 204));
+				cerrarPanel.setBackground(new Color(45, 51, 107));
 			}
 		});
-		cerrarPanel.setBackground(new Color(102, 0, 204));
+		cerrarPanel.setBackground(new Color(45, 51, 107));
 		cerrarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		cerrarPanel.setForeground(Color.BLACK);
 
 		JLabel lblNewLabel = new JLabel("X");
 		cerrarPanel.add(lblNewLabel);
 
-		imagenPrincipal = new JLabel("");
 
-		imagenPrincipal.setBounds(0, 13, 402, 505);
 		icon = new ImageIcon(Login.class.getResource("/imagenes/principal.jpg"));
-		img = icon.getImage().getScaledInstance(imagenPrincipal.getWidth(), imagenPrincipal.getHeight(), Image.SCALE_SMOOTH);
-		fondo.add(imagenPrincipal);
-
-		imagenPrincipal.setIcon(new ImageIcon(Login.class.getResource("/imagenes/principal.jpg")));
 
 		loginPanel = new JPanel();
 		loginPanel.setBackground(new Color(240, 248, 255));
@@ -213,14 +202,14 @@ public class Login extends JFrame {
 		loginPanel.setBounds(444, 103, 467, 402);
 		fondo.add(loginPanel);
 		loginPanel.setLayout(null);
-		
+
 		campoObligatorio2 = new JLabel("*");
 		campoObligatorio2.setVisible(false);
 		campoObligatorio2.setFont(new Font("Tahoma", Font.BOLD, 13));
 		campoObligatorio2.setBounds(389, 230, 55, 36);
 		loginPanel.add(campoObligatorio2);
 		campoObligatorio2.setForeground(Color.RED);
-		
+
 		campoObligatorio = new JLabel("*");
 		campoObligatorio.setFont(new Font("Tahoma", Font.BOLD, 13));
 		campoObligatorio.setBounds(384, 100, 39, 37);
@@ -265,8 +254,8 @@ public class Login extends JFrame {
 					}
 
 				}
-				
-				
+
+
 				if(e.getKeyCode() == KeyEvent.VK_DOWN) {
 					passwordField.requestFocusInWindow();
 				}
@@ -283,7 +272,7 @@ public class Login extends JFrame {
 					separator1.setBackground(Color.black);
 					campoObligatorio.setVisible(false);
 				}
-				
+
 			}
 		});
 		usuarioField.setForeground(Color.LIGHT_GRAY);
@@ -344,8 +333,8 @@ public class Login extends JFrame {
 						borradoContra = true;
 					}
 				}
-				
-				
+
+
 				if(e.getKeyCode() == KeyEvent.VK_UP) {
 					usuarioField.requestFocusInWindow();
 				}
@@ -383,7 +372,7 @@ public class Login extends JFrame {
 
 				}else
 					JOptionPane.showMessageDialog(null, "Usuario no encontrado");
-				
+
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -441,11 +430,27 @@ public class Login extends JFrame {
 		lblUsuario.setBounds(179, 59, 116, 28);
 		loginPanel.add(lblUsuario);
 
+		lblLogo = new JLabel("logo");
+		lblLogo.setBounds(26, 24, 70, 16);
+		loginPanel.add(lblLogo);
+		lblLogo.setForeground(Color.WHITE);
+		lblLogo.setFont(new Font("Verdana", Font.BOLD, 13));
+
 		lblNewLabel_5 = new JLabel("Iniciar Sesion");
 		lblNewLabel_5.setForeground(new Color(138, 43, 226));
 		lblNewLabel_5.setFont(new Font("Verdana", Font.BOLD, 38));
-		lblNewLabel_5.setBounds(553, 52, 294, 44);
+		lblNewLabel_5.setBounds(533, 52, 294, 44);
 		fondo.add(lblNewLabel_5);
+
+		imagenPrincipal = new JLabel("");
+		imagenPrincipal.setBounds(12, 38, 399, 467);
+		imagenPrincipal.setIcon(new ImageIcon(Login.class.getResource("/imagenes/Princi.png")));
+		icon = new ImageIcon(Login.class.getResource("/imagenes/Princi.png"));
+		img = icon.getImage().getScaledInstance(imagenPrincipal.getWidth(), imagenPrincipal.getHeight(), Image.SCALE_SMOOTH);
+		imagenPrincipal.setIcon(new ImageIcon(img));
+
+		fondo.add(imagenPrincipal);
+		
 
 	}
 }
