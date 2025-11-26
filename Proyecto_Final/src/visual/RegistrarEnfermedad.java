@@ -65,7 +65,7 @@ public class RegistrarEnfermedad extends JDialog {
 		{
 			JPanel barra = new JPanel();
 			barra.setLayout(null);
-			barra.setBackground(new Color(102, 0, 204));
+			barra.setBackground(new Color(45, 51, 107));
 			barra.setBounds(0, 0, 590, 25);
 			fondo.add(barra);
 			{
@@ -87,7 +87,7 @@ public class RegistrarEnfermedad extends JDialog {
 				});
 				BotonX.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 				BotonX.setForeground(Color.BLACK);
-				BotonX.setBackground(new Color(102, 0, 204));
+				BotonX.setBackground(new Color(45, 51, 107));
 				BotonX.setBounds(551, 0, 39, 26);
 				barra.add(BotonX);
 				{
@@ -98,7 +98,7 @@ public class RegistrarEnfermedad extends JDialog {
 		}
 		{
 			JLabel Titulo = new JLabel("Registrar Enfermedad");
-			Titulo.setForeground(new Color(102, 0, 204));
+			Titulo.setForeground(new Color(120, 134, 199));
 			Titulo.setFont(new Font("Verdana", Font.BOLD, 28));
 			Titulo.setBounds(118, 38, 350, 35);
 			fondo.add(Titulo);
@@ -107,23 +107,24 @@ public class RegistrarEnfermedad extends JDialog {
 		JPanel Informacion = new JPanel();
 		Informacion.setLayout(null);
 		Informacion.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		Informacion.setBackground(new Color(240, 248, 255));
+		Informacion.setBackground(new Color(120, 134, 199));
 		Informacion.setBounds(28, 86, 536, 212);
 		fondo.add(Informacion);
 		
 		JSeparator separator = new JSeparator();
-		separator.setForeground(new Color(72, 61, 139));
-		separator.setBackground(new Color(72, 61, 139));
+		separator.setForeground(new Color(45, 51, 107));
+		separator.setBackground(new Color(45, 51, 107));
 		separator.setBounds(28, 140, 181, 2);
 		Informacion.add(separator);
 		
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setForeground(new Color(72, 61, 139));
-		separator_1.setBackground(new Color(72, 61, 139));
+		separator_1.setForeground(new Color(45, 51, 107));
+		separator_1.setBackground(new Color(45, 51, 107));
 		separator_1.setBounds(28, 66, 181, 2);
 		Informacion.add(separator_1);
 		
 		JLabel lblCodigo = new JLabel("Codigo:");
+		lblCodigo.setForeground(new Color(255, 255, 255));
 		lblCodigo.setFont(new Font("Verdana", Font.BOLD, 14));
 		lblCodigo.setBounds(28, 13, 63, 22);
 		Informacion.add(lblCodigo);
@@ -136,21 +137,25 @@ public class RegistrarEnfermedad extends JDialog {
 		Informacion.add(txtCodigo);
 		
 		JLabel lblNombre = new JLabel("Nombre:");
+		lblNombre.setForeground(new Color(255, 255, 255));
 		lblNombre.setFont(new Font("Verdana", Font.BOLD, 14));
 		lblNombre.setBounds(28, 91, 79, 16);
 		Informacion.add(lblNombre);
 		
 		JLabel lblCon = new JLabel("Controlada:");
+		lblCon.setForeground(new Color(255, 255, 255));
 		lblCon.setFont(new Font("Verdana", Font.BOLD, 14));
 		lblCon.setBounds(28, 168, 104, 16);
 		Informacion.add(lblCon);
 		
 		JLabel lblSintomas_1 = new JLabel("Sintomas:");
+		lblSintomas_1.setForeground(new Color(255, 255, 255));
 		lblSintomas_1.setFont(new Font("Verdana", Font.BOLD, 14));
 		lblSintomas_1.setBounds(318, 13, 79, 16);
 		Informacion.add(lblSintomas_1);
 		
 		JLabel lblSintomas = new JLabel("Tipo:");
+		lblSintomas.setForeground(new Color(255, 255, 255));
 		lblSintomas.setFont(new Font("Verdana", Font.BOLD, 14));
 		lblSintomas.setBounds(318, 91, 79, 16);
 		Informacion.add(lblSintomas);
@@ -172,14 +177,14 @@ public class RegistrarEnfermedad extends JDialog {
 		Informacion.add(label_8);
 		
 		JSeparator separator_3 = new JSeparator();
-		separator_3.setForeground(new Color(72, 61, 139));
-		separator_3.setBackground(new Color(72, 61, 139));
+		separator_3.setForeground(new Color(45, 51, 107));
+		separator_3.setBackground(new Color(45, 51, 107));
 		separator_3.setBounds(318, 66, 181, 2);
 		Informacion.add(separator_3);
 		
 		JSeparator separator_5 = new JSeparator();
-		separator_5.setForeground(new Color(72, 61, 139));
-		separator_5.setBackground(new Color(72, 61, 139));
+		separator_5.setForeground(new Color(45, 51, 107));
+		separator_5.setBackground(new Color(45, 51, 107));
 		separator_5.setBounds(318, 140, 181, 2);
 		Informacion.add(separator_5);
 		
@@ -192,31 +197,32 @@ public class RegistrarEnfermedad extends JDialog {
 		rdbtnSi.setSelected(true);
 		rdbtnSi.setForeground(Color.WHITE);
 		rdbtnSi.setFont(new Font("Verdana", Font.PLAIN, 14));
-		rdbtnSi.setBackground(new Color(123, 104, 238));
+		rdbtnSi.setBackground(new Color(169, 181, 223));
 		rdbtnSi.setBounds(131, 165, 50, 25);
 		Informacion.add(rdbtnSi);
 		
 		JRadioButton rdbtnNo = new JRadioButton("No");
 		rdbtnNo.setForeground(Color.WHITE);
 		rdbtnNo.setFont(new Font("Verdana", Font.PLAIN, 14));
-		rdbtnNo.setBackground(new Color(123, 104, 238));
-		rdbtnNo.setBounds(192, 165, 50, 25);
+		rdbtnNo.setBackground(new Color(169, 181, 223));
+		rdbtnNo.setBounds(192, 165, 63, 25);
 		Informacion.add(rdbtnNo);
 		
 		JPanel paneltratamiento = new JPanel();
 		paneltratamiento.setLayout(null);
 		paneltratamiento.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		paneltratamiento.setBackground(new Color(240, 248, 255));
+		paneltratamiento.setBackground(new Color(120, 134, 199));
 		paneltratamiento.setBounds(28, 311, 536, 156);
 		fondo.add(paneltratamiento);
 		
 		JSeparator separator_2 = new JSeparator();
-		separator_2.setForeground(new Color(72, 61, 139));
-		separator_2.setBackground(new Color(72, 61, 139));
+		separator_2.setForeground(new Color(45, 51, 107));
+		separator_2.setBackground(new Color(45, 51, 107));
 		separator_2.setBounds(28, 140, 473, 2);
 		paneltratamiento.add(separator_2);
 		
 		JLabel lblTratamiento = new JLabel("Tratamiento:");
+		lblTratamiento.setForeground(new Color(255, 255, 255));
 		lblTratamiento.setFont(new Font("Verdana", Font.BOLD, 14));
 		lblTratamiento.setBounds(28, 13, 118, 16);
 		paneltratamiento.add(lblTratamiento);
@@ -254,7 +260,7 @@ public class RegistrarEnfermedad extends JDialog {
 			
 		});
 		Registrar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		Registrar.setBackground(new Color(138, 43, 226));
+		Registrar.setBackground(new Color(169, 181, 223));
 		Registrar.setBounds(348, 488, 85, 28);
 		fondo.add(Registrar);
 		
@@ -279,7 +285,7 @@ public class RegistrarEnfermedad extends JDialog {
 			}
 		});
 		Cancelar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		Cancelar.setBackground(new Color(138, 43, 226));
+		Cancelar.setBackground(new Color(169, 181, 223));
 		Cancelar.setBounds(463, 488, 85, 28);
 		fondo.add(Cancelar);
 		

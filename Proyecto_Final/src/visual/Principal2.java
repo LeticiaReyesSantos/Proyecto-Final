@@ -213,7 +213,7 @@ public class Principal2 extends JFrame {
 			}
 		});
 		panel_9.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_9.setBackground(new Color(138, 43, 226));
+		panel_9.setBackground(new Color(169, 181, 223));
 
 		JLabel lblCerrarSesion = new JLabel("Cambiar de usuario");
 		lblCerrarSesion.setForeground(Color.WHITE);
@@ -231,7 +231,7 @@ public class Principal2 extends JFrame {
 			}
 		});
 		panel_10.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_10.setBackground(new Color(138, 43, 226));
+		panel_10.setBackground(new Color(169, 181, 223));
 
 		JLabel lblSalir = new JLabel("Salir");
 		lblSalir.setForeground(Color.WHITE);
@@ -258,7 +258,7 @@ public class Principal2 extends JFrame {
 			}
 		});
 		registrarMedicoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		registrarMedicoPanel.setBackground(new Color(138, 43, 226));
+		registrarMedicoPanel.setBackground(new Color(169, 181, 223));
 
 		JLabel label_3 = new JLabel("Registrar");
 		label_3.setForeground(Color.WHITE);
@@ -285,7 +285,7 @@ public class Principal2 extends JFrame {
 			}
 		});
 		listarMedicoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		listarMedicoPanel.setBackground(new Color(138, 43, 226));
+		listarMedicoPanel.setBackground(new Color(169, 181, 223));
 
 		JLabel lblListaDeMedicos = new JLabel("Lista de medicos");
 		lblListaDeMedicos.setForeground(Color.WHITE);
@@ -312,7 +312,7 @@ public class Principal2 extends JFrame {
 			}
 		});
 		agendarCitaPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		agendarCitaPanel.setBackground(new Color(138, 43, 226));
+		agendarCitaPanel.setBackground(new Color(169, 181, 223));
 		agendarCitaPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
 		JLabel lblAgendarCita = new JLabel("Agendar Cita");

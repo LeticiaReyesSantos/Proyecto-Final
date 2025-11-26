@@ -24,6 +24,7 @@ import logico.Persona;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import com.toedter.calendar.JDateChooser;
+import javax.swing.JSeparator;
 
 public class RegistrarCita extends JDialog {
 
@@ -70,7 +71,7 @@ public class RegistrarCita extends JDialog {
 		contentPanel.setLayout(null);
 
 		JPanel fondo = new JPanel();
-		fondo.setBackground(new Color(248, 248, 255));
+		fondo.setBackground(new Color(255, 255, 255));
 		fondo.setBounds(0, 0, 889, 500);
 		contentPanel.add(fondo);
 		fondo.setLayout(null);
@@ -79,7 +80,7 @@ public class RegistrarCita extends JDialog {
 		barPanel.setBounds(-96, 0, 985, 25);
 		fondo.add(barPanel);
 		barPanel.setLayout(null);
-		barPanel.setBackground(new Color(102, 0, 204));
+		barPanel.setBackground(new Color(45, 51, 107));
 
 		JPanel cerrarPanel = new JPanel();
 		cerrarPanel.addMouseListener(new MouseAdapter() {
@@ -89,7 +90,7 @@ public class RegistrarCita extends JDialog {
 			}
 		});
 		cerrarPanel.setForeground(Color.BLACK);
-		cerrarPanel.setBackground(new Color(102, 0, 204));
+		cerrarPanel.setBackground(new Color(45, 51, 107));
 		cerrarPanel.setBounds(946, 0, 39, 26);
 		barPanel.add(cerrarPanel);
 
@@ -124,7 +125,7 @@ public class RegistrarCita extends JDialog {
 		cedulaField.setColumns(10);
 
 		JLabel lblCrearCitas = new JLabel("REALIZAR CITAS");
-		lblCrearCitas.setForeground(new Color(138, 43, 226));
+		lblCrearCitas.setForeground(new Color(120, 134, 199));
 		lblCrearCitas.setFont(new Font("Verdana", Font.BOLD, 28));
 		lblCrearCitas.setBounds(308, 51, 282, 35);
 		fondo.add(lblCrearCitas);
@@ -132,16 +133,18 @@ public class RegistrarCita extends JDialog {
 		JPanel generalPanel = new JPanel();
 		generalPanel.setLayout(null);
 		generalPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		generalPanel.setBackground(new Color(240, 248, 255));
+		generalPanel.setBackground(new Color(120, 134, 199));
 		generalPanel.setBounds(55, 176, 772, 244);
 		fondo.add(generalPanel);
 
 		JLabel lblNombre = new JLabel("Nombre");
+		lblNombre.setForeground(new Color(255, 255, 255));
 		lblNombre.setFont(new Font("Verdana", Font.PLAIN, 18));
 		lblNombre.setBounds(12, 13, 80, 16);
 		generalPanel.add(lblNombre);
 
 		JLabel lblApellido = new JLabel("Apellido");
+		lblApellido.setForeground(new Color(255, 255, 255));
 		lblApellido.setFont(new Font("Verdana", Font.PLAIN, 18));
 		lblApellido.setBounds(12, 77, 93, 22);
 		generalPanel.add(lblApellido);
@@ -149,7 +152,7 @@ public class RegistrarCita extends JDialog {
 		nombreField = new JTextField();
 		nombreField.setEnabled(false);
 		nombreField.setColumns(10);
-		nombreField.setBounds(12, 42, 190, 22);
+		nombreField.setBounds(12, 45, 190, 22);
 		generalPanel.add(nombreField);
 
 		apellidoField = new JTextField();
@@ -165,17 +168,19 @@ public class RegistrarCita extends JDialog {
 		generalPanel.add(telefonoField);
 
 		JLabel lblTelefono = new JLabel("Telefono");
+		lblTelefono.setForeground(new Color(255, 255, 255));
 		lblTelefono.setFont(new Font("Verdana", Font.PLAIN, 18));
 		lblTelefono.setBounds(12, 146, 93, 22);
 		generalPanel.add(lblTelefono);
 
 		JLabel lblMedico = new JLabel("Medico");
+		lblMedico.setForeground(new Color(255, 255, 255));
 		lblMedico.setBounds(404, 13, 80, 16);
 		generalPanel.add(lblMedico);
 		lblMedico.setFont(new Font("Verdana", Font.BOLD, 18));
 
 		medicoField = new JTextField();
-		medicoField.setBounds(404, 52, 190, 22);
+		medicoField.setBounds(404, 45, 190, 22);
 		generalPanel.add(medicoField);
 		medicoField.setEnabled(false);
 		medicoField.setColumns(10);
@@ -195,10 +200,10 @@ public class RegistrarCita extends JDialog {
 
 			}
 		});
-		buscarMedicoPanel.setBounds(628, 46, 114, 28);
+		buscarMedicoPanel.setBounds(628, 39, 114, 28);
 		generalPanel.add(buscarMedicoPanel);
 		buscarMedicoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		buscarMedicoPanel.setBackground(new Color(138, 43, 226));
+		buscarMedicoPanel.setBackground(new Color(169, 181, 223));
 
 		JLabel label_2 = new JLabel("Buscar");
 		label_2.setForeground(Color.WHITE);
@@ -206,6 +211,7 @@ public class RegistrarCita extends JDialog {
 		buscarMedicoPanel.add(label_2);
 
 		JLabel lblHoraEstimadaDe = new JLabel("Fecha");
+		lblHoraEstimadaDe.setForeground(new Color(255, 255, 255));
 		lblHoraEstimadaDe.setFont(new Font("Verdana", Font.BOLD, 18));
 		lblHoraEstimadaDe.setBounds(404, 111, 103, 16);
 		generalPanel.add(lblHoraEstimadaDe);
@@ -213,6 +219,36 @@ public class RegistrarCita extends JDialog {
 		dateChooser = new JDateChooser();
 		dateChooser.setBounds(404, 146, 152, 22);
 		generalPanel.add(dateChooser);
+		
+		JSeparator separator = new JSeparator();
+		separator.setForeground(new Color(45, 51, 107));
+		separator.setBackground(new Color(45, 51, 107));
+		separator.setBounds(12, 67, 190, 7);
+		generalPanel.add(separator);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setForeground(new Color(45, 51, 107));
+		separator_1.setBackground(new Color(45, 51, 107));
+		separator_1.setBounds(12, 134, 190, 7);
+		generalPanel.add(separator_1);
+		
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setForeground(new Color(45, 51, 107));
+		separator_2.setBackground(new Color(45, 51, 107));
+		separator_2.setBounds(12, 203, 190, 7);
+		generalPanel.add(separator_2);
+		
+		JSeparator separator_3 = new JSeparator();
+		separator_3.setForeground(new Color(45, 51, 107));
+		separator_3.setBackground(new Color(45, 51, 107));
+		separator_3.setBounds(404, 67, 190, 7);
+		generalPanel.add(separator_3);
+		
+		JSeparator separator_4 = new JSeparator();
+		separator_4.setForeground(new Color(45, 51, 107));
+		separator_4.setBackground(new Color(45, 51, 107));
+		separator_4.setBounds(404, 169, 152, 7);
+		generalPanel.add(separator_4);
 
 		buscarPanel = new JPanel();
 		buscarPanel.addMouseListener(new MouseAdapter() {
@@ -230,7 +266,7 @@ public class RegistrarCita extends JDialog {
 			}
 		});
 		buscarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		buscarPanel.setBackground(new Color(138, 43, 226));
+		buscarPanel.setBackground(new Color(169, 181, 223));
 		buscarPanel.setBounds(349, 115, 135, 28);
 		fondo.add(buscarPanel);
 
@@ -265,7 +301,7 @@ public class RegistrarCita extends JDialog {
 			}
 		});
 		agendarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		agendarPanel.setBackground(new Color(138, 43, 226));
+		agendarPanel.setBackground(new Color(169, 181, 223));
 		agendarPanel.setBounds(622, 459, 114, 28);
 		fondo.add(agendarPanel);
 
@@ -282,7 +318,7 @@ public class RegistrarCita extends JDialog {
 			}
 		});
 		panel_2.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_2.setBackground(new Color(138, 43, 226));
+		panel_2.setBackground(new Color(169, 181, 223));
 		panel_2.setBounds(763, 459, 114, 28);
 		fondo.add(panel_2);
 

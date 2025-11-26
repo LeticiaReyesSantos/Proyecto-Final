@@ -41,6 +41,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Panel;
+import java.awt.Label;
 
 public class Login extends JFrame {
 	/**
@@ -57,7 +59,6 @@ public class Login extends JFrame {
 	private int y2;
 	private Image img;
 	private ImageIcon icon;
-	private JLabel lblNewLabel_1;
 	private JPanel loginPanel;
 	private JLabel lblLogo;
 	private JPanel usuarioPanel;
@@ -75,11 +76,11 @@ public class Login extends JFrame {
 	private char ocultar;
 	private boolean borradoUsuario = false;
 	private boolean borradoContra = false;
-	private JLabel lblNewLabel_5;
 	private JSeparator separator2;
 	private JLabel campoObligatorio;
 	private JLabel campoObligatorio2;
-	private JLabel imagenPrincipal;
+	private JLabel lblIniciarSesion;
+	private JLabel lblNewLabel_2;
 
 	/**
 	 * Launch the application.
@@ -159,11 +160,12 @@ public class Login extends JFrame {
 			}
 		});
 		
-				lblNewLabel_1 = new JLabel("BIENVENIDO");
-				lblNewLabel_1.setBounds(53, 261, 329, 82);
-				fondo.add(lblNewLabel_1);
-				lblNewLabel_1.setForeground(new Color(45, 51, 107));
-				lblNewLabel_1.setFont(new Font("Verdana", Font.PLAIN, 48));
+		lblNewLabel_2 = new JLabel("BIENVENIDO");
+		lblNewLabel_2.setFont(new Font("Verdana", Font.BOLD, 40));
+		lblNewLabel_2.setBackground(new Color(255, 255, 255));
+		lblNewLabel_2.setForeground(new Color(255, 255, 255));
+		lblNewLabel_2.setBounds(43, 212, 385, 90);
+		fondo.add(lblNewLabel_2);
 		barPanel.setBounds(0, 0, 923, 25);
 		fondo.add(barPanel);
 		barPanel.setBackground(new Color(45, 51, 107));
@@ -199,7 +201,7 @@ public class Login extends JFrame {
 		loginPanel = new JPanel();
 		loginPanel.setBackground(new Color(240, 248, 255));
 		loginPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		loginPanel.setBounds(444, 103, 467, 402);
+		loginPanel.setBounds(441, 86, 467, 402);
 		fondo.add(loginPanel);
 		loginPanel.setLayout(null);
 
@@ -383,7 +385,7 @@ public class Login extends JFrame {
 				loginF.setBackground(new Color(138, 43, 226));
 			}
 		});
-		loginF.setBackground(new Color(138, 43, 226));
+		loginF.setBackground(new Color(45, 51, 107));
 		loginF.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		loginF.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		loginF.setBounds(68, 331, 339, 51);
@@ -391,10 +393,10 @@ public class Login extends JFrame {
 
 		lblNewLabel_3 = new JLabel("Iniciar Sesion");
 		lblNewLabel_3.setForeground(new Color(255, 255, 255));
-		lblNewLabel_3.setFont(new Font("Verdana", Font.PLAIN, 28));
+		lblNewLabel_3.setFont(new Font("Verdana", Font.BOLD, 27));
 		loginF.add(lblNewLabel_3);
 
-		contraCheck = new JCheckBox("Mostra contrase\u00F1a");
+		contraCheck = new JCheckBox("Mostrar contrase\u00F1a");
 		contraCheck.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		contraCheck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -413,21 +415,21 @@ public class Login extends JFrame {
 				}
 			}
 		});
-		contraCheck.setFont(new Font("Verdana", Font.PLAIN, 13));
+		contraCheck.setFont(new Font("Verdana", Font.PLAIN, 15));
 		contraCheck.setBackground(new Color(240, 248, 255));
-		contraCheck.setBounds(78, 279, 167, 25);
+		contraCheck.setBounds(78, 279, 197, 25);
 		loginPanel.add(contraCheck);
 
 		JLabel lblNewLabel_4 = new JLabel("Contrase\u00F1a");
-		lblNewLabel_4.setForeground(new Color(106, 90, 205));
-		lblNewLabel_4.setFont(new Font("Verdana", Font.BOLD, 24));
-		lblNewLabel_4.setBounds(155, 194, 189, 28);
+		lblNewLabel_4.setForeground(new Color(120, 134, 199));
+		lblNewLabel_4.setFont(new Font("Verdana", Font.BOLD, 23));
+		lblNewLabel_4.setBounds(159, 197, 158, 28);
 		loginPanel.add(lblNewLabel_4);
 
 		JLabel lblUsuario = new JLabel("Usuario");
-		lblUsuario.setForeground(new Color(106, 90, 205));
-		lblUsuario.setFont(new Font("Verdana", Font.BOLD, 24));
-		lblUsuario.setBounds(179, 59, 116, 28);
+		lblUsuario.setForeground(new Color(120, 134, 199));
+		lblUsuario.setFont(new Font("Verdana", Font.BOLD, 23));
+		lblUsuario.setBounds(159, 68, 116, 28);
 		loginPanel.add(lblUsuario);
 
 		lblLogo = new JLabel("logo");
@@ -435,21 +437,18 @@ public class Login extends JFrame {
 		loginPanel.add(lblLogo);
 		lblLogo.setForeground(Color.WHITE);
 		lblLogo.setFont(new Font("Verdana", Font.BOLD, 13));
-
-		lblNewLabel_5 = new JLabel("Iniciar Sesion");
-		lblNewLabel_5.setForeground(new Color(138, 43, 226));
-		lblNewLabel_5.setFont(new Font("Verdana", Font.BOLD, 38));
-		lblNewLabel_5.setBounds(533, 52, 294, 44);
-		fondo.add(lblNewLabel_5);
-
-		imagenPrincipal = new JLabel("");
-		imagenPrincipal.setBounds(12, 38, 399, 467);
-		imagenPrincipal.setIcon(new ImageIcon(Login.class.getResource("/imagenes/Princi.png")));
+		
+		JLabel lblNewLabel_1 = new JLabel("New label");
+		lblNewLabel_1.setBounds(0, 16, 354, 502);
+		fondo.add(lblNewLabel_1);
+		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\User\\OneDrive\\Pictures\\Screenshots\\Screenshot 2025-11-25 212054.png"));
+		
+		lblIniciarSesion = new JLabel("Iniciar Sesion");
+		lblIniciarSesion.setForeground(new Color(120, 134, 199));
+		lblIniciarSesion.setFont(new Font("Verdana", Font.BOLD, 30));
+		lblIniciarSesion.setBounds(560, 52, 238, 28);
+		fondo.add(lblIniciarSesion);
 		icon = new ImageIcon(Login.class.getResource("/imagenes/Princi.png"));
-		img = icon.getImage().getScaledInstance(imagenPrincipal.getWidth(), imagenPrincipal.getHeight(), Image.SCALE_SMOOTH);
-		imagenPrincipal.setIcon(new ImageIcon(img));
-
-		fondo.add(imagenPrincipal);
 		
 
 	}

@@ -100,7 +100,7 @@ public class ListarPersonas extends JDialog {
 		barPanel.setBounds(0, 0, 989, 25);
 		fondo.add(barPanel);
 		barPanel.setLayout(null);
-		barPanel.setBackground(new Color(102, 0, 204));
+		barPanel.setBackground(new Color(45, 51, 107));
 
 		JPanel cerrarPanel = new JPanel();
 		cerrarPanel.addMouseListener(new MouseAdapter() {
@@ -118,7 +118,7 @@ public class ListarPersonas extends JDialog {
 			}
 		});
 		cerrarPanel.setForeground(Color.BLACK);
-		cerrarPanel.setBackground(new Color(102, 0, 204));
+		cerrarPanel.setBackground(new Color(45, 51, 107));
 		cerrarPanel.setBounds(950, 0, 39, 26);
 		barPanel.add(cerrarPanel);
 
@@ -132,33 +132,33 @@ public class ListarPersonas extends JDialog {
 				tituloLabel.setText("LISTA DE PACIENTES");
 		}
 
-		tituloLabel.setForeground(new Color(138, 43, 226));
+		tituloLabel.setForeground(new Color(120, 134, 199));
 		tituloLabel.setFont(new Font("Verdana", Font.BOLD, 28));
 		tituloLabel.setBounds(438, 63, 322, 35);
 		fondo.add(tituloLabel);
 
 		JPanel menuPanel = new JPanel();
-		menuPanel.setBackground(new Color(102, 0, 204));
+		menuPanel.setBackground(new Color(255, 255, 255));
 		menuPanel.setBounds(0, 24, 169, 457);
 		fondo.add(menuPanel);
 		menuPanel.setLayout(null);
 
 		JLabel lblMenu = new JLabel("Menu");
 		lblMenu.setBounds(57, 5, 55, 23);
-		lblMenu.setForeground(new Color(255, 255, 255));
+		lblMenu.setForeground(new Color(169, 181, 223));
 		lblMenu.setFont(new Font("Verdana", Font.BOLD, 18));
 		menuPanel.add(lblMenu);
 
 		JSeparator separator = new JSeparator();
-		separator.setForeground(new Color(255, 255, 255));
-		separator.setBackground(new Color(255, 255, 255));
+		separator.setForeground(new Color(45, 51, 107));
+		separator.setBackground(new Color(45, 51, 107));
 		separator.setBounds(12, 41, 145, 2);
 		menuPanel.add(separator);
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_2.setBackground(new Color(138, 43, 226));
-		panel_2.setBounds(22, 85, 135, 28);
+		panel_2.setBackground(new Color(120, 134, 199));
+		panel_2.setBounds(25, 82, 132, 35);
 		menuPanel.add(panel_2);
 
 		JLabel label_2 = new JLabel("Detallar");
@@ -181,8 +181,8 @@ public class ListarPersonas extends JDialog {
 			}
 		});
 		panel_3.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_3.setBackground(new Color(138, 43, 226));
-		panel_3.setBounds(22, 183, 135, 28);
+		panel_3.setBackground(new Color(120, 134, 199));
+		panel_3.setBounds(25, 180, 132, 35);
 		menuPanel.add(panel_3);
 
 		JLabel lblVerUsuario = new JLabel("Ver usuario");
@@ -199,8 +199,8 @@ public class ListarPersonas extends JDialog {
 			}
 		});
 		panel_4.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_4.setBackground(new Color(138, 43, 226));
-		panel_4.setBounds(22, 309, 135, 28);
+		panel_4.setBackground(new Color(120, 134, 199));
+		panel_4.setBounds(22, 302, 135, 35);
 		menuPanel.add(panel_4);
 
 		JLabel lblSeleccionar = new JLabel("Seleccionar");
@@ -210,8 +210,8 @@ public class ListarPersonas extends JDialog {
 
 		JPanel panel_5 = new JPanel();
 		panel_5.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_5.setBackground(new Color(138, 43, 226));
-		panel_5.setBounds(22, 132, 135, 28);
+		panel_5.setBackground(new Color(120, 134, 199));
+		panel_5.setBounds(25, 129, 132, 35);
 		menuPanel.add(panel_5);
 
 		JLabel lblModificar = new JLabel("Modificar");
@@ -242,7 +242,7 @@ public class ListarPersonas extends JDialog {
 			}
 		});
 		panel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel.setBackground(new Color(138, 43, 226));
+		panel.setBackground(new Color(169, 181, 223));
 		panel.setBounds(874, 449, 85, 28);
 		fondo.add(panel);
 
@@ -258,7 +258,7 @@ public class ListarPersonas extends JDialog {
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_1.setBackground(new Color(138, 43, 226));
+		panel_1.setBackground(new Color(169, 181, 223));
 		panel_1.setBounds(703, 453, 85, 28);
 		fondo.add(panel_1);
 		
