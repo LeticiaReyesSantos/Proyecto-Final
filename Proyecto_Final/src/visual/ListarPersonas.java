@@ -247,23 +247,23 @@ public class ListarPersonas extends JDialog {
 		fondo.add(panel);
 
 		JLabel lblVolver = new JLabel("Volver");
-		lblVolver.setForeground(Color.WHITE);
+		lblVolver.setForeground(Color.BLACK);
 		lblVolver.setFont(new Font("Verdana", Font.PLAIN, 14));
 		panel.add(lblVolver);
 		
 		textField = new JTextField();
-		textField.setBounds(388, 455, 303, 22);
+		textField.setBounds(388, 453, 303, 22);
 		fondo.add(textField);
 		textField.setColumns(10);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_1.setBackground(new Color(169, 181, 223));
-		panel_1.setBounds(703, 453, 85, 28);
+		panel_1.setBounds(703, 449, 85, 28);
 		fondo.add(panel_1);
 		
 		JLabel lblBuscar = new JLabel("Buscar");
-		lblBuscar.setForeground(Color.WHITE);
+		lblBuscar.setForeground(Color.BLACK);
 		lblBuscar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		panel_1.add(lblBuscar);
 

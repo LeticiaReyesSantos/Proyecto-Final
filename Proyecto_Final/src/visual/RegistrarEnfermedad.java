@@ -86,7 +86,7 @@ public class RegistrarEnfermedad extends JDialog {
 					}
 					@Override
 					public void mouseExited(MouseEvent e) {
-						BotonX.setBackground(new Color(102, 0, 204));
+						BotonX.setBackground(new Color(45, 51, 107));
 					}
 					
 				});
@@ -136,7 +136,7 @@ public class RegistrarEnfermedad extends JDialog {
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setForeground(new Color(45, 51, 107));
 		separator_1.setBackground(new Color(45, 51, 107));
-		separator_1.setBounds(28, 66, 181, 2);
+		separator_1.setBounds(28, 64, 181, 2);
 		Informacion.add(separator_1);
 		
 		JLabel lblCodigo = new JLabel("Codigo:");
@@ -195,7 +195,7 @@ public class RegistrarEnfermedad extends JDialog {
 		JSeparator separator_3 = new JSeparator();
 		separator_3.setForeground(new Color(45, 51, 107));
 		separator_3.setBackground(new Color(45, 51, 107));
-		separator_3.setBounds(318, 66, 181, 2);
+		separator_3.setBounds(318, 64, 181, 2);
 		Informacion.add(separator_3);
 		
 		JSeparator separator_5 = new JSeparator();
@@ -233,19 +233,12 @@ public class RegistrarEnfermedad extends JDialog {
 		rdbtnNo.setForeground(Color.WHITE);
 		rdbtnNo.setFont(new Font("Verdana", Font.PLAIN, 14));
 		rdbtnNo.setBackground(new Color(169, 181, 223));
-		rdbtnNo.setBounds(192, 165, 63, 25);
+		rdbtnNo.setBounds(192, 165, 50, 25);
 		Informacion.add(rdbtnNo);
-		
-		JPanel paneltratamiento = new JPanel();
-		paneltratamiento.setLayout(null);
-		paneltratamiento.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		paneltratamiento.setBackground(new Color(120, 134, 199));
-		paneltratamiento.setBounds(28, 311, 536, 156);
-		fondo.add(paneltratamiento);
 		JPanel panelTratamiento = new JPanel();
 		panelTratamiento.setLayout(null);
 		panelTratamiento.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panelTratamiento.setBackground(new Color(240, 248, 255));
+		panelTratamiento.setBackground(new Color(120, 134, 199));
 		panelTratamiento.setBounds(28, 311, 536, 156);
 		fondo.add(panelTratamiento);
 		
@@ -300,7 +293,7 @@ public class RegistrarEnfermedad extends JDialog {
 		fondo.add(Registrar);
 		
 		JLabel label = new JLabel("Registrar");
-		label.setForeground(Color.WHITE);
+		label.setForeground(Color.BLACK);
 		label.setFont(new Font("Verdana", Font.PLAIN, 14));
 		Registrar.add(label);
 		
@@ -325,7 +318,7 @@ public class RegistrarEnfermedad extends JDialog {
 		fondo.add(Cancelar);
 		
 		JLabel label_1 = new JLabel("Cancelar");
-		label_1.setForeground(Color.WHITE);
+		label_1.setForeground(Color.BLACK);
 		label_1.setFont(new Font("Verdana", Font.PLAIN, 14));
 		Cancelar.add(label_1);
 	}
