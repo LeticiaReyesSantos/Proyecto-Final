@@ -98,6 +98,7 @@ public class RegistrarCita extends JDialog {
 		cerrarPanel.add(label);
 
 		JLabel label_1 = new JLabel("Cedula");
+		label_1.setForeground(new Color(45, 51, 107));
 		label_1.setFont(new Font("Verdana", Font.BOLD, 18));
 		label_1.setBounds(57, 121, 80, 16);
 		fondo.add(label_1);

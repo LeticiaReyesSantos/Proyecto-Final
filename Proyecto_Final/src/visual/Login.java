@@ -445,7 +445,7 @@ public class Login extends JFrame {
 		
 		lblIniciarSesion = new JLabel("Iniciar Sesion");
 		lblIniciarSesion.setForeground(new Color(120, 134, 199));
-		lblIniciarSesion.setFont(new Font("Verdana", Font.BOLD, 30));
+		lblIniciarSesion.setFont(new Font("Verdana", Font.BOLD, 29));
 		lblIniciarSesion.setBounds(560, 52, 238, 28);
 		fondo.add(lblIniciarSesion);
 		icon = new ImageIcon(Login.class.getResource("/imagenes/Princi.png"));

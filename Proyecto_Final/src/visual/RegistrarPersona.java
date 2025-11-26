@@ -421,7 +421,7 @@ public class RegistrarPersona extends JDialog {
 
 		lblDatosDelMedico = new JLabel("Datos del Medico");
 		lblDatosDelMedico.setForeground(new Color(120, 134, 199));
-		lblDatosDelMedico.setFont(new Font("Verdana", Font.BOLD, 28));
+		lblDatosDelMedico.setFont(new Font("Verdana", Font.BOLD, 27));
 		lblDatosDelMedico.setBounds(291, 442, 278, 25);
 		fondo.add(lblDatosDelMedico);
 

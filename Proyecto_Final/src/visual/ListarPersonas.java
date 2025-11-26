@@ -143,7 +143,7 @@ public class ListarPersonas extends JDialog {
 		fondo.add(menuPanel);
 		menuPanel.setLayout(null);
 
-		JLabel lblMenu = new JLabel("Menu");
+		JLabel lblMenu = new JLabel("Men\u00FA");
 		lblMenu.setBounds(57, 5, 55, 23);
 		lblMenu.setForeground(new Color(169, 181, 223));
 		lblMenu.setFont(new Font("Verdana", Font.BOLD, 18));
