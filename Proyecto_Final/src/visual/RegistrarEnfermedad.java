@@ -233,7 +233,7 @@ public class RegistrarEnfermedad extends JDialog {
 		rdbtnNo.setForeground(Color.WHITE);
 		rdbtnNo.setFont(new Font("Verdana", Font.PLAIN, 14));
 		rdbtnNo.setBackground(new Color(169, 181, 223));
-		rdbtnNo.setBounds(192, 165, 50, 25);
+		rdbtnNo.setBounds(192, 165, 56, 25);
 		Informacion.add(rdbtnNo);
 		JPanel panelTratamiento = new JPanel();
 		panelTratamiento.setLayout(null);

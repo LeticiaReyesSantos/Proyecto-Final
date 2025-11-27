@@ -1,23 +1,26 @@
 package logico;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Diagnostico implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	protected String codigo;
-	protected LocalDateTime fecha;
-	protected ArrayList <String> sintomas;
-	protected String tratamiento;
+	private String codigo;
+	private LocalDate fecha;
+	private ArrayList <String> sintomas;
+	private String tratamiento;
+	private ArrayList<Enfermedad> enfDiagnosticadas;
 	
-	public Diagnostico(String codigo, LocalDateTime fecha, ArrayList<String> sintomas, String tratamiento) {
+	public Diagnostico(String codigo, LocalDate fecha, ArrayList<String> sintomas, String tratamiento) {
 		super();
 		this.codigo = codigo;
 		this.fecha = fecha;
 		this.sintomas = sintomas;
 		this.tratamiento = tratamiento;
+		enfDiagnosticadas = new ArrayList<>();
 	}
 
 	public String getCodigo() {
@@ -27,12 +30,12 @@ public class Diagnostico implements Serializable{
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
-	
-	public LocalDateTime getFecha() {
+
+	public LocalDate getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(LocalDateTime fecha) {
+	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
 	}
 
@@ -50,6 +53,14 @@ public class Diagnostico implements Serializable{
 
 	public void setTratamiento(String tratamiento) {
 		this.tratamiento = tratamiento;
+	}
+
+	public ArrayList<Enfermedad> getEnfDiagnosticadas() {
+		return enfDiagnosticadas;
+	}
+
+	public void setEnfDiagnosticadas(ArrayList<Enfermedad> enfDiagnosticadas) {
+		this.enfDiagnosticadas = enfDiagnosticadas;
 	}
 	
 	

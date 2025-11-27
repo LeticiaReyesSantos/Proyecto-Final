@@ -193,7 +193,7 @@ public class RegistrarVacuna extends JDialog {
 		radioButton_1.setForeground(Color.WHITE);
 		radioButton_1.setFont(new Font("Verdana", Font.PLAIN, 14));
 		radioButton_1.setBackground(new Color(169, 181, 223));
-		radioButton_1.setBounds(192, 165, 50, 25);
+		radioButton_1.setBounds(192, 165, 56, 25);
 		Informacion.add(radioButton_1);
 		
 		JPanel panel_4 = new JPanel();
