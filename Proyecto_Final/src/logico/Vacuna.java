@@ -14,14 +14,14 @@ public class Vacuna implements Serializable{
 	private boolean aplicada;
 	private boolean controlada;
 	
-	public Vacuna(String codigo, String nombre, Enfermedad enfermedad, String descripcion, boolean aplicada, boolean controlada) {
+	public Vacuna(String codigo, String nombre, Enfermedad enfermedad, String descripcion) {
 		super();
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.enfermedad = enfermedad;
 		this.descripcion = descripcion;
 		this.aplicada = false;
-		this.controlada = false;
+		this.controlada = BajoControl();
 	}
 
 	public boolean isControlada() {
@@ -71,5 +71,8 @@ public class Vacuna implements Serializable{
 	public void setAplicada(boolean aplicada) {
 		this.aplicada = aplicada;
 	}
-
+	
+	private boolean BajoControl() {
+		return enfermedad.isControlada();
+	}
 }

@@ -23,6 +23,7 @@ public class Clinica implements Serializable {
 	private ArrayList <Enfermedad> enfermedades;
 	private ArrayList <Vacuna> vacunas;
 	private ArrayList <Cita> citas;
+	private ArrayList<Consulta> consultas;
 
 	public int genMedico = 1;
 	public int genPaciente = 1;
@@ -43,7 +44,7 @@ public class Clinica implements Serializable {
 		vacunas = new ArrayList<>();
 		citas = new ArrayList<>();
 	}
-	
+
 	public static void setClinica(Clinica aux) {
 		Clinica.clinica = aux;
 	}
@@ -110,6 +111,17 @@ public class Clinica implements Serializable {
 		genVacuna++;
 	}
 
+	public ArrayList<Consulta> getConsultas() {
+		return consultas;
+	}
+
+	public void addConsulta(Consulta aux) {
+		consultas.add(aux);
+	}
+	
+	public void setConsultas(ArrayList<Consulta> consultas) {
+		this.consultas = consultas;
+	}
 
 	public Paciente buscarPacienteByCedula(String cedula) {
 		for (Persona p : personas) {
@@ -122,31 +134,31 @@ public class Clinica implements Serializable {
 		}
 		return null;
 	}
-	
+
 	public Persona personaById(String id) {
 		Persona aux = null;
 		boolean val = false;
 		int i = 0;
-		
+
 		while(i<personas.size() && !val) {
 			if(personas.get(i).getCodigo().equals(id)) {
 				aux = personas.get(i);
 				val = true;
 			}
-			
+
 			i++;
 		}
 		return aux;
 	}
-	
+
 	public boolean cedulaUnica(String cedula) {
 		boolean unico = true;
 		int i = 0;
-		
+
 		while(i<personas.size() && unico) {
 			if(personas.get(i).getCedula().equals(cedula))
 				unico = false;
-			
+
 			i++;
 		}
 		return unico;
@@ -268,22 +280,6 @@ public class Clinica implements Serializable {
 		}
 		return false;
 	}
-
-	/*Funcion: marcarVacunaControlada
-	 * Parametro: codigo de vacuna
-	 * Retorna: Boolean*/
-
-	public boolean marcarVacunaControlada(String code) {
-		for (Vacuna vac : vacunas) {
-			if(vac.getCodigo().equalsIgnoreCase(code)) {
-				vac.setControlada(true);
-				return true;
-			}
-
-		}
-		return false;
-	}
-
 
 	/*Funcion: getEnfermedadesControladas
 	 * Retorna: Lista de enfb controladas*/
@@ -428,7 +424,7 @@ public class Clinica implements Serializable {
 		}
 		return controladas;
 	}
-	
+
 	public static Persona getLoginUser() {
 		return personaLogueada;
 	}
@@ -436,26 +432,26 @@ public class Clinica implements Serializable {
 	public static void setLoginUser(Persona personaLogueada) {
 		Clinica.personaLogueada = personaLogueada;
 	}
-	
+
 	public boolean confirmarLogin(String usuario, String pass) {
 		boolean valido = false;
 		int i = 0;
-		
+
 		while(i<personas.size() && !valido) {
 			User user = personas.get(i).getUser();
 			if(user.getUserName().equals(usuario) && user.getPass().equals(pass)) {
 				personaLogueada = personas.get(i);
 				valido = true;
 			}
-			
+
 			i++;
 		}
-		
-	return valido;
-	}
-	
 
-	
+		return valido;
+	}
+
+
+
 	public void save() {
 		ObjectOutputStream objeto;
 		FileOutputStream file;
@@ -471,12 +467,12 @@ public class Clinica implements Serializable {
 			// TODO: handle exception
 		}
 	}
-	
+
 	public static boolean load() {
 		ObjectInputStream objeto;
 		FileInputStream file;
 		boolean val= false;
-		
+
 		try {
 			file = new FileInputStream("clinica.dat");
 			objeto = new ObjectInputStream(file);
@@ -494,7 +490,49 @@ public class Clinica implements Serializable {
 		}
 		return val;
 	}
-	
 
+	public boolean reagendarCita(LocalDate fecha, String codigoCita) {
+		Cita aux = buscarCitaByCode(codigoCita);
+		if(aux != null) {
+			if(!(aux.isEstado()&& aux.getFecha() != fecha)){
+				if(fecha.isAfter(aux.getFecha())) {
+					aux.setFecha(fecha);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean crearConsulta(String codigoCita, Double precio, ArrayList<String> sintomas, String tratamiento) {
+		boolean creada = false;
+		Cita aux = buscarCitaByCode(codigoCita);
+		if(aux != null && !(aux.isEstado())) {
+			Paciente pac = (Paciente) aux.getPersona();
+			Diagnostico diag = new Diagnostico("D-" +genDiagnostico, aux.getFecha(), sintomas, tratamiento);
+			Consulta cons = new Consulta("CN-" +genCita, aux.getPersona(), aux.getMedico(), aux.getFecha(), precio, pac, true, diag);
+			addDiagnostico(diag);
+			addConsulta(cons);
+			aux.setEstado(true);
+			pac.addHistorial(cons);
+			aux.getMedico().addHistorial(cons);
+			aux.getMedico().addPaciente(pac);
+			creada = true;
+		}
+		return creada;
+	}
+	
+	public boolean modificarPaciente(String cedula, String nuevaDireccion, String nuevoTelefono, String nuevoEmail) {
+		Paciente pac = buscarPacienteByCedula(cedula);
+		if(pac != null) {
+			pac.setTelefono(nuevoTelefono);
+			pac.setDireccion(nuevaDireccion);
+			pac.setEmail(nuevoEmail);
+			return true;
+		}
+		return false;
+	}
+	
+	
 
 }
