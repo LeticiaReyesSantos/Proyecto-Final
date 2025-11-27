@@ -41,8 +41,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.Panel;
-import java.awt.Label;
+
 
 public class Login extends JFrame {
 	/**
@@ -196,7 +195,7 @@ public class Login extends JFrame {
 		cerrarPanel.add(lblNewLabel);
 
 
-		icon = new ImageIcon(Login.class.getResource("/imagenes/principal.jpg"));
+		icon = new ImageIcon(Login.class.getResource("/imagenes/Principal.png"));
 
 		loginPanel = new JPanel();
 		loginPanel.setBackground(new Color(240, 248, 255));
@@ -438,10 +437,10 @@ public class Login extends JFrame {
 		lblLogo.setForeground(Color.WHITE);
 		lblLogo.setFont(new Font("Verdana", Font.BOLD, 13));
 		
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setBounds(0, 16, 354, 502);
+		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setBounds(0, 16, 392, 502);
 		fondo.add(lblNewLabel_1);
-		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\User\\OneDrive\\Pictures\\Screenshots\\Screenshot 2025-11-25 212054.png"));
+		lblNewLabel_1.setIcon(new ImageIcon(Login.class.getResource("/imagenes/Principal.png")));
 		
 		lblIniciarSesion = new JLabel("Iniciar Sesion");
 		lblIniciarSesion.setForeground(new Color(120, 134, 199));

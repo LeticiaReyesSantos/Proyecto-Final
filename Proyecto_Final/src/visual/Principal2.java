@@ -180,7 +180,6 @@ public class Principal2 extends JFrame {
 
 		JLabel lblHoyEs = new JLabel("Hoy es");
 		lblHoyEs.setBounds(25, 0, 152, 50);
-		fechaPanel.add(lblHoyEs);
 		lblHoyEs.setForeground(Color.WHITE);
 		lblHoyEs.setFont(new Font("Verdana", Font.BOLD, 40));
 
