@@ -23,7 +23,6 @@ public class Clinica implements Serializable {
 	private ArrayList <Enfermedad> enfermedades;
 	private ArrayList <Vacuna> vacunas;
 	private ArrayList <Cita> citas;
-	private ArrayList<Consulta> consultas;
 
 	public int genMedico = 1;
 	public int genPaciente = 1;
@@ -112,17 +111,6 @@ public class Clinica implements Serializable {
 		genVacuna++;
 	}
 
-	public ArrayList<Consulta> getConsultas() {
-		return consultas;
-	}
-
-	public void addConsulta(Consulta aux) {
-		consultas.add(aux);
-	}
-	
-	public void setConsultas(ArrayList<Consulta> consultas) {
-		this.consultas = consultas;
-	}
 
 	public Paciente buscarPacienteByCedula(String cedula) {
 		for (Persona p : personas) {
@@ -511,9 +499,9 @@ public class Clinica implements Serializable {
 		if(aux != null && !(aux.isEstado())) {
 			Paciente pac = (Paciente) aux.getPersona();
 			Diagnostico diag = new Diagnostico("D-" +genDiagnostico, aux.getFecha(), sintomas, tratamiento);
-			Consulta cons = new Consulta("CN-" +genCita, aux.getPersona(), aux.getMedico(), aux.getFecha(), precio, pac, true, diag);
+			Consulta cons = new Consulta("CN-" +genCita, aux.getPersona(), aux.getMedico(), aux.getFecha(), precio, pac, false, diag);
 			addDiagnostico(diag);
-			addConsulta(cons);
+			addCita(cons);
 			aux.setEstado(true);
 			pac.addHistorial(cons);
 			aux.getMedico().addHistorial(cons);
@@ -523,17 +511,40 @@ public class Clinica implements Serializable {
 		return creada;
 	}
 	
-	public boolean modificarPaciente(String cedula, String nuevaDireccion, String nuevoTelefono, String nuevoEmail) {
-		Paciente pac = buscarPacienteByCedula(cedula);
-		if(pac != null) {
-			pac.setTelefono(nuevoTelefono);
-			pac.setDireccion(nuevaDireccion);
-			pac.setEmail(nuevoEmail);
+	public boolean modificarPersona(String id, String nuevaDireccion, String nuevoTelefono, String nuevoEmail) {
+		Persona pers = personaById(id);
+		if(pers != null) {
+			pers.setTelefono(nuevoTelefono);
+			pers.setDireccion(nuevaDireccion);
+			pers.setEmail(nuevoEmail);
 			return true;
 		}
 		return false;
 	}
 	
+	public boolean visibilidadConsulta(Consulta cons) {
+		boolean esVisible = false;
+		for (Enfermedad enf : cons.getDiagonistco().getEnfDiagnosticadas()) {
+			if(enf.isControlada()) {
+				cons.setVisibilidad(true);
+				esVisible = true;
+			}
+		}
+		return esVisible;
+	}
+	
+	public ArrayList<Consulta> consultasVisibles(){
+		ArrayList<Consulta> visibles = new ArrayList<>();
+		for (Cita c : citas) {
+			if(c instanceof Consulta) {
+				Consulta cons = (Consulta) c;
+				if(cons.isVisibilidad()) {
+					visibles.add(cons);
+				}
+			}
+		}
+		return visibles;
+	}
 	
 
 }
