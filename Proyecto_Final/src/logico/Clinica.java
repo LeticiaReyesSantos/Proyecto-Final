@@ -31,6 +31,7 @@ public class Clinica implements Serializable {
 	public int genEnfermedad = 1;
 	public int genVacuna = 1;
 	public int genCita = 1;
+	public int genAdmin = 1;
 
 
 	private static Clinica clinica = null;
