@@ -139,7 +139,6 @@ public class Login extends JFrame {
 		fondo.setLayout(null);
 
 		barPanel = new JPanel();
-		//barPanel.setBackground(new Color(25, 25, 112));
 		barPanel.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent arg0) {

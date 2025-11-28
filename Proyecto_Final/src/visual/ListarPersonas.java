@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 
 import logico.Clinica;
 import logico.Medico;
+import logico.Paciente;
 import logico.Persona;
 
 import java.awt.Color;
@@ -291,7 +292,7 @@ public class ListarPersonas extends JDialog {
 		model.setRowCount(0);
 
 		for(Persona p: cl.getPersonas()) {
-			if(p instanceof Medico) {
+			if(p instanceof Paciente) {
 				Object[] fila = {p.getCodigo(), p.getNombres(), p.getApellidos(), p.getCedula(), p.getEdad(), p.getGenero(), p.getTelefono()};
 				model.addRow(fila);
 			}

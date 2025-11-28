@@ -23,8 +23,14 @@ import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextPane;
+import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class RegistrarEnfermedad extends JDialog {
 
@@ -32,11 +38,12 @@ public class RegistrarEnfermedad extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCodigo;
 	private JTextField txtNombre;
-	private JTextField txtSintomas;
-	private JTextField txtTratamiento;
 	private JComboBox<String> cbxTipo;
 	private JRadioButton rdbtnSi;
 	private JRadioButton rdbtnNo;
+	private JLabel Titulo;
+	private JTextArea txtTratamiento;
+	private ArrayList<String> sintomas = new ArrayList<>();
 	
 	/**
 	 * Launch the application.
@@ -102,22 +109,10 @@ public class RegistrarEnfermedad extends JDialog {
 			}
 		}
 		{
-			JLabel Titulo = new JLabel("Registrar Enfermedad");
+			Titulo = new JLabel("Registrar Enfermedad");
 			Titulo.setForeground(new Color(120, 134, 199));
 			
-			if(enf == null) {
-				Titulo = new JLabel("Registrar Enfermedad");
-				txtCodigo.setText("E-"+Clinica.getInstance().genEnfermedad);
-			}
-			else{
-				Titulo = new JLabel("Modificar Enfermedad");
-				cargar(enf);
-				txtNombre.setEnabled(false);
-			}
-			Titulo.setForeground(new Color(120, 134, 199));
-			Titulo.setFont(new Font("Verdana", Font.BOLD, 28));
-			Titulo.setBounds(118, 38, 350, 35);
-			fondo.add(Titulo);
+			
 		}
 		
 		JPanel Informacion = new JPanel();
@@ -146,7 +141,10 @@ public class RegistrarEnfermedad extends JDialog {
 		Informacion.add(lblCodigo);
 		
 		txtCodigo = new JTextField();
-		txtCodigo.setEnabled(false);
+		txtCodigo.setEditable(false);
+		txtCodigo.setBackground(Color.WHITE);
+		txtCodigo.setFont(new Font("Verdana", Font.PLAIN, 13));
+		txtCodigo.setForeground(Color.BLACK);
 		txtCodigo.setColumns(10);
 		txtCodigo.setBorder(null);
 		txtCodigo.setBounds(28, 42, 181, 22);
@@ -177,16 +175,19 @@ public class RegistrarEnfermedad extends JDialog {
 		Informacion.add(lblSintomas);
 		
 		txtNombre = new JTextField();
+		txtNombre.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if(!Character.isAlphabetic(c) && c!= ' ') {
+					e.consume();
+				}
+			}
+		});
 		txtNombre.setColumns(10);
 		txtNombre.setBorder(null);
 		txtNombre.setBounds(28, 120, 181, 22);
 		Informacion.add(txtNombre);
-		
-		txtSintomas = new JTextField();
-		txtSintomas.setColumns(10);
-		txtSintomas.setBorder(null);
-		txtSintomas.setBounds(318, 42, 181, 22);
-		Informacion.add(txtSintomas);
 		
 		JLabel label_8 = new JLabel("");
 		label_8.setBounds(635, 46, 56, 16);
@@ -235,6 +236,35 @@ public class RegistrarEnfermedad extends JDialog {
 		rdbtnNo.setBackground(new Color(169, 181, 223));
 		rdbtnNo.setBounds(192, 165, 56, 25);
 		Informacion.add(rdbtnNo);
+		
+		JPanel sintomasPanel = new JPanel();
+		sintomasPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				SintomasSelection sintomasW = new SintomasSelection(sintomas);
+				sintomasW.setModal(true);
+				sintomasW.setVisible(true);
+				sintomas = sintomasW.objectsSelected();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				sintomasPanel.setBackground(new Color (120, 134, 199));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				sintomasPanel.setBackground(new Color(169, 181, 223));
+			}
+		});
+		sintomasPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		sintomasPanel.setBackground(new Color(169, 181, 223));
+		sintomasPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		sintomasPanel.setBounds(318, 38, 181, 28);
+		Informacion.add(sintomasPanel);
+		
+		JLabel lblSeleccionar = new JLabel("Seleccionar");
+		lblSeleccionar.setForeground(Color.BLACK);
+		lblSeleccionar.setFont(new Font("Verdana", Font.PLAIN, 14));
+		sintomasPanel.add(lblSeleccionar);
 		JPanel panelTratamiento = new JPanel();
 		panelTratamiento.setLayout(null);
 		panelTratamiento.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -254,15 +284,16 @@ public class RegistrarEnfermedad extends JDialog {
 		lblTratamiento.setBounds(28, 13, 118, 16);
 		panelTratamiento.add(lblTratamiento);
 		
-		txtTratamiento = new JTextField();
-		txtTratamiento.setColumns(10);
-		txtTratamiento.setBorder(null);
-		txtTratamiento.setBounds(28, 42, 473, 100);
-		panelTratamiento.add(txtTratamiento);
-		
 		JLabel label_5 = new JLabel("");
 		label_5.setBounds(635, 46, 56, 16);
 		panelTratamiento.add(label_5);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(28, 42, 473, 100);
+		panelTratamiento.add(scrollPane);
+		
+		txtTratamiento = new JTextArea();
+		scrollPane.setViewportView(txtTratamiento);
 		
 		JPanel Registrar = new JPanel();
 		Registrar.addMouseListener(new MouseAdapter() {
@@ -279,16 +310,17 @@ public class RegistrarEnfermedad extends JDialog {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				Registrar.setBackground(new Color(102, 0, 204));
+				Registrar.setBackground(new Color(120, 134, 199));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				Registrar.setBackground(new Color(138, 43, 226));
+				Registrar.setBackground(new Color(169, 181, 223));
 			}
 			
 		});
 		Registrar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		Registrar.setBackground(new Color(169, 181, 223));
+		Registrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		Registrar.setBounds(348, 488, 85, 28);
 		fondo.add(Registrar);
 		
@@ -305,15 +337,16 @@ public class RegistrarEnfermedad extends JDialog {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				Cancelar.setBackground(new Color(102, 0, 204));
+				Cancelar.setBackground(new Color(120, 134, 199));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				Cancelar.setBackground(new Color(138, 43, 226));
+				Cancelar.setBackground(new Color(169, 181, 223));
 			}
 		});
 		Cancelar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		Cancelar.setBackground(new Color(169, 181, 223));
+		Cancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		Cancelar.setBounds(463, 488, 85, 28);
 		fondo.add(Cancelar);
 		
@@ -321,6 +354,20 @@ public class RegistrarEnfermedad extends JDialog {
 		label_1.setForeground(Color.BLACK);
 		label_1.setFont(new Font("Verdana", Font.PLAIN, 14));
 		Cancelar.add(label_1);
+		
+		if(enf == null) {
+			Titulo.setText("Registrar Enfermedad");
+			txtCodigo.setText("E-"+Clinica.getInstance().genEnfermedad);
+		}
+		else{
+			Titulo.setText("Registrar Enfermedad");
+			cargar(enf);
+			txtNombre.setEnabled(false);
+		}
+		Titulo.setForeground(new Color(120, 134, 199));
+		Titulo.setFont(new Font("Verdana", Font.BOLD, 28));
+		Titulo.setBounds(118, 38, 350, 35);
+		fondo.add(Titulo);
 	}
 	
 	

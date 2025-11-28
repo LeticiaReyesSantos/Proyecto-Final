@@ -510,25 +510,25 @@ public class RegistrarPersona extends JDialog {
 		lblCancelar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		cancelarPanel.add(lblCancelar);
 		
-		JSeparator separator_7 = new JSeparator();
-		separator_7.setOrientation(SwingConstants.VERTICAL);
-		separator_7.setForeground(new Color(75, 0, 130));
-		separator_7.setBackground(new Color(138, 43, 226));
-		separator_7.setBounds(0, 25, 8, 639);
-		fondo.add(separator_7);
+		JSeparator border1 = new JSeparator();
+		border1.setOrientation(SwingConstants.VERTICAL);
+		border1.setForeground(new Color(0, 0, 128));
+		border1.setBackground(new Color(0, 0, 128));
+		border1.setBounds(1, 25, 20, 639);
+		fondo.add(border1);
 		
-		JSeparator separator_8 = new JSeparator();
-		separator_8.setOrientation(SwingConstants.VERTICAL);
-		separator_8.setForeground(new Color(75, 0, 130));
-		separator_8.setBackground(new Color(138, 43, 226));
-		separator_8.setBounds(842, 25, 13, 639);
-		fondo.add(separator_8);
+		JSeparator border2 = new JSeparator();
+		border2.setOrientation(SwingConstants.VERTICAL);
+		border2.setForeground(new Color(45, 51, 107));
+		border2.setBackground(new Color(45, 51, 107));
+		border2.setBounds(841, 25, 62, 639);
+		fondo.add(border2);
 		
-		JSeparator separator_9 = new JSeparator();
-		separator_9.setForeground(new Color(75, 0, 130));
-		separator_9.setBackground(new Color(138, 43, 226));
-		separator_9.setBounds(0, 662, 844, 2);
-		fondo.add(separator_9);
+		JSeparator border3 = new JSeparator();
+		border3.setForeground(new Color(45, 51, 107));
+		border3.setBackground(new Color(45, 51, 107));
+		border3.setBounds(0, 662, 844, 2);
+		fondo.add(border3);
 	}
 
 	private boolean camposGeneralesVacios() {

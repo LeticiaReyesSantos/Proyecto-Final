@@ -85,7 +85,7 @@ public class RegistrarVacuna extends JDialog {
 		}
 		else{
 			Titulo = new JLabel("Modificar Vacuna");
-			cargar(vac);
+			//cargar(vac);
 			txtNombre.setEnabled(false);
 		}
 		Titulo.setForeground(new Color(120, 134, 199));
