@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
@@ -45,7 +46,7 @@ public class RegistrarCita extends JDialog {
 	private JLabel mensajeLabel;
 	private JPanel agendarPanel;
 	private JDateChooser dateChooser;
-
+	private Calendar calendario = Calendar.getInstance();
 	/**
 	 * Launch the application.
 	 */
@@ -219,6 +220,8 @@ public class RegistrarCita extends JDialog {
 		
 		dateChooser = new JDateChooser();
 		dateChooser.setBounds(404, 146, 152, 22);
+		calendario.set(LocalDate.now().getYear(), LocalDate.now().getMonthValue()-1, LocalDate.now().getDayOfMonth());
+		dateChooser.setMinSelectableDate(calendario.getTime());
 		generalPanel.add(dateChooser);
 		
 		JSeparator separator = new JSeparator();

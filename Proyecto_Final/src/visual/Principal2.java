@@ -7,8 +7,12 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
+import logico.Cita;
 import logico.Clinica;
 import logico.Persona;
 
@@ -17,8 +21,10 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 
 import javax.swing.JLabel;
-import java.time.format.DateTimeFormatter;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
@@ -45,10 +51,10 @@ public class Principal2 extends JFrame {
 	private int x2;
 	private int y1;
 	private int y2;
-	private JPanel menuMedico;
+	private JPanel menuPersonaPanel;
 	private Image img;
 	private ImageIcon icon;
-	private JLabel medicoIcon;
+	private JLabel personaIcon;
 	private JLabel usuarioIcon;
 	private JPanel regMedicoPanel;
 	private JPanel listMedicoPanel;
@@ -56,12 +62,22 @@ public class Principal2 extends JFrame {
 	private JLabel rangoLbl;
 	private JLabel enfermedadIcon;
 	private JLabel calendarioIcon;
-	private JPanel citasPanel;
+	private JPanel citasAdminPanel;
 	private JPanel agendarCitaPanel;
 	private JPanel listCitasPanel;
 	private JPanel listEnfermedadPanel;
 	private JPanel regEnfermedadPanel;
 	private JPanel enfermedadPanel;
+	private JPanel vacunaPanel;
+	private JPanel reportePanel;
+	private JPanel registrarVacunaPanel;
+	private JPanel listVacunasPanel;
+	private JLabel lblPersona;
+	private JLabel vacunaIcon;
+	private JTable table;
+	private DefaultTableModel model;
+	private JScrollPane scrollPane;
+	private JLabel label_3;
 
 	/**
 	 * Launch the application.
@@ -181,7 +197,7 @@ public class Principal2 extends JFrame {
 		bienvenidoPanel.add(label_1);
 
 		usuarioIcon = new JLabel("");
-		usuarioIcon.setBounds(1321, 13, 53, 54);
+		usuarioIcon.setBounds(dim.width-60, 11, 53, 54);
 		bienvenidoPanel.add(usuarioIcon);
 		usuarioIcon.setIcon(new ImageIcon(Principal2.class.getResource("/imagenes/Usuario.png")));
 		icon = (ImageIcon)usuarioIcon.getIcon();
@@ -194,8 +210,8 @@ public class Principal2 extends JFrame {
 		lblHoyEs.setForeground(Color.WHITE);
 		lblHoyEs.setFont(new Font("Verdana", Font.BOLD, 40));
 
-		menuMedico = new JPanel();
-		menuMedico.addMouseListener(new MouseAdapter() {
+		menuPersonaPanel = new JPanel();
+		menuPersonaPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if(!regMedicoPanel.isVisible()) {
@@ -208,38 +224,38 @@ public class Principal2 extends JFrame {
 			}
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
-				menuMedico.setBackground(new Color(45, 51, 107));
+				menuPersonaPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				menuMedico.setBackground(new Color(120, 134, 199));
+				menuPersonaPanel.setBackground(new Color(120, 134, 199));
 			}
 		});
-		menuMedico.setBackground(new Color(120, 134, 199));
-		menuMedico.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		menuMedico.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		menuMedico.setBounds(41, 188, 386, 146);
-		fondo.add(menuMedico);
-		menuMedico.setLayout(null);
+		menuPersonaPanel.setBackground(new Color(120, 134, 199));
+		menuPersonaPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		menuPersonaPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		menuPersonaPanel.setBounds(142, 188, 386, 146);
+		fondo.add(menuPersonaPanel);
+		menuPersonaPanel.setLayout(null);
 
 
-		JLabel lblMedico = new JLabel("Medico");
-		lblMedico.setForeground(Color.WHITE);
-		lblMedico.setFont(new Font("Verdana", Font.BOLD, 40));
-		lblMedico.setBounds(36, 54, 175, 41);
-		menuMedico.add(lblMedico);
+		lblPersona = new JLabel("Medico");
+		lblPersona.setForeground(Color.WHITE);
+		lblPersona.setFont(new Font("Verdana", Font.BOLD, 40));
+		lblPersona.setBounds(36, 54, 203, 41);
+		menuPersonaPanel.add(lblPersona);
 
 
-		medicoIcon = new JLabel("");
-		medicoIcon.setBounds(233, 13, 141, 120);
-		menuMedico.add(medicoIcon);
-		medicoIcon.setIcon(new ImageIcon(Principal2.class.getResource("/imagenes/medicoIcon.png")));
-		icon = (ImageIcon)medicoIcon.getIcon();
-		img = icon.getImage().getScaledInstance(medicoIcon.getWidth(), medicoIcon.getHeight(), Image.SCALE_SMOOTH);
-		medicoIcon.setIcon(new ImageIcon(img));
+		personaIcon = new JLabel("");
+		personaIcon.setBounds(233, 13, 141, 120);
+		menuPersonaPanel.add(personaIcon);
+		personaIcon.setIcon(new ImageIcon(Principal2.class.getResource("/imagenes/medicoIcon.png")));
+		icon = (ImageIcon)personaIcon.getIcon();
+		img = icon.getImage().getScaledInstance(personaIcon.getWidth(), personaIcon.getHeight(), Image.SCALE_SMOOTH);
+		personaIcon.setIcon(new ImageIcon(img));
 
 		JPanel panel_9 = new JPanel();
-		panel_9.setBounds(299, 829, 229, 28);
+		panel_9.setBounds(10, 788, 229, 28);
 		fondo.add(panel_9);
 		panel_9.addMouseListener(new MouseAdapter() {
 			@Override
@@ -259,7 +275,7 @@ public class Principal2 extends JFrame {
 		panel_9.add(lblCerrarSesion);
 
 		JPanel panel_10 = new JPanel();
-		panel_10.setBounds(41, 829, 229, 28);
+		panel_10.setBounds(10, 829, 229, 28);
 		fondo.add(panel_10);
 		panel_10.addMouseListener(new MouseAdapter() {
 			@Override
@@ -275,11 +291,6 @@ public class Principal2 extends JFrame {
 		lblSalir.setForeground(Color.WHITE);
 		lblSalir.setFont(new Font("Verdana", Font.PLAIN, 14));
 		panel_10.add(lblSalir);
-
-		JPanel panel_3 = new JPanel();
-		panel_3.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_3.setBounds(1407, 178, 386, 146);
-		fondo.add(panel_3);
 
 		regMedicoPanel = new JPanel();
 		regMedicoPanel.addMouseListener(new MouseAdapter() {
@@ -300,7 +311,7 @@ public class Principal2 extends JFrame {
 		});
 		regMedicoPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		regMedicoPanel.setBackground(new Color(169, 181, 223));
-		regMedicoPanel.setBounds(41, 333, 386, 67);
+		regMedicoPanel.setBounds(142, 333, 386, 67);
 		regMedicoPanel.setVisible(false);
 		fondo.add(regMedicoPanel);
 
@@ -330,7 +341,7 @@ public class Principal2 extends JFrame {
 		listMedicoPanel.setVisible(false);
 		listMedicoPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		listMedicoPanel.setBackground(new Color(169, 181, 223));
-		listMedicoPanel.setBounds(41, 400, 386, 67);
+		listMedicoPanel.setBounds(142, 400, 386, 67);
 		fondo.add(listMedicoPanel);
 
 		JLabel lblLista = new JLabel("Lista");
@@ -376,7 +387,7 @@ public class Principal2 extends JFrame {
 		enfermedadPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		enfermedadPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		enfermedadPanel.setBackground(new Color(120, 134, 199));
-		enfermedadPanel.setBounds(907, 188, 434, 146);
+		enfermedadPanel.setBounds(271, 557, 434, 146);
 		fondo.add(enfermedadPanel);
 
 		JLabel lblEnfermedad = new JLabel("Enfermedad");
@@ -395,6 +406,7 @@ public class Principal2 extends JFrame {
 		enfermedadPanel.add(enfermedadIcon);
 
 		regEnfermedadPanel = new JPanel();
+		regEnfermedadPanel.setVisible(false);
 		regEnfermedadPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -412,10 +424,9 @@ public class Principal2 extends JFrame {
 				regEnfermedadPanel.setBackground(new Color(169, 181, 223));
 			}
 		});
-		regEnfermedadPanel.setVisible(false);
 		regEnfermedadPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		regEnfermedadPanel.setBackground(new Color(169, 181, 223));
-		regEnfermedadPanel.setBounds(907, 333, 434, 67);
+		regEnfermedadPanel.setBounds(271, 702, 434, 67);
 		fondo.add(regEnfermedadPanel);
 
 		JLabel label_2 = new JLabel("Registrar");
@@ -426,7 +437,7 @@ public class Principal2 extends JFrame {
 		listEnfermedadPanel = new JPanel();
 		listEnfermedadPanel.setVisible(false);
 		listEnfermedadPanel.setBackground(new Color(169, 181, 223));
-		listEnfermedadPanel.setBounds(907, 400, 434, 67);
+		listEnfermedadPanel.setBounds(271, 769, 434, 67);
 		fondo.add(listEnfermedadPanel);
 
 		JLabel lblLista_1 = new JLabel("Lista");
@@ -434,8 +445,8 @@ public class Principal2 extends JFrame {
 		lblLista_1.setFont(new Font("Verdana", Font.PLAIN, 40));
 		listEnfermedadPanel.add(lblLista_1);
 
-		citasPanel = new JPanel();
-		citasPanel.addMouseListener(new MouseAdapter() {
+		citasAdminPanel = new JPanel();
+		citasAdminPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(!agendarCitaPanel.isVisible()) {
@@ -448,25 +459,25 @@ public class Principal2 extends JFrame {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				citasPanel.setBackground(new Color(45, 51, 107));
+				citasAdminPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				citasPanel.setBackground(new Color(120, 134, 199));
+				citasAdminPanel.setBackground(new Color(120, 134, 199));
 			}
 		});
-		citasPanel.setLayout(null);
-		citasPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		citasPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		citasPanel.setBackground(new Color(120, 134, 199));
-		citasPanel.setBounds(508, 188, 313, 146);
-		fondo.add(citasPanel);
+		citasAdminPanel.setLayout(null);
+		citasAdminPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		citasAdminPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		citasAdminPanel.setBackground(new Color(120, 134, 199));
+		citasAdminPanel.setBounds(685, 188, 313, 146);
+		fondo.add(citasAdminPanel);
 
 		JLabel lblCitas = new JLabel("Citas");
 		lblCitas.setForeground(Color.WHITE);
 		lblCitas.setFont(new Font("Verdana", Font.BOLD, 40));
 		lblCitas.setBounds(12, 61, 112, 41);
-		citasPanel.add(lblCitas);
+		citasAdminPanel.add(lblCitas);
 
 		calendarioIcon = new JLabel("");
 		calendarioIcon.setBounds(160, 13, 141, 120);
@@ -475,7 +486,7 @@ public class Principal2 extends JFrame {
 		img = icon.getImage().getScaledInstance(calendarioIcon.getWidth(), calendarioIcon.getHeight(), Image.SCALE_SMOOTH);
 		calendarioIcon.setIcon(new ImageIcon(img));
 
-		citasPanel.add(calendarioIcon);
+		citasAdminPanel.add(calendarioIcon);
 
 		agendarCitaPanel = new JPanel();
 
@@ -498,7 +509,7 @@ public class Principal2 extends JFrame {
 		agendarCitaPanel.setBackground(new Color(169, 181, 223));
 		agendarCitaPanel.setVisible(false);
 		agendarCitaPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		agendarCitaPanel.setBounds(508, 333, 313, 67);
+		agendarCitaPanel.setBounds(685, 333, 313, 67);
 		fondo.add(agendarCitaPanel);
 
 		JLabel lblAgendar = new JLabel("Agendar");
@@ -524,19 +535,133 @@ public class Principal2 extends JFrame {
 		listCitasPanel.setBackground(new Color(169, 181, 223));
 		listCitasPanel.setVisible(false);
 		listCitasPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		listCitasPanel.setBounds(508, 400, 313, 67);
+		listCitasPanel.setBounds(685, 400, 313, 67);
 		fondo.add(listCitasPanel);
 
-		JLabel lblListar = new JLabel("Lista");
+		JLabel lblListar = new JLabel("Ver");
 		lblListar.setForeground(Color.WHITE);
 		lblListar.setFont(new Font("Verdana", Font.PLAIN, 40));
 		listCitasPanel.add(lblListar);
-
-
+		
+		vacunaPanel = new JPanel();
+		vacunaPanel.setLayout(null);
+		vacunaPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		vacunaPanel.setBackground(new Color(120, 134, 199));
+		vacunaPanel.setBounds(1132, 188, 386, 146);
+		fondo.add(vacunaPanel);
+		
+		JLabel lblReportes = new JLabel("Vacunas");
+		lblReportes.setForeground(Color.WHITE);
+		lblReportes.setFont(new Font("Verdana", Font.BOLD, 40));
+		lblReportes.setBounds(36, 54, 209, 41);
+		vacunaPanel.add(lblReportes);
+		
+		vacunaIcon = new JLabel("");
+		vacunaIcon.setBounds(209, 0, 197, 148);
+		vacunaIcon.setIcon(new ImageIcon(Principal2.class.getResource("/imagenes/jeringaIcon.png")));
+		icon = (ImageIcon)vacunaIcon.getIcon();
+		img = icon.getImage().getScaledInstance(vacunaIcon.getWidth(), vacunaIcon.getHeight(), Image.SCALE_SMOOTH);
+		vacunaIcon.setIcon(new ImageIcon(img));
+		vacunaPanel.add(vacunaIcon);
+		
+		reportePanel = new JPanel();
+		reportePanel.setLayout(null);
+		reportePanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		reportePanel.setBackground(new Color(120, 134, 199));
+		reportePanel.setBounds(942, 557, 458, 146);
+		fondo.add(reportePanel);
+		
+		JLabel lblReportes_1 = new JLabel("Ver reportes");
+		lblReportes_1.setForeground(Color.WHITE);
+		lblReportes_1.setFont(new Font("Verdana", Font.BOLD, 40));
+		lblReportes_1.setBounds(36, 54, 302, 41);
+		reportePanel.add(lblReportes_1);
+		
+		registrarVacunaPanel = new JPanel();
+		registrarVacunaPanel.setVisible(false);
+		registrarVacunaPanel.setBackground(new Color(169, 181, 223));
+		registrarVacunaPanel.setBounds(1132, 333, 386, 67);
+		fondo.add(registrarVacunaPanel);
+		
+		JLabel lblRegistrar_1 = new JLabel("Registrar");
+		lblRegistrar_1.setForeground(Color.WHITE);
+		lblRegistrar_1.setFont(new Font("Verdana", Font.PLAIN, 40));
+		registrarVacunaPanel.add(lblRegistrar_1);
+		
+		listVacunasPanel = new JPanel();
+		listVacunasPanel.setVisible(false);
+		listVacunasPanel.setBackground(new Color(169, 181, 223));
+		listVacunasPanel.setBounds(1132, 400, 386, 67);
+		fondo.add(listVacunasPanel);
+		
+		JLabel label_4 = new JLabel("Lista");
+		label_4.setForeground(Color.WHITE);
+		label_4.setFont(new Font("Verdana", Font.PLAIN, 40));
+		listVacunasPanel.add(label_4);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(361, 615, 995, 272);
+		fondo.add(scrollPane);
+		
+		table = new JTable();
+		model = new DefaultTableModel(
+				new Object[][] {
+				},
+				new String[] {
+					"Codigo", "Persona", "Fecha", "Estado"
+				}
+			) {
+				boolean[] columnEditables = new boolean[] {
+					false, false, false, false
+				};
+				public boolean isCellEditable(int row, int column) {
+					return columnEditables[column];
+				}
+			};
+		table.setModel(model);
+		scrollPane.setViewportView(table);
+		
+		label_3 = new JLabel("Citas para hoy");
+		label_3.setVisible(false);
+		label_3.setForeground(new Color(45, 51, 107));
+		label_3.setFont(new Font("Verdana", Font.BOLD, 40));
+		label_3.setBounds(667, 503, 367, 41);
+		fondo.add(label_3);
+		scrollPane.setVisible(false);
+		
+		if(usuario.getUser().getTipo().equals("Medico"))
+			cargarMedico();
 
 	}
 
 	private boolean isDesignTime() {
 		return java.beans.Beans.isDesignTime();
+	}
+	
+	private void cargarMedico() {
+		personaIcon.setIcon(new ImageIcon(Principal2.class.getResource("/imagenes/pacienteIcon.png")));
+		icon = (ImageIcon)personaIcon.getIcon();
+		img = icon.getImage().getScaledInstance(personaIcon.getWidth(), personaIcon.getHeight(), Image.SCALE_SMOOTH);
+		personaIcon.setIcon(new ImageIcon(img));
+		lblPersona.setText("Paciente");
+		scrollPane.setVisible(true);
+		enfermedadPanel.setVisible(false);
+		reportePanel.setVisible(false);
+		label_3.setVisible(true);
+		cargarCitasActuales();
+		
+	}
+	
+	private void cargarCitasActuales() {
+		model.setRowCount(0);
+		ArrayList<Cita> citas = usuario.getHistorial();
+		
+		
+		for(Cita c: citas) {
+			if(c.getFecha().equals(LocalDate.now())) {
+				Object[] fila = {c.getCodigo(), c.getPersona().getNombres()+" "+c.getPersona().getApellidos(), 
+						c.getFecha(), c.isEstado() ? "Pendiente" : "Completada"};
+			}
+		}
 	}
 }

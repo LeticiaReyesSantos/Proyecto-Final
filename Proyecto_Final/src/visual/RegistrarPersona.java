@@ -67,7 +67,6 @@ public class RegistrarPersona extends JDialog {
 	private JDateChooser dateChooser;
 
 	private User user = Clinica.getLoginUser().getUser();
-	Horario horario;
 	private JSpinner maxCitasSpinner;
 	private JPanel aceptarPanel;
 	private JRadioButton medicoRadio;
@@ -243,10 +242,6 @@ public class RegistrarPersona extends JDialog {
 		lblNewLabel_2.setBounds(497, 13, 181, 16);
 		generalPanel.add(lblNewLabel_2);
 
-		JLabel calenderIcon = new JLabel("");
-		calenderIcon.setBounds(635, 46, 56, 16);
-		generalPanel.add(calenderIcon);
-
 		calendario.set(1900, Calendar.JANUARY, 1);
 
 		dateChooser = new JDateChooser();
@@ -259,6 +254,11 @@ public class RegistrarPersona extends JDialog {
 		dateChooser.setBorder(null);
 		dateChooser.setBounds(497, 42, 181, 22);
 		generalPanel.add(dateChooser);
+		
+		JSeparator separator_10 = new JSeparator();
+		dateChooser.add(separator_10, BorderLayout.SOUTH);
+		separator_10.setForeground(new Color(45, 51, 107));
+		separator_10.setBackground(new Color(45, 51, 107));
 
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setForeground(new Color(45, 51, 107));
@@ -323,12 +323,6 @@ public class RegistrarPersona extends JDialog {
 		medicoRadio.setBackground(new Color(169, 181, 223));
 		medicoRadio.setBounds(99, 276, 99, 25);
 		generalPanel.add(medicoRadio);
-		
-		JSeparator separator_10 = new JSeparator();
-		separator_10.setForeground(new Color(45, 51, 107));
-		separator_10.setBackground(new Color(45, 51, 107));
-		separator_10.setBounds(497, 66, 181, 2);
-		generalPanel.add(separator_10);
 
 		JPanel barPanel = new JPanel();
 		barPanel.addMouseListener(new MouseAdapter() {
