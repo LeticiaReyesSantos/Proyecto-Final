@@ -546,5 +546,33 @@ public class Clinica implements Serializable {
 		return visibles;
 	}
 	
-
+	/*
+	public boolean medicoPuedeVerConsulta(Medico med, Consulta cons) {
+		boolean puede = false;
+		if(cons.isVisibilidad() || cons.getMedico().getEspecialidad().equalsIgnoreCase(med.getEspecialidad())) {
+			puede = true;
+		}
+		return puede;
+	}*/
+	
+	public Enfermedad buscarEnfByCode(String code) {
+		for (Enfermedad enf : enfermedades) {
+			if(enf.getCodigo().equalsIgnoreCase(code)) {
+				return enf;
+			}
+		}
+		return null;
+	}
+	
+	public boolean modificarEnfermedad(String codigo, String nuevoTratamiento, boolean nuevoControl, ArrayList<String> nuevosSintomas) {
+		Enfermedad enf = buscarEnfByCode(codigo);
+		if(enf!= null) {
+			enf.setTratamiento(nuevoTratamiento);
+			enf.setControlada(nuevoControl);
+			enf.setSintomas(nuevosSintomas);
+			return true;
+		}
+		return false;
+	}
+	
 }

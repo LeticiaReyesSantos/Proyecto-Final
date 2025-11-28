@@ -208,7 +208,7 @@ public class RegistrarCita extends JDialog {
 		buscarMedicoPanel.setBackground(new Color(169, 181, 223));
 
 		JLabel label_2 = new JLabel("Buscar");
-		label_2.setForeground(Color.WHITE);
+		label_2.setForeground(new Color(0, 0, 0));
 		label_2.setFont(new Font("Verdana", Font.PLAIN, 14));
 		buscarMedicoPanel.add(label_2);
 
@@ -275,7 +275,7 @@ public class RegistrarCita extends JDialog {
 		fondo.add(buscarPanel);
 
 		JLabel lblBuscar = new JLabel("Buscar");
-		lblBuscar.setForeground(Color.WHITE);
+		lblBuscar.setForeground(new Color(0, 0, 0));
 		lblBuscar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		buscarPanel.add(lblBuscar);
 
@@ -310,7 +310,7 @@ public class RegistrarCita extends JDialog {
 		fondo.add(agendarPanel);
 
 		JLabel lblAgendar = new JLabel("Agendar");
-		lblAgendar.setForeground(Color.WHITE);
+		lblAgendar.setForeground(new Color(0, 0, 0));
 		lblAgendar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		agendarPanel.add(lblAgendar);
 
@@ -327,7 +327,7 @@ public class RegistrarCita extends JDialog {
 		fondo.add(panel_2);
 
 		JLabel lblVolver = new JLabel("Volver");
-		lblVolver.setForeground(Color.WHITE);
+		lblVolver.setForeground(new Color(0, 0, 0));
 		lblVolver.setFont(new Font("Verdana", Font.PLAIN, 14));
 		panel_2.add(lblVolver);
 	}

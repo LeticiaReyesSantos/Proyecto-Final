@@ -14,7 +14,7 @@ public class Cita implements Serializable{
 	protected Persona persona;
 	protected Medico medico;
 	protected LocalDate fecha;
-	protected boolean estado;
+	private boolean estado;
 	
 	public Cita(String codigo, Persona persona, Medico medico, LocalDate fecha) {
 		super();
