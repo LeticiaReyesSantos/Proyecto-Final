@@ -5,22 +5,26 @@ import java.awt.EventQueue;
 
 
 
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import logico.Cita;
 import logico.Clinica;
 import logico.Persona;
+import servidor.Servidor;
 
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -30,9 +34,19 @@ import java.awt.event.MouseEvent;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.MouseMotionAdapter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.Socket;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JSeparator;
 
 
 
@@ -79,10 +93,23 @@ public class Principal2 extends JFrame {
 	private JScrollPane scrollPane;
 	private JLabel label_3;
 
+	private JPanel configuracionPanel;
+	private JPanel loadRespaldoPanel;
+	private JLabel lblCargarRespaldo;
+	private JPanel changePassPanel;
+	private JLabel lblCambiarContrasea;
+	private JPanel changeUserPanel;
+	private JPanel salirPanel;
+	private JPanel respaldoPanel;
+
+	private Servidor servidor = new Servidor(9000);
+
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -100,6 +127,8 @@ public class Principal2 extends JFrame {
 	 */
 	public Principal2() {
 		Clinica.load();
+		servidor.iniciar();
+
 		setResizable(false);
 		if (isDesignTime()) {
 			dim = new Dimension(1400, 900); 
@@ -147,6 +176,118 @@ public class Principal2 extends JFrame {
 				setLocation(x2-x1, y2-y1);
 			}
 		});
+
+		configuracionPanel = new JPanel();
+		configuracionPanel.setVisible(false);
+		configuracionPanel.setBackground(new Color(45, 51, 107));
+		configuracionPanel.setBounds(dim.width-260, 92, 256, 375);
+		fondo.add(configuracionPanel);
+		configuracionPanel.setLayout(null);
+
+		respaldoPanel = new JPanel();
+		respaldoPanel.setBounds(12, 85, 229, 28);
+		configuracionPanel.add(respaldoPanel);
+		respaldoPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				realizarRespaldo();
+			}
+		});
+		respaldoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		respaldoPanel.setBackground(new Color(120, 134, 199));
+
+		JLabel lblRespaldo = new JLabel("Hacer Respaldo");
+		lblRespaldo.setForeground(Color.WHITE);
+		lblRespaldo.setFont(new Font("Verdana", Font.PLAIN, 14));
+		respaldoPanel.add(lblRespaldo);
+
+		changeUserPanel = new JPanel();
+		changeUserPanel.setBounds(12, 293, 229, 28);
+		configuracionPanel.add(changeUserPanel);
+		changeUserPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				servidor.detener();
+				Clinica.getInstance().save();
+				Login login = new Login();
+				login.setVisible(true);
+
+				dispose();
+			}
+		});
+		changeUserPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		changeUserPanel.setBackground(new Color(120, 134, 199));
+
+		JLabel lblCerrarSesion = new JLabel("Cambiar de usuario");
+		lblCerrarSesion.setForeground(Color.WHITE);
+		lblCerrarSesion.setFont(new Font("Verdana", Font.PLAIN, 14));
+		changeUserPanel.add(lblCerrarSesion);
+
+		salirPanel = new JPanel();
+		salirPanel.setBounds(12, 334, 229, 28);
+		configuracionPanel.add(salirPanel);
+		salirPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Clinica.getInstance().save();
+				servidor.detener();
+				dispose();
+			}
+		});
+		salirPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		salirPanel.setBackground(new Color(120, 134, 199));
+
+		JLabel lblSalir = new JLabel("Salir");
+		lblSalir.setForeground(Color.WHITE);
+		lblSalir.setFont(new Font("Verdana", Font.PLAIN, 14));
+		salirPanel.add(lblSalir);
+
+		loadRespaldoPanel = new JPanel();
+		loadRespaldoPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				File archivo = buscarRespaldo();
+				if(archivo!= null) {
+					int respuesta  = JOptionPane.showConfirmDialog(null, "Estas seguro de querer sobreescribir el archivo actual?");
+					
+					if(respuesta == JOptionPane.YES_OPTION) {
+						Clinica.getInstance().save();
+						cargarRespaldo(archivo);
+					}
+				}
+			}
+		});
+		loadRespaldoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		loadRespaldoPanel.setBackground(new Color(120, 134, 199));
+		loadRespaldoPanel.setBounds(12, 126, 229, 28);
+		configuracionPanel.add(loadRespaldoPanel);
+
+		lblCargarRespaldo = new JLabel("Cargar Respaldo");
+		lblCargarRespaldo.setForeground(Color.WHITE);
+		lblCargarRespaldo.setFont(new Font("Verdana", Font.PLAIN, 14));
+		loadRespaldoPanel.add(lblCargarRespaldo);
+
+		changePassPanel = new JPanel();
+		changePassPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		changePassPanel.setBackground(new Color(120, 134, 199));
+		changePassPanel.setBounds(12, 252, 229, 28);
+		configuracionPanel.add(changePassPanel);
+
+		lblCambiarContrasea = new JLabel("Cambiar contrase\u00F1a");
+		lblCambiarContrasea.setForeground(Color.WHITE);
+		lblCambiarContrasea.setFont(new Font("Verdana", Font.PLAIN, 14));
+		changePassPanel.add(lblCambiarContrasea);
+
+		JLabel lblNewLabel = new JLabel("Opciones");
+		lblNewLabel.setFont(new Font("Verdana", Font.PLAIN, 20));
+		lblNewLabel.setForeground(Color.WHITE);
+		lblNewLabel.setBounds(84, 13, 110, 28);
+		configuracionPanel.add(lblNewLabel);
+
+		JSeparator separator = new JSeparator();
+		separator.setForeground(Color.WHITE);
+		separator.setBounds(22, 54, 222, 2);
+		configuracionPanel.add(separator);
 		barPanel.setBackground(new Color(45, 51, 107));
 		barPanel.setBounds(0, 0, dim.width, 25);
 		fondo.add(barPanel);
@@ -158,6 +299,7 @@ public class Principal2 extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				dispose();
 				Clinica.getInstance().save();
+				servidor.detener();
 			}
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -197,6 +339,16 @@ public class Principal2 extends JFrame {
 		bienvenidoPanel.add(label_1);
 
 		usuarioIcon = new JLabel("");
+		usuarioIcon.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(!configuracionPanel.isVisible()) {
+					configuracionPanel.setVisible(true);
+				}else {
+					configuracionPanel.setVisible(false);
+				}
+			}
+		});
 		usuarioIcon.setBounds(dim.width-60, 11, 53, 54);
 		bienvenidoPanel.add(usuarioIcon);
 		usuarioIcon.setIcon(new ImageIcon(Principal2.class.getResource("/imagenes/Usuario.png")));
@@ -253,44 +405,6 @@ public class Principal2 extends JFrame {
 		icon = (ImageIcon)personaIcon.getIcon();
 		img = icon.getImage().getScaledInstance(personaIcon.getWidth(), personaIcon.getHeight(), Image.SCALE_SMOOTH);
 		personaIcon.setIcon(new ImageIcon(img));
-
-		JPanel panel_9 = new JPanel();
-		panel_9.setBounds(10, 788, 229, 28);
-		fondo.add(panel_9);
-		panel_9.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Login login = new Login();
-				login.setVisible(true);
-				Clinica.getInstance().save();
-				dispose();
-			}
-		});
-		panel_9.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_9.setBackground(new Color(169, 181, 223));
-
-		JLabel lblCerrarSesion = new JLabel("Cambiar de usuario");
-		lblCerrarSesion.setForeground(Color.WHITE);
-		lblCerrarSesion.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_9.add(lblCerrarSesion);
-
-		JPanel panel_10 = new JPanel();
-		panel_10.setBounds(10, 829, 229, 28);
-		fondo.add(panel_10);
-		panel_10.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Clinica.getInstance().save();
-				dispose();
-			}
-		});
-		panel_10.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_10.setBackground(new Color(169, 181, 223));
-
-		JLabel lblSalir = new JLabel("Salir");
-		lblSalir.setForeground(Color.WHITE);
-		lblSalir.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_10.add(lblSalir);
 
 		regMedicoPanel = new JPanel();
 		regMedicoPanel.addMouseListener(new MouseAdapter() {
@@ -413,7 +527,7 @@ public class Principal2 extends JFrame {
 				RegistrarEnfermedad regEnf = new RegistrarEnfermedad(null);
 				regEnf.setModal(true);
 				regEnf.setVisible(true);
-				
+
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -542,20 +656,20 @@ public class Principal2 extends JFrame {
 		lblListar.setForeground(Color.WHITE);
 		lblListar.setFont(new Font("Verdana", Font.PLAIN, 40));
 		listCitasPanel.add(lblListar);
-		
+
 		vacunaPanel = new JPanel();
 		vacunaPanel.setLayout(null);
 		vacunaPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		vacunaPanel.setBackground(new Color(120, 134, 199));
 		vacunaPanel.setBounds(1132, 188, 386, 146);
 		fondo.add(vacunaPanel);
-		
+
 		JLabel lblReportes = new JLabel("Vacunas");
 		lblReportes.setForeground(Color.WHITE);
 		lblReportes.setFont(new Font("Verdana", Font.BOLD, 40));
 		lblReportes.setBounds(36, 54, 209, 41);
 		vacunaPanel.add(lblReportes);
-		
+
 		vacunaIcon = new JLabel("");
 		vacunaIcon.setBounds(209, 0, 197, 148);
 		vacunaIcon.setIcon(new ImageIcon(Principal2.class.getResource("/imagenes/jeringaIcon.png")));
@@ -563,64 +677,64 @@ public class Principal2 extends JFrame {
 		img = icon.getImage().getScaledInstance(vacunaIcon.getWidth(), vacunaIcon.getHeight(), Image.SCALE_SMOOTH);
 		vacunaIcon.setIcon(new ImageIcon(img));
 		vacunaPanel.add(vacunaIcon);
-		
+
 		reportePanel = new JPanel();
 		reportePanel.setLayout(null);
 		reportePanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		reportePanel.setBackground(new Color(120, 134, 199));
 		reportePanel.setBounds(942, 557, 458, 146);
 		fondo.add(reportePanel);
-		
+
 		JLabel lblReportes_1 = new JLabel("Ver reportes");
 		lblReportes_1.setForeground(Color.WHITE);
 		lblReportes_1.setFont(new Font("Verdana", Font.BOLD, 40));
 		lblReportes_1.setBounds(36, 54, 302, 41);
 		reportePanel.add(lblReportes_1);
-		
+
 		registrarVacunaPanel = new JPanel();
 		registrarVacunaPanel.setVisible(false);
 		registrarVacunaPanel.setBackground(new Color(169, 181, 223));
 		registrarVacunaPanel.setBounds(1132, 333, 386, 67);
 		fondo.add(registrarVacunaPanel);
-		
+
 		JLabel lblRegistrar_1 = new JLabel("Registrar");
 		lblRegistrar_1.setForeground(Color.WHITE);
 		lblRegistrar_1.setFont(new Font("Verdana", Font.PLAIN, 40));
 		registrarVacunaPanel.add(lblRegistrar_1);
-		
+
 		listVacunasPanel = new JPanel();
 		listVacunasPanel.setVisible(false);
 		listVacunasPanel.setBackground(new Color(169, 181, 223));
 		listVacunasPanel.setBounds(1132, 400, 386, 67);
 		fondo.add(listVacunasPanel);
-		
+
 		JLabel label_4 = new JLabel("Lista");
 		label_4.setForeground(Color.WHITE);
 		label_4.setFont(new Font("Verdana", Font.PLAIN, 40));
 		listVacunasPanel.add(label_4);
-		
+
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(361, 615, 995, 272);
 		fondo.add(scrollPane);
-		
+
 		table = new JTable();
 		model = new DefaultTableModel(
 				new Object[][] {
 				},
 				new String[] {
-					"Codigo", "Persona", "Fecha", "Estado"
+						"Codigo", "Persona", "Fecha", "Estado"
 				}
-			) {
-				boolean[] columnEditables = new boolean[] {
+				) {
+			boolean[] columnEditables = new boolean[] {
 					false, false, false, false
-				};
-				public boolean isCellEditable(int row, int column) {
-					return columnEditables[column];
-				}
 			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		};
 		table.setModel(model);
 		scrollPane.setViewportView(table);
-		
+
 		label_3 = new JLabel("Citas para hoy");
 		label_3.setVisible(false);
 		label_3.setForeground(new Color(45, 51, 107));
@@ -628,16 +742,17 @@ public class Principal2 extends JFrame {
 		label_3.setBounds(667, 503, 367, 41);
 		fondo.add(label_3);
 		scrollPane.setVisible(false);
-		
+
 		if(usuario.getUser().getTipo().equals("Medico"))
 			cargarMedico();
+
 
 	}
 
 	private boolean isDesignTime() {
 		return java.beans.Beans.isDesignTime();
 	}
-	
+
 	private void cargarMedico() {
 		personaIcon.setIcon(new ImageIcon(Principal2.class.getResource("/imagenes/pacienteIcon.png")));
 		icon = (ImageIcon)personaIcon.getIcon();
@@ -649,18 +764,101 @@ public class Principal2 extends JFrame {
 		reportePanel.setVisible(false);
 		label_3.setVisible(true);
 		cargarCitasActuales();
-		
+
 	}
-	
+
 	private void cargarCitasActuales() {
 		model.setRowCount(0);
 		ArrayList<Cita> citas = usuario.getHistorial();
-		
-		
+
+
 		for(Cita c: citas) {
 			if(c.getFecha().equals(LocalDate.now())) {
 				Object[] fila = {c.getCodigo(), c.getPersona().getNombres()+" "+c.getPersona().getApellidos(), 
 						c.getFecha(), c.isEstado() ? "Pendiente" : "Completada"};
+				model.addRow(fila);
+			}
+		}
+	}
+
+	private void realizarRespaldo() {
+
+
+		File archivo = new File("clinica.dat");
+		try (Socket sc = new Socket("127.0.0.1", 9000)){
+
+
+
+			DataOutputStream ou = new DataOutputStream(sc.getOutputStream());
+			DataInputStream in = new DataInputStream(sc.getInputStream());
+			FileInputStream f = new FileInputStream(archivo);
+
+			ou.writeUTF(archivo.getName());
+			int unByte;
+
+			while((unByte = f.read())!= -1) {
+				ou.write(unByte);
+			}
+
+			ou.flush();
+			sc.shutdownOutput();
+			String respuesta = in.readUTF();
+			JOptionPane.showMessageDialog(this, "Respaldo completado: " + respuesta);
+			f.close();
+			in.close();
+			ou.close();
+
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, "Error al enviar respaldo: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+
+	private File buscarRespaldo() {
+		File archivo = new File("Backup");
+		File archivoSeleccionado = null;
+		if(!archivo.exists() || archivo.list().length <=0) {
+			JOptionPane.showMessageDialog(null, "No existen respaldos ahora mismo");
+			return archivoSeleccionado;
+		}
+
+		JFileChooser chooser = new JFileChooser();
+		chooser.setDialogTitle("Selecciona un archivo");
+		chooser.setCurrentDirectory(archivo);
+		FileNameExtensionFilter filtro = new FileNameExtensionFilter("Respaldos .dat", "dat");
+		chooser.setFileFilter(filtro);
+		int resultado = chooser.showOpenDialog(null);
+
+
+		if (resultado == JFileChooser.APPROVE_OPTION) {
+			archivoSeleccionado = chooser.getSelectedFile();
+		}
+
+		return archivoSeleccionado;
+	}
+
+	private void cargarRespaldo(File archivo) {
+
+		if(archivo != null) {
+			ObjectInputStream objeto;
+			FileInputStream file;
+
+			try {
+				file = new FileInputStream(archivo);
+				objeto = new ObjectInputStream(file);
+				Clinica aux = (Clinica)objeto.readObject();
+				Clinica.setClinica(aux);
+				objeto.close();
+				file.close();
+				JOptionPane.showMessageDialog(null, "Se ha cargado con exito");
+			}catch (FileNotFoundException e) {
+				// TODO: handle exception
+			}catch (IOException e) {
+
+			}catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			}
 		}
 	}

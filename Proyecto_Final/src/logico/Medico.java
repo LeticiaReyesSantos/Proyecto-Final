@@ -74,7 +74,7 @@ public class Medico extends Persona {
 	public int cantCitasDia(LocalDate fecha) {
 		int cant = 0;
 		for (Cita cita : historial) {
-			if(!cita.estado && cita.fecha.equals(fecha)) {
+			if(!cita.isEstado() && cita.fecha.equals(fecha)) {
 				cant++;
 			}
 		}

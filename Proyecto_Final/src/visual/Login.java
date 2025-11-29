@@ -376,11 +376,11 @@ public class Login extends JFrame {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				loginF.setBackground(new Color(102, 0, 204));
+				loginF.setBackground(new Color(0, 0, 128));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				loginF.setBackground(new Color(138, 43, 226));
+				loginF.setBackground(new Color(45, 51, 107));
 			}
 		});
 		loginF.setBackground(new Color(45, 51, 107));
@@ -448,6 +448,5 @@ public class Login extends JFrame {
 		fondo.add(lblIniciarSesion);
 		icon = new ImageIcon(Login.class.getResource("/imagenes/Princi.png"));
 		
-
 	}
 }
