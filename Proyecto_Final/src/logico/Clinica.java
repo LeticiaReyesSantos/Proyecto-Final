@@ -575,4 +575,22 @@ public class Clinica implements Serializable {
 		return false;
 	}
 	
+	public Vacuna buscarVacByCode(String code) {
+		for (Vacuna vac : vacunas) {
+			if(vac.getCodigo().equalsIgnoreCase(code)) {
+				return vac;
+			}
+		}
+		return null;
+	}
+	
+	public boolean modificarVacuna(String codigo, String nuevaDescripcion) {
+		Vacuna vac = buscarVacByCode(codigo);
+		if(vac!= null) {
+			vac.setDescripcion(nuevaDescripcion);
+			return true;
+		}
+		return false;
+	}
+	
 }

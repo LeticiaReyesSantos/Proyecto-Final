@@ -140,6 +140,15 @@ public class CrearConsulta extends JDialog {
 		enfermedad.add(lblDiagnosticarEnfermedad);
 
 		JPanel vacunas = new JPanel();
+		vacunas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ListarVacuna listarVacuna = new ListarVacuna();
+				listarVacuna.setModal(true); 
+				listarVacuna.setLocationRelativeTo(null); 
+				listarVacuna.setVisible(true);
+			}
+		});
 		vacunas.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		vacunas.setBackground(new Color(120, 134, 199));
 		vacunas.setBounds(12, 210, 217, 35);

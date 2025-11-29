@@ -8,6 +8,7 @@ import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Font;
@@ -55,11 +56,11 @@ public class ListarEnfermedades extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	
+
 	public ListarEnfermedades() {
 		this(0);
 	}
-	
+
 	public ListarEnfermedades(int mode) {
 		setUndecorated(true);
 		setBounds(100, 100, 989, 481);
@@ -139,56 +140,121 @@ public class ListarEnfermedades extends JDialog {
 		separator.setBounds(12, 41, 145, 2);
 		panel.add(separator);
 
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_1.setBackground(new Color(120, 134, 199));
-		panel_1.setBounds(25, 82, 132, 35);
-		panel.add(panel_1);
+		JPanel sintomasPanel = new JPanel();
+		sintomasPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int selectedRow = table.getSelectedRow();
+
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(null, "Seleccione una enfermedad primero");
+					return;
+				}
+
+				String codigoEnfermedad = (String) table.getValueAt(selectedRow, 0);
+				Clinica cl = Clinica.getInstance();
+
+				for (Enfermedad enf : cl.getEnfermedades()) {
+					if (enf.getCodigo().equals(codigoEnfermedad)) {
+						if (enf.getSintomas().isEmpty()) {
+							JOptionPane.showMessageDialog(null, 
+									"No hay síntomas registrados para " + enf.getNombre(),
+									"Síntomas", 
+									JOptionPane.INFORMATION_MESSAGE);
+						} else {
+							String sintomasStr = String.join("\n• ", enf.getSintomas());
+							JOptionPane.showMessageDialog(null, 
+									"Síntomas de " + enf.getNombre() + ":\n\n• " + sintomasStr,
+									"Síntomas", 
+									JOptionPane.INFORMATION_MESSAGE);
+						}
+						break;
+					}
+				}
+			}
+		});
+		sintomasPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		sintomasPanel.setBackground(new Color(120, 134, 199));
+		sintomasPanel.setBounds(25, 82, 132, 35);
+		panel.add(sintomasPanel);
 
 		JLabel lblVerS = new JLabel("Ver S\u00EDntomas");
 		lblVerS.setForeground(Color.WHITE);
 		lblVerS.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_1.add(lblVerS);
+		sintomasPanel.add(lblVerS);
 
-		JPanel panel_3 = new JPanel();
-		panel_3.addMouseListener(new MouseAdapter() {
+		JPanel selectionPanel = new JPanel();
+		selectionPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(table.getSelectedRow()>-1)
 					dispose();
 			}
 		});
-		panel_3.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_3.setBackground(new Color(120, 134, 199));
-		panel_3.setBounds(22, 302, 135, 35);
-		panel.add(panel_3);
+		selectionPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		selectionPanel.setBackground(new Color(120, 134, 199));
+		selectionPanel.setBounds(22, 302, 135, 35);
+		panel.add(selectionPanel);
 
 		JLabel label_4 = new JLabel("Seleccionar");
 		label_4.setForeground(Color.WHITE);
 		label_4.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_3.add(label_4);
+		selectionPanel.add(label_4);
 
-		JPanel panel_4 = new JPanel();
-		panel_4.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_4.setBackground(new Color(120, 134, 199));
-		panel_4.setBounds(25, 129, 132, 35);
-		panel.add(panel_4);
+		JPanel tratamientosPanel = new JPanel();
+		tratamientosPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int selectedRow = table.getSelectedRow();
+
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(null, "Seleccione una enfermedad primero");
+					return;
+				}
+
+				String codigoEnfermedad = (String) table.getValueAt(selectedRow, 0);
+				Clinica cl = Clinica.getInstance();
+
+				for (Enfermedad enf : cl.getEnfermedades()) {
+					if (enf.getCodigo().equals(codigoEnfermedad)) {
+						String tratamiento = enf.getTratamiento();
+						if (tratamiento == null || tratamiento.trim().isEmpty()) {
+							JOptionPane.showMessageDialog(null, 
+									"No hay tratamiento registrado para " + enf.getNombre(),
+									"Tratamiento", 
+									JOptionPane.INFORMATION_MESSAGE);
+						} else {
+							JOptionPane.showMessageDialog(null, 
+									"Tratamiento para " + enf.getNombre() + ":\n\n" + tratamiento,
+									"Tratamiento - " + enf.getNombre(), 
+									JOptionPane.INFORMATION_MESSAGE);
+						}
+						break;
+					}
+				}
+
+			}
+		});
+		tratamientosPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		tratamientosPanel.setBackground(new Color(120, 134, 199));
+		tratamientosPanel.setBounds(25, 129, 132, 35);
+		panel.add(tratamientosPanel);
 
 		JLabel lblVerTratamientos = new JLabel("Ver tratamientos");
 		lblVerTratamientos.setForeground(Color.WHITE);
 		lblVerTratamientos.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_4.add(lblVerTratamientos);
+		tratamientosPanel.add(lblVerTratamientos);
 
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_2.setBackground(new Color(120, 134, 199));
-		panel_2.setBounds(25, 180, 132, 35);
-		panel.add(panel_2);
+		JPanel modificarPanel = new JPanel();
+		modificarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		modificarPanel.setBackground(new Color(120, 134, 199));
+		modificarPanel.setBounds(25, 180, 132, 35);
+		panel.add(modificarPanel);
 
 		JLabel label_2 = new JLabel("Modificar");
 		label_2.setForeground(Color.WHITE);
 		label_2.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_2.add(label_2);
+		modificarPanel.add(label_2);
 
 		JLabel lblListaDeEnfermedades = new JLabel("LISTA DE ENFERMEDADES");
 		lblListaDeEnfermedades.setForeground(new Color(120, 134, 199));
@@ -201,11 +267,11 @@ public class ListarEnfermedades extends JDialog {
 		fondo.add(scrollPane);
 
 		modelMultipleSelection = new DefaultTableModel(
-			new Object[][] {},
-			new String[] {"C\u00F3digo", "Nombre", "Tipo", "Control", "Seleccion"}
-		) {
+				new Object[][] {},
+				new String[] {"C\u00F3digo", "Nombre", "Tipo", "Control", "Seleccion"}
+				) {
 			Class[] columnTypes = new Class[] {
-				Object.class, Object.class, Object.class, Object.class, Boolean.class
+					Object.class, Object.class, Object.class, Object.class, Boolean.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
@@ -213,11 +279,11 @@ public class ListarEnfermedades extends JDialog {
 		};
 
 		modelSingleSelection = new DefaultTableModel(
-			new Object[][] {},
-			new String[] {"C\u00F3digo", "Nombre", "Tipo", "Control", "Seleccion"}
-		) {
+				new Object[][] {},
+				new String[] {"C\u00F3digo", "Nombre", "Tipo", "Control", "Seleccion"}
+				) {
 			Class[] columnTypes = new Class[] {
-				Object.class, Object.class, Object.class, Object.class, Boolean.class
+					Object.class, Object.class, Object.class, Object.class, Boolean.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
@@ -227,7 +293,7 @@ public class ListarEnfermedades extends JDialog {
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		cambiarMode(mode);
-		
+
 		if (mode == 0) {
 			actualizarTableSingle();
 		} else if (mode == 1) {
@@ -251,25 +317,25 @@ public class ListarEnfermedades extends JDialog {
 		label_3.setFont(new Font("Verdana", Font.PLAIN, 14));
 		volverPanel.add(label_3);
 	}
-	
+
 	private void actualizarTableMultiple() {
 		Clinica cl = Clinica.getInstance();
 		modelMultipleSelection.setRowCount(0);
 		for (Enfermedad enf : cl.getEnfermedades()) {
-			Object fila[] = {enf.getCodigo(), enf.getNombre(), enf.getTipo(), enf.isControlada(), false};
+			Object[] fila = {enf.getCodigo(), enf.getNombre(), enf.getTipo(), enf.isControlada(), false};
 			modelMultipleSelection.addRow(fila);
 		}
 	}
-	
+
 	private void actualizarTableSingle() {
 		Clinica cl = Clinica.getInstance();
 		modelSingleSelection.setRowCount(0);
 		for (Enfermedad enf : cl.getEnfermedades()) {
-			Object fila[] = {enf.getCodigo(), enf.getNombre(), enf.getTipo(), enf.isControlada(), false};
+			Object[] fila = {enf.getCodigo(), enf.getNombre(), enf.getTipo(), enf.isControlada(), false};
 			modelSingleSelection.addRow(fila);
 		}
 	}
-	
+
 	private void cambiarMode(int mode) {
 		if(mode == 0) {
 			table.setModel(modelSingleSelection);
@@ -280,5 +346,13 @@ public class ListarEnfermedades extends JDialog {
 			table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			table.setRowSelectionAllowed(false);
 		}
+	}
+	
+	private void cargarMultipleSlection() {
+		actualizarTableMultiple();
+	}
+	
+	private void cargarSingleSelection() {
+		actualizarTableSingle();
 	}
 }
