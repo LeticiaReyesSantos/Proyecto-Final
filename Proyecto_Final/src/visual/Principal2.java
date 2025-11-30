@@ -549,6 +549,22 @@ public class Principal2 extends JFrame {
 		regEnfermedadPanel.add(label_2);
 
 		listEnfermedadPanel = new JPanel();
+		listEnfermedadPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ListarEnfermedades listarEnfermedades = new ListarEnfermedades(0); //0 como single selection
+				listarEnfermedades.setModal(true); 
+				listarEnfermedades.setVisible(true);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				listEnfermedadPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				listEnfermedadPanel.setBackground(new Color(169, 181, 223));
+			}
+		});
 		listEnfermedadPanel.setVisible(false);
 		listEnfermedadPanel.setBackground(new Color(169, 181, 223));
 		listEnfermedadPanel.setBounds(271, 769, 434, 67);
@@ -692,6 +708,22 @@ public class Principal2 extends JFrame {
 		reportePanel.add(lblReportes_1);
 
 		registrarVacunaPanel = new JPanel();
+		registrarVacunaPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				RegistrarVacuna regVacuna = new RegistrarVacuna(null);
+				regVacuna.setModal(true); 
+				regVacuna.setVisible(true);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				registrarVacunaPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				registrarVacunaPanel.setBackground(new Color(169, 181, 223));
+			}
+		});
 		registrarVacunaPanel.setVisible(false);
 		registrarVacunaPanel.setBackground(new Color(169, 181, 223));
 		registrarVacunaPanel.setBounds(1132, 333, 386, 67);
@@ -703,6 +735,23 @@ public class Principal2 extends JFrame {
 		registrarVacunaPanel.add(lblRegistrar_1);
 
 		listVacunasPanel = new JPanel();
+		listVacunasPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ListarVacuna listVac = new ListarVacuna();
+				listVac.setModal(true); 
+				listVac.setVisible(true);
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				listVacunasPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				listVacunasPanel.setBackground(new Color(169, 181, 223));
+			}
+		});
 		listVacunasPanel.setVisible(false);
 		listVacunasPanel.setBackground(new Color(169, 181, 223));
 		listVacunasPanel.setBounds(1132, 400, 386, 67);

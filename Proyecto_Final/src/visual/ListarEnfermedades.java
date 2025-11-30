@@ -341,10 +341,12 @@ public class ListarEnfermedades extends JDialog {
 			table.setModel(modelSingleSelection);
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			table.setRowSelectionAllowed(true);
+			cargarSingleSelection();
 		}else if(mode == 1) {
 			table.setModel(modelMultipleSelection);
 			table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			table.setRowSelectionAllowed(false);
+			cargarMultipleSlection();
 		}
 	}
 	

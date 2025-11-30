@@ -1,29 +1,24 @@
 package visual;
 
-import static logico.Clinica.getLoginUser;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.border.BevelBorder;
 import javax.swing.JSeparator;
 import java.awt.Font;
 import javax.swing.JTextField;
-import javax.swing.JRadioButton;
-import com.toedter.calendar.JDateChooser;
+
 
 import logico.Clinica;
-import logico.Persona;
 
 import javax.swing.JSpinner;
 import javax.swing.JTable;
@@ -41,13 +36,9 @@ public class CrearConsulta extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private ArrayList<String> sintomas = new ArrayList<>();
 
-	private int x1;
-	private int x2;
-	private int y1;
-	private int y2;
-	private JPanel barPanel;
 	private JTextField codigoField;
 	private JTextField precioField;
+	private JScrollPane scrollPane; 
 
 	/**
 	 * Launch the application.
@@ -249,6 +240,7 @@ public class CrearConsulta extends JDialog {
 		codigoField.setColumns(10);
 		codigoField.setBounds(28, 44, 190, 22);
 		panel_1.add(codigoField);
+		codigoField.setText("CN-"+Clinica.getInstance().genCita);
 
 		precioField = new JTextField();
 		precioField.setEnabled(false);
@@ -269,8 +261,22 @@ public class CrearConsulta extends JDialog {
 		JPanel realizarPanel = new JPanel();
 		realizarPanel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				//if(Clinica.getInstance().crearConsulta(codigoField.getText(), precioField.getText(), sintomasPanel, tratamiento))
+			public void mouseClicked(MouseEvent e) {
+				if(validarCampos()) {
+					String codigoCita = codigoField.getText();
+					double precio = Double.parseDouble(precioField.getText());
+					JTextArea tratamientoArea = (JTextArea) scrollPane.getViewport().getView();
+					String tratamientoText = tratamientoArea.getText();
+
+					if(Clinica.getInstance().crearConsulta(codigoCita, precio, sintomas, tratamientoText)) {
+						JOptionPane.showMessageDialog(null, "Se ha realizado la consulta con éxito");
+						dispose();
+					} else {
+						JOptionPane.showMessageDialog(null, "Ha surgido un error al realizar la consulta");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Aún hay campos por rellenar");
+				}
 			}
 		});
 		realizarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -301,4 +307,21 @@ public class CrearConsulta extends JDialog {
 		volverPanel.add(label_2);
 
 	}
+	
+	 private boolean validarCampos() {
+	        JTextArea tratamientoArea = (JTextArea) scrollPane.getViewport().getView();
+	        String tratamientoText = tratamientoArea.getText();
+	        String precioText = precioField.getText();
+	        
+	        if(precioText.isEmpty() || tratamientoText.isEmpty()) {
+	            return false;
+	        }
+	        
+	        try {
+	            Double.parseDouble(precioText);
+	            return true;
+	        } catch (NumberFormatException e) {
+	            return false;
+	        }
+	    }
 }

@@ -294,12 +294,12 @@ public class RegistrarCita extends JDialog {
 					LocalDate fecha = dateToLocalDate();
 					
 					if(Clinica.getInstance().hacerCita(cedulaField.getText(), nombreField.getText(), apellidoField.getText(), telefonoField.getText(), medico, fecha)) {
-						JOptionPane.showMessageDialog(null, "Se ha guardado la cita con exito");
+						JOptionPane.showMessageDialog(null, "Se ha guardado la cita con éxito");
 					}else {
 						JOptionPane.showMessageDialog(null, "Ha surgido un error al guardar la cita");
 					}
 				}else {
-					JOptionPane.showMessageDialog(null, "Aun hay campos por rellenar");
+					JOptionPane.showMessageDialog(null, "Aún hay campos por rellenar");
 				}
 
 			}
