@@ -1,0 +1,243 @@
+package visual;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import java.awt.Font;
+import javax.swing.JSeparator;
+import javax.swing.border.BevelBorder;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import logico.Cita;
+import logico.Clinica;
+import logico.Vacuna;
+
+import javax.swing.ListSelectionModel;
+
+public class ListarCitas extends JDialog {
+
+	private static final long serialVersionUID = 1L;
+	private final JPanel contentPanel = new JPanel();
+
+	private int x1;
+	private int x2;
+	private int y1;
+	private int y2;
+	private JPanel barPanel;
+	private JTable table;
+	private DefaultTableModel model;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			ListarCitas dialog = new ListarCitas();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public ListarCitas() {
+		setUndecorated(true);
+		setBounds(100, 100, 989, 481);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+
+		JPanel fondo = new JPanel();
+		fondo.setBackground(new Color(248, 248, 255));
+		fondo.setBounds(0, 0, 989, 481);
+		contentPanel.add(fondo);
+		fondo.setLayout(null);
+
+		barPanel = new JPanel();
+		barPanel.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				//toma la posicion actual de la ventana
+				x2= arg0.getXOnScreen();
+				y2 = arg0.getYOnScreen();
+				//actualiza la posicion de la ventana
+				setLocation(x2-x1, y2-y1);
+			}
+		});
+		barPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				//Toma la posicion actual del panel
+				x1= e.getX();
+				y1 = e.getY();
+			}
+		});
+		barPanel.setBounds(0, 0, 989, 25);
+		fondo.add(barPanel);
+		barPanel.setLayout(null);
+		barPanel.setBackground(new Color(45, 51, 107));
+
+		JPanel cerrarPanel = new JPanel();
+		cerrarPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+
+			}
+		});
+		cerrarPanel.setForeground(Color.BLACK);
+		cerrarPanel.setBackground(new Color(45, 51, 107));
+		cerrarPanel.setBounds(950, 0, 39, 26);
+		barPanel.add(cerrarPanel);
+
+		JLabel label = new JLabel("X");
+		cerrarPanel.add(label);
+
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBackground(Color.WHITE);
+		panel.setBounds(0, 24, 169, 457);
+		fondo.add(panel);
+
+		JLabel label_1 = new JLabel("Men\u00FA");
+		label_1.setForeground(new Color(169, 181, 223));
+		label_1.setFont(new Font("Verdana", Font.BOLD, 18));
+		label_1.setBounds(57, 5, 55, 23);
+		panel.add(label_1);
+
+		JSeparator separator = new JSeparator();
+		separator.setForeground(new Color(45, 51, 107));
+		separator.setBackground(new Color(45, 51, 107));
+		separator.setBounds(12, 41, 145, 2);
+		panel.add(separator);
+
+		JPanel seleccionarPanel = new JPanel();
+		seleccionarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		seleccionarPanel.setBackground(new Color(120, 134, 199));
+		seleccionarPanel.setBounds(22, 247, 135, 35);
+		panel.add(seleccionarPanel);
+
+		JLabel label_3 = new JLabel("Seleccionar");
+		label_3.setForeground(Color.WHITE);
+		label_3.setFont(new Font("Verdana", Font.PLAIN, 14));
+		seleccionarPanel.add(label_3);
+
+		JPanel reagendarPanel = new JPanel();
+		reagendarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		reagendarPanel.setBackground(new Color(120, 134, 199));
+		reagendarPanel.setBounds(22, 82, 132, 35);
+		panel.add(reagendarPanel);
+
+		JLabel lblReagendar = new JLabel("Reagendar");
+		lblReagendar.setForeground(Color.WHITE);
+		lblReagendar.setFont(new Font("Verdana", Font.PLAIN, 14));
+		reagendarPanel.add(lblReagendar);
+
+		JPanel cancelarCita = new JPanel();
+		cancelarCita.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		cancelarCita.setBackground(new Color(120, 134, 199));
+		cancelarCita.setBounds(25, 133, 132, 35);
+		panel.add(cancelarCita);
+
+		JLabel lblCancelar = new JLabel("Cancelar");
+		lblCancelar.setForeground(Color.WHITE);
+		lblCancelar.setFont(new Font("Verdana", Font.PLAIN, 14));
+		cancelarCita.add(lblCancelar);
+
+		JLabel lblListaDeCitas = new JLabel("LISTA DE CITAS");
+		lblListaDeCitas.setForeground(new Color(120, 134, 199));
+		lblListaDeCitas.setFont(new Font("Verdana", Font.BOLD, 28));
+		lblListaDeCitas.setBounds(421, 61, 373, 35);
+		fondo.add(lblListaDeCitas);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(202, 112, 736, 309);
+		fondo.add(scrollPane);
+
+		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		model = new DefaultTableModel(new Object[][] {
+		},
+				new String[] {
+						"Codigo", "Persona", "Medico", "Fecha", "Seleccion"
+		}
+				) {
+			Class[] columnTypes = new Class[] {
+					Object.class, Object.class, Object.class, Object.class, Boolean.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		};
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Codigo", "Persona", "Medico", "Fecha", "Estado", "Seleccion"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				Object.class, Object.class, Object.class, Object.class, Object.class, Boolean.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		});
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane.setViewportView(table);
+
+
+		JPanel volverPanel = new JPanel();
+		volverPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+			}
+		});
+		
+		actualizar();
+		
+		volverPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		volverPanel.setBackground(new Color(169, 181, 223));
+		volverPanel.setBounds(824, 437, 114, 28);
+		fondo.add(volverPanel);
+
+		JLabel label_2 = new JLabel("Volver");
+		label_2.setForeground(Color.BLACK);
+		label_2.setFont(new Font("Verdana", Font.PLAIN, 14));
+		volverPanel.add(label_2);
+	}
+	
+	private void actualizar() {
+		Clinica cl = Clinica.getInstance();
+		model.setRowCount(0);
+		for (Cita cita : cl.getCitas()) {
+			Object[] fila = {cita.getCodigo(), cita.getPersona().getNombres(),cita.getMedico().getNombres(), cita.getFecha(), cita.isEstado()? "FINALIZADA": "PENDIENTE"};
+			model.addRow(fila);
+		}
+
+	}
+
+}

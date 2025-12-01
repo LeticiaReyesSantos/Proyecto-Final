@@ -265,6 +265,7 @@ public class ListarVacuna extends JDialog {
 		fondo.add(volverPanel);
 
 		actualizar();
+		
 		JLabel label_3 = new JLabel("Volver");
 		label_3.setForeground(Color.BLACK);
 		label_3.setFont(new Font("Verdana", Font.PLAIN, 14));

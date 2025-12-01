@@ -37,7 +37,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 
 import logico.Clinica;
-import logico.Horario;
 import logico.Medico;
 import logico.Persona;
 import logico.User;
@@ -590,8 +589,7 @@ public class RegistrarPersona extends JDialog {
 			int maxCitas = (int) maxCitasSpinner.getValue();
 			User usuario = new User("Medico", codigo, codigo);
 
-			aux = new Medico(codigo, cedula, nombres, apellidos, 
-					fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario);
+			aux = new Medico(codigo, cedula, nombres, apellidos, fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario, true);
 
 			Clinica.getInstance().addPersona(aux);
 
