@@ -190,14 +190,17 @@ public class RegistrarCita extends JDialog {
 		buscarMedicoPanel = new JPanel();
 		buscarMedicoPanel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void mouseClicked(MouseEvent e) {
 				ListarPersonas listPerson = new ListarPersonas();
 				listPerson.setModal(true);
 				listPerson.setVisible(true);
 				medico = (Medico)listPerson.objectoSeleccionado();
 
-				if(medico != null) {
+				if(medico != null && medico.isActivo()) {
 					medicoField.setText(medico.getNombres());
+				}else {
+					JOptionPane.showMessageDialog(null, "El médico no existe", "Error", JOptionPane.ERROR_MESSAGE);
+					medicoField.setText("");
 				}
 
 			}

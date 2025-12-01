@@ -19,6 +19,8 @@ import javax.swing.JTextField;
 
 
 import logico.Clinica;
+import logico.Enfermedad;
+import logico.Vacuna;
 
 import javax.swing.JSpinner;
 import javax.swing.JTable;
@@ -35,7 +37,9 @@ public class CrearConsulta extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private ArrayList<String> sintomas = new ArrayList<>();
-
+    private ArrayList<Enfermedad> enfermedadesSeleccionadas = new ArrayList<>();
+    private Vacuna vacunaSeleccionada = null;
+    
 	private JTextField codigoField;
 	private JTextField precioField;
 	private JScrollPane scrollPane; 
@@ -79,7 +83,7 @@ public class CrearConsulta extends JDialog {
 		JPanel cerrarPanel = new JPanel();
 		cerrarPanel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void mouseClicked(MouseEvent e) {
 				dispose();
 			}
 		});

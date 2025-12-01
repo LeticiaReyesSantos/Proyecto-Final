@@ -255,6 +255,17 @@ public class ListarEnfermedades extends JDialog {
 		label_2.setForeground(Color.WHITE);
 		label_2.setFont(new Font("Verdana", Font.PLAIN, 14));
 		modificarPanel.add(label_2);
+		
+		JPanel eliminarPanel = new JPanel();
+		eliminarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		eliminarPanel.setBackground(new Color(120, 134, 199));
+		eliminarPanel.setBounds(25, 225, 132, 35);
+		panel.add(eliminarPanel);
+		
+		JLabel lblEliminar = new JLabel("Eliminar");
+		lblEliminar.setForeground(Color.WHITE);
+		lblEliminar.setFont(new Font("Verdana", Font.PLAIN, 14));
+		eliminarPanel.add(lblEliminar);
 
 		JLabel lblListaDeEnfermedades = new JLabel("LISTA DE ENFERMEDADES");
 		lblListaDeEnfermedades.setForeground(new Color(120, 134, 199));
