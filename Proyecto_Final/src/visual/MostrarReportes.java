@@ -120,34 +120,60 @@ public class MostrarReportes extends JDialog {
 
 	private void graficoVacunas() {
 		DefaultPieDataset data = reporte.generarVacunasMasAplicadas();
-		JFreeChart chart = ChartFactory.createPieChart("Cantidad", data, true, true, false);
-		ChartPanel vacPanel = new ChartPanel(chart);
-		stat1.setLayout(new BorderLayout());
-	    stat1.add(vacPanel, BorderLayout.CENTER);
+		if(data == null || data.getItemCount()==0) {
+			mensaje(stat1);
+		}else {
+			JFreeChart chart = ChartFactory.createPieChart("Cantidad", data, true, true, false);
+			ChartPanel vacPanel = new ChartPanel(chart);
+			stat1.setLayout(new BorderLayout());
+		    stat1.add(vacPanel, BorderLayout.CENTER);
+		}
+		
 	}
 	
 	private void graficoEnfermedades() {
 		DefaultCategoryDataset data = reporte.generarFrecuenciaEnfermedades();
-		JFreeChart chart = ChartFactory.createBarChart("Frecuencia", "Enfermedades", "Cantidad", data);
-		ChartPanel enfPanel = new ChartPanel(chart);
-		stat2.setLayout(new BorderLayout());
-	    stat2.add(enfPanel, BorderLayout.CENTER);
+		if(data == null || data.getRowCount()==0) {
+			mensaje(stat2);
+		}else {
+			JFreeChart chart = ChartFactory.createBarChart("Frecuencia", "Enfermedades", "Cantidad", data);
+			ChartPanel enfPanel = new ChartPanel(chart);
+			stat2.setLayout(new BorderLayout());
+		    stat2.add(enfPanel, BorderLayout.CENTER);
+		}
 	}
 	
 	private void graficoConsultas() {
 	    DefaultCategoryDataset data = reporte.consultasPorEsp();
-	    JFreeChart chart = ChartFactory.createBarChart("Consultas por Especialidad", "Especialidades", "Número de Consultas", data);
-	    ChartPanel consPanel = new ChartPanel(chart);
-	    stat3.setLayout(new BorderLayout());
-	    stat3.add(consPanel, BorderLayout.CENTER);
+	    if(data == null || data.getRowCount()==0) {
+			mensaje(stat3);
+		}else {
+			JFreeChart chart = ChartFactory.createBarChart("Consultas por Especialidad", "Especialidades", "Número de Consultas", data);
+		    ChartPanel consPanel = new ChartPanel(chart);
+		    stat3.setLayout(new BorderLayout());
+		    stat3.add(consPanel, BorderLayout.CENTER);
+		}
 	}
 	
 	private void graficoCitas() {
 		DefaultPieDataset data = reporte.citasByEstado();
-		JFreeChart chart = ChartFactory.createPieChart("Estado", data, true, true, false);
-		ChartPanel citaPanel = new ChartPanel(chart);
-		stat4.setLayout(new BorderLayout());
-	    stat4.add(citaPanel, BorderLayout.CENTER);
+		if(data == null || data.getItemCount()==0) {
+			mensaje(stat4);
+		}else {
+			JFreeChart chart = ChartFactory.createPieChart("Estado", data, true, true, false);
+			ChartPanel citaPanel = new ChartPanel(chart);
+			stat4.setLayout(new BorderLayout());
+		    stat4.add(citaPanel, BorderLayout.CENTER);
+		}
 	}
 
+	private void mensaje(JPanel panel) {
+		panel.removeAll();
+		panel.setLayout(new BorderLayout());
+		JLabel lblMensaje = new JLabel("No hay información suficiente para generar el gráfico", JLabel.CENTER);
+		lblMensaje.setFont(new Font("Verdana", Font.PLAIN, 14));
+		panel.add(lblMensaje, BorderLayout.CENTER);
+		panel.revalidate();
+		panel.repaint();
+	}
 }

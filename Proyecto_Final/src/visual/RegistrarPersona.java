@@ -589,7 +589,7 @@ public class RegistrarPersona extends JDialog {
 			int maxCitas = (int) maxCitasSpinner.getValue();
 			User usuario = new User("Medico", codigo, codigo);
 
-			aux = new Medico(codigo, cedula, nombres, apellidos, fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario, true);
+			aux = new Medico(codigo, cedula, nombres, apellidos, fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario);
 
 			Clinica.getInstance().addPersona(aux);
 

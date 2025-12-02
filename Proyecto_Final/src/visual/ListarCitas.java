@@ -10,6 +10,7 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Font;
@@ -134,15 +135,22 @@ public class ListarCitas extends JDialog {
 		panel.add(separator);
 
 		JPanel seleccionarPanel = new JPanel();
+		seleccionarPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(table.getSelectedRow()>-1)
+					dispose();
+			}
+		});
 		seleccionarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		seleccionarPanel.setBackground(new Color(120, 134, 199));
 		seleccionarPanel.setBounds(22, 247, 135, 35);
 		panel.add(seleccionarPanel);
 
-		JLabel label_3 = new JLabel("Seleccionar");
-		label_3.setForeground(Color.WHITE);
-		label_3.setFont(new Font("Verdana", Font.PLAIN, 14));
-		seleccionarPanel.add(label_3);
+		JLabel seleccionarlbl = new JLabel("Seleccionar");
+		seleccionarlbl.setForeground(Color.WHITE);
+		seleccionarlbl.setFont(new Font("Verdana", Font.PLAIN, 14));
+		seleccionarPanel.add(seleccionarlbl);
 
 		JPanel reagendarPanel = new JPanel();
 		reagendarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -162,6 +170,35 @@ public class ListarCitas extends JDialog {
 		panel.add(cancelarCita);
 
 		JLabel lblCancelar = new JLabel("Cancelar");
+		lblCancelar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				 int selectedRow = table.getSelectedRow();
+			        if (selectedRow == -1) {
+			            JOptionPane.showMessageDialog(null, "Por favor, seleccione una cita primero", "Error", JOptionPane.WARNING_MESSAGE);
+			            return;
+			        }
+			        String codigoCita = (String) table.getValueAt(selectedRow, 0);
+			        String nombrePersona = (String) table.getValueAt(selectedRow, 1);
+			        String medicoNombre = (String) table.getValueAt(selectedRow, 2);
+			        String fechaCita = (String) table.getValueAt(selectedRow, 3);
+			        
+			        String mensaje = "¿Está seguro que desea cancelar la cita?\n\n" +"Código: " + codigoCita + "\n" +"Persona: " + nombrePersona + "\n" +"Médico: " + medicoNombre + "\n" +"Fecha: " + fechaCita;
+	        
+	        int confirmacion = JOptionPane.showConfirmDialog(null, mensaje,"Confirmar Cancelación",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+	        
+	        if (confirmacion == JOptionPane.YES_OPTION) {
+	            if (Clinica.getInstance().cancelarCita(codigoCita)) {
+	                JOptionPane.showMessageDialog(null,"Cita cancelada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+	                actualizar();
+	                
+	            } else {
+	                JOptionPane.showMessageDialog(null, "No se pudo cancelar la cita.\n" +"La cita ya fue completada o no existe.", "Error", JOptionPane.ERROR_MESSAGE);
+	            }
+	        }
+	    }
+	});
+			   
 		lblCancelar.setForeground(Color.WHITE);
 		lblCancelar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		cancelarCita.add(lblCancelar);
@@ -177,7 +214,6 @@ public class ListarCitas extends JDialog {
 		fondo.add(scrollPane);
 
 		table = new JTable();
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		model = new DefaultTableModel(new Object[][] {
 		},
 				new String[] {
@@ -191,20 +227,7 @@ public class ListarCitas extends JDialog {
 				return columnTypes[columnIndex];
 			}
 		};
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Codigo", "Persona", "Medico", "Fecha", "Estado", "Seleccion"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				Object.class, Object.class, Object.class, Object.class, Object.class, Boolean.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
+		table.setModel(model);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(table);
 
@@ -216,9 +239,9 @@ public class ListarCitas extends JDialog {
 				dispose();
 			}
 		});
-		
+
 		actualizar();
-		
+
 		volverPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		volverPanel.setBackground(new Color(169, 181, 223));
 		volverPanel.setBounds(824, 437, 114, 28);
@@ -229,7 +252,7 @@ public class ListarCitas extends JDialog {
 		label_2.setFont(new Font("Verdana", Font.PLAIN, 14));
 		volverPanel.add(label_2);
 	}
-	
+
 	private void actualizar() {
 		Clinica cl = Clinica.getInstance();
 		model.setRowCount(0);

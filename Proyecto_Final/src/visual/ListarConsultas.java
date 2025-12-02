@@ -1,5 +1,7 @@
 package visual;
 
+import static logico.Clinica.getLoginUser;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -14,10 +16,17 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import logico.Cita;
+import logico.Clinica;
+import logico.Consulta;
+import logico.Persona;
+
 import java.awt.Font;
 import javax.swing.border.BevelBorder;
 import javax.swing.JSeparator;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
 public class ListarConsultas extends JDialog {
 
@@ -26,12 +35,15 @@ public class ListarConsultas extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
+	private Persona user = getLoginUser();
 
 	private int x1;
 	private int x2;
 	private int y1;
 	private int y2;
 	private JPanel barPanel;
+	private JTable table;
+	private DefaultTableModel model;
 
 
 	/**
@@ -118,6 +130,13 @@ public class ListarConsultas extends JDialog {
 		fondo.add(panel);
 		
 		JPanel seleccionPanel = new JPanel();
+		seleccionPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//if(table.getSelectedRow()>-1)
+					dispose();
+			}
+		});
 		seleccionPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		seleccionPanel.setBackground(new Color(120, 134, 199));
 		seleccionPanel.setBounds(19, 232, 135, 35);
@@ -151,6 +170,17 @@ public class ListarConsultas extends JDialog {
 		lblVerDiagn.setFont(new Font("Verdana", Font.PLAIN, 14));
 		diagnosticoPanel.add(lblVerDiagn);
 		
+		JPanel vacunaPanel = new JPanel();
+		vacunaPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		vacunaPanel.setBackground(new Color(120, 134, 199));
+		vacunaPanel.setBounds(22, 142, 132, 35);
+		panel.add(vacunaPanel);
+		
+		JLabel lblVerVacuna = new JLabel("Ver Vacuna");
+		lblVerVacuna.setForeground(Color.WHITE);
+		lblVerVacuna.setFont(new Font("Verdana", Font.PLAIN, 14));
+		vacunaPanel.add(lblVerVacuna);
+		
 		JLabel lblListaDeConsultas = new JLabel("LISTA DE CONSULTAS");
 		lblListaDeConsultas.setForeground(new Color(120, 134, 199));
 		lblListaDeConsultas.setFont(new Font("Verdana", Font.BOLD, 28));
@@ -177,5 +207,37 @@ public class ListarConsultas extends JDialog {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(220, 107, 736, 309);
 		fondo.add(scrollPane);
+		
+		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		model = new DefaultTableModel(new Object[][] {
+		},
+		new String[] {
+			"C\u00F3digo ", "Paciente", "Medico", "Fecha", "Precio", "Seleccion"
+		}
+	) {
+		Class[] columnTypes = new Class[] {
+			Object.class, Object.class, Object.class, Object.class, Object.class, Boolean.class
+		};
+		public Class getColumnClass(int columnIndex) {
+			return columnTypes[columnIndex];
+		}
+	};
+		table.setModel(model);
+		scrollPane.setViewportView(table);
+		actualizar();
+	}
+	//MANEJAR VISIBILIDAD DE LAS CONSULTAS
+	private void actualizar() {
+		Clinica cl = Clinica.getInstance();
+		model.setRowCount(0);
+		for (Cita cita : cl.getCitas()) {
+			if(cita instanceof Consulta) {
+				Consulta cons = (Consulta) cita;
+				Object[] fila = {cons.getCodigo(), cons.getPaciente().getNombres(),cons.getMedico().getNombres(), cons.getFecha(), cons.getPrecio()};
+				model.addRow(fila);
+			}
+		}
+
 	}
 }

@@ -31,6 +31,7 @@ import javax.swing.JScrollPane;
 import java.awt.TextArea;
 import javax.swing.JTextArea;
 import java.awt.ScrollPane;
+import javax.swing.SpinnerNumberModel;
 
 public class CrearConsulta extends JDialog {
 
@@ -41,7 +42,6 @@ public class CrearConsulta extends JDialog {
     private Vacuna vacunaSeleccionada = null;
     
 	private JTextField codigoField;
-	private JTextField precioField;
 	private JScrollPane scrollPane; 
 
 	/**
@@ -246,12 +246,6 @@ public class CrearConsulta extends JDialog {
 		panel_1.add(codigoField);
 		codigoField.setText("CN-"+Clinica.getInstance().genCita);
 
-		precioField = new JTextField();
-		precioField.setEnabled(false);
-		precioField.setColumns(10);
-		precioField.setBounds(318, 42, 190, 22);
-		panel_1.add(precioField);
-
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(35, 114, 473, 84);
 		panel_1.add(scrollPane);
@@ -261,6 +255,11 @@ public class CrearConsulta extends JDialog {
 		lblTratamiento.setFont(new Font("Verdana", Font.BOLD, 14));
 		lblTratamiento.setBounds(28, 82, 109, 16);
 		panel_1.add(lblTratamiento);
+		
+		JSpinner precioSpinner = new JSpinner();
+		precioSpinner.setModel(new SpinnerNumberModel(1500, 1500, 6000, 500));
+		precioSpinner.setBounds(318, 40, 190, 26);
+		panel_1.add(precioSpinner);
 
 		JPanel realizarPanel = new JPanel();
 		realizarPanel.addMouseListener(new MouseAdapter() {
@@ -268,7 +267,7 @@ public class CrearConsulta extends JDialog {
 			public void mouseClicked(MouseEvent e) {
 				if(validarCampos()) {
 					String codigoCita = codigoField.getText();
-					double precio = Double.parseDouble(precioField.getText());
+					double precio = ((Number) precioSpinner.getValue()).doubleValue();
 					JTextArea tratamientoArea = (JTextArea) scrollPane.getViewport().getView();
 					String tratamientoText = tratamientoArea.getText();
 
@@ -315,17 +314,10 @@ public class CrearConsulta extends JDialog {
 	 private boolean validarCampos() {
 	        JTextArea tratamientoArea = (JTextArea) scrollPane.getViewport().getView();
 	        String tratamientoText = tratamientoArea.getText();
-	        String precioText = precioField.getText();
 	        
-	        if(precioText.isEmpty() || tratamientoText.isEmpty()) {
+	        if(tratamientoText.isEmpty()) {
 	            return false;
 	        }
-	        
-	        try {
-	            Double.parseDouble(precioText);
-	            return true;
-	        } catch (NumberFormatException e) {
-	            return false;
-	        }
+	        return true;
 	    }
 }

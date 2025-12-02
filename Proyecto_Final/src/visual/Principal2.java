@@ -249,7 +249,7 @@ public class Principal2 extends JFrame {
 				File archivo = buscarRespaldo();
 				if(archivo!= null) {
 					int respuesta  = JOptionPane.showConfirmDialog(null, "Estas seguro de querer sobreescribir el archivo actual?");
-					
+
 					if(respuesta == JOptionPane.YES_OPTION) {
 						Clinica.getInstance().save();
 						cargarRespaldo(archivo);
@@ -695,6 +695,25 @@ public class Principal2 extends JFrame {
 		vacunaPanel.add(vacunaIcon);
 
 		reportePanel = new JPanel();
+		reportePanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				MostrarReportes reportes = new MostrarReportes();
+				reportes.setModal(true);
+				reportes.setVisible(true);
+
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				reportePanel.setBackground(new Color(45, 51, 107));
+			}
+
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				reportePanel.setBackground(new Color(120, 134, 199));
+			}
+		});
 		reportePanel.setLayout(null);
 		reportePanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		reportePanel.setBackground(new Color(120, 134, 199));
@@ -742,7 +761,7 @@ public class Principal2 extends JFrame {
 				listVac.setModal(true); 
 				listVac.setVisible(true);
 			}
-			
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				listVacunasPanel.setBackground(new Color(45, 51, 107));
