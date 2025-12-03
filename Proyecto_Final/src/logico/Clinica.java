@@ -544,12 +544,13 @@ public class Clinica implements Serializable {
 	}
 
 	public Enfermedad buscarEnfByCode(String code) {
+		Enfermedad aux = null;
 		for (Enfermedad enf : enfermedades) {
 			if(enf.getCodigo().equalsIgnoreCase(code)) {
-				return enf;
+				aux = enf;
 			}
 		}
-		return null;
+		return aux;
 	}
 	
 
