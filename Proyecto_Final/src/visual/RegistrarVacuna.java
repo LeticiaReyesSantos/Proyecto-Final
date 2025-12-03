@@ -87,16 +87,7 @@ public class RegistrarVacuna extends JDialog {
 		BotonX.add(label_1);
 		
 		JLabel Titulo = new JLabel("Registrar Vacuna");
-		if(vac == null) {
-			Titulo = new JLabel("Registrar Vacuna");
-			txtCodigo.setText("V-"+Clinica.getInstance().genVacuna);
-			ingresar.setText("Registrar");
-		}
-		else{
-			Titulo = new JLabel("Modificar Vacuna");
-			cargar(vac);
-			ingresar.setText("Modificar");
-		}
+
 		Titulo.setForeground(new Color(120, 134, 199));
 		Titulo.setFont(new Font("Verdana", Font.BOLD, 28));
 		Titulo.setBounds(143, 38, 278, 35);
@@ -128,7 +119,8 @@ public class RegistrarVacuna extends JDialog {
 		Informacion.add(label_3);
 		
 		txtCodigo = new JTextField();
-		txtCodigo.setEnabled(false);
+		txtCodigo.setFont(new Font("Verdana", Font.PLAIN, 13));
+		txtCodigo.setEditable(false);
 		txtCodigo.setColumns(10);
 		txtCodigo.setBorder(null);
 		txtCodigo.setBounds(28, 42, 181, 22);
@@ -193,6 +185,9 @@ public class RegistrarVacuna extends JDialog {
 				list.setModal(true);
 				list.setVisible(true);
 				enfermedad = list.getSelectedEnfermedad();
+				if(enfermedad == null)
+					return;
+				
 				if(enfermedad.isControlada()) {
 					rdbtSi.setSelected(true);
 					rdbtNo.setSelected(false);
@@ -316,6 +311,17 @@ public class RegistrarVacuna extends JDialog {
 		label_12.setForeground(Color.BLACK);
 		label_12.setFont(new Font("Verdana", Font.PLAIN, 14));
 		Cancelar.add(label_12);
+		
+		if(vac == null) {
+			Titulo = new JLabel("Registrar Vacuna");
+			txtCodigo.setText("V-"+Clinica.getInstance().genVacuna);
+			ingresar.setText("Registrar");
+		}
+		else{
+			Titulo = new JLabel("Modificar Vacuna");
+			cargar(vac);
+			ingresar.setText("Modificar");
+		}
 	}
 	
 	private void cargar(Vacuna vac) {
