@@ -396,4 +396,12 @@ public class ListarEnfermedades extends JDialog {
 	private void cargarSingleSelection() {
 		actualizarTableSingle();
 	}
+	
+	public Enfermedad getSelectedEnfermedad() {
+		Enfermedad aux = null;
+		if(table.getSelectedRow() > -1) {
+			aux = Clinica.getInstance().buscarEnfByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
+		}
+		return aux;
+	}
 }

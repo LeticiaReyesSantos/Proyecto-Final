@@ -9,20 +9,25 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import logico.Clinica;
+import logico.Enfermedad;
 import logico.Vacuna;
 
 import java.awt.Color;
 import java.awt.Cursor;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.awt.Font;
 import javax.swing.border.BevelBorder;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
 
 public class RegistrarVacuna extends JDialog {
 
@@ -30,8 +35,11 @@ public class RegistrarVacuna extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCodigo;
 	private JTextField txtNombre;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextArea txtDescripcion;
+	private Enfermedad enfermedad;
+	private JRadioButton rdbtSi;
+	private JRadioButton rdbtNo;
+	private JLabel ingresar;
 
 	/**
 	 * Launch the application.
@@ -82,11 +90,12 @@ public class RegistrarVacuna extends JDialog {
 		if(vac == null) {
 			Titulo = new JLabel("Registrar Vacuna");
 			txtCodigo.setText("V-"+Clinica.getInstance().genVacuna);
+			ingresar.setText("Registrar");
 		}
 		else{
 			Titulo = new JLabel("Modificar Vacuna");
-			//cargar(vac);
-			txtNombre.setEnabled(false);
+			cargar(vac);
+			ingresar.setText("Modificar");
 		}
 		Titulo.setForeground(new Color(120, 134, 199));
 		Titulo.setFont(new Font("Verdana", Font.BOLD, 28));
@@ -134,7 +143,7 @@ public class RegistrarVacuna extends JDialog {
 		JLabel label_5 = new JLabel("Controlada:");
 		label_5.setForeground(Color.WHITE);
 		label_5.setFont(new Font("Verdana", Font.BOLD, 14));
-		label_5.setBounds(28, 168, 104, 16);
+		label_5.setBounds(258, 122, 104, 16);
 		Informacion.add(label_5);
 		
 		JLabel lblEnfermedad = new JLabel("Enfermedad");
@@ -143,23 +152,11 @@ public class RegistrarVacuna extends JDialog {
 		lblEnfermedad.setBounds(318, 13, 112, 16);
 		Informacion.add(lblEnfermedad);
 		
-		JLabel label_7 = new JLabel("Tipo:");
-		label_7.setForeground(Color.WHITE);
-		label_7.setFont(new Font("Verdana", Font.BOLD, 14));
-		label_7.setBounds(318, 91, 79, 16);
-		Informacion.add(label_7);
-		
 		txtNombre = new JTextField();
 		txtNombre.setColumns(10);
 		txtNombre.setBorder(null);
 		txtNombre.setBounds(28, 120, 181, 22);
 		Informacion.add(txtNombre);
-		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBorder(null);
-		textField_2.setBounds(318, 42, 181, 22);
-		Informacion.add(textField_2);
 		
 		JLabel label_8 = new JLabel("");
 		label_8.setBounds(635, 46, 56, 16);
@@ -171,72 +168,145 @@ public class RegistrarVacuna extends JDialog {
 		separator_2.setBounds(318, 64, 181, 2);
 		Informacion.add(separator_2);
 		
-		JSeparator separator_3 = new JSeparator();
-		separator_3.setForeground(new Color(45, 51, 107));
-		separator_3.setBackground(new Color(45, 51, 107));
-		separator_3.setBounds(318, 140, 181, 2);
-		Informacion.add(separator_3);
+		rdbtSi = new JRadioButton("Si");
+		rdbtSi.setEnabled(false);
+		rdbtSi.setSelected(true);
+		rdbtSi.setForeground(Color.WHITE);
+		rdbtSi.setFont(new Font("Verdana", Font.PLAIN, 14));
+		rdbtSi.setBackground(new Color(169, 181, 223));
+		rdbtSi.setBounds(380, 118, 50, 25);
+		Informacion.add(rdbtSi);
 		
-		JComboBox<String> comboBox = new JComboBox<String>();
-		comboBox.setBounds(318, 120, 181, 22);
-		Informacion.add(comboBox);
+		rdbtNo = new JRadioButton("No");
+		rdbtNo.setEnabled(false);
+		rdbtNo.setForeground(Color.WHITE);
+		rdbtNo.setFont(new Font("Verdana", Font.PLAIN, 14));
+		rdbtNo.setBackground(new Color(169, 181, 223));
+		rdbtNo.setBounds(443, 118, 56, 25);
+		Informacion.add(rdbtNo);
 		
-		JRadioButton radioButton = new JRadioButton("Si");
-		radioButton.setSelected(true);
-		radioButton.setForeground(Color.WHITE);
-		radioButton.setFont(new Font("Verdana", Font.PLAIN, 14));
-		radioButton.setBackground(new Color(169, 181, 223));
-		radioButton.setBounds(131, 165, 50, 25);
-		Informacion.add(radioButton);
+		JPanel enfermedadPanel = new JPanel();
+		enfermedadPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ListarEnfermedades list = new ListarEnfermedades(0);
+				list.setModal(true);
+				list.setVisible(true);
+				enfermedad = list.getSelectedEnfermedad();
+				if(enfermedad.isControlada()) {
+					rdbtSi.setSelected(true);
+					rdbtNo.setSelected(false);
+				}else {
+					rdbtNo.setSelected(true);
+					rdbtSi.setSelected(false);
+				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				enfermedadPanel.setBackground(new Color (120, 134, 199));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				enfermedadPanel.setBackground(new Color(169, 181, 223));
+			}
+		});
+		enfermedadPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		enfermedadPanel.setBackground(new Color(169, 181, 223));
+		enfermedadPanel.setBounds(318, 38, 181, 28);
+		Informacion.add(enfermedadPanel);
 		
-		JRadioButton radioButton_1 = new JRadioButton("No");
-		radioButton_1.setForeground(Color.WHITE);
-		radioButton_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		radioButton_1.setBackground(new Color(169, 181, 223));
-		radioButton_1.setBounds(192, 165, 56, 25);
-		Informacion.add(radioButton_1);
+		JLabel label = new JLabel("Seleccionar");
+		label.setForeground(Color.BLACK);
+		label.setFont(new Font("Verdana", Font.PLAIN, 14));
+		enfermedadPanel.add(label);
 		
-		JPanel panel_4 = new JPanel();
-		panel_4.setLayout(null);
-		panel_4.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_4.setBackground(new Color(120, 134, 199));
-		panel_4.setBounds(28, 311, 536, 156);
-		fondo.add(panel_4);
+		JPanel Descripcion = new JPanel();
+		Descripcion.setLayout(null);
+		Descripcion.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		Descripcion.setBackground(new Color(120, 134, 199));
+		Descripcion.setBounds(28, 311, 536, 156);
+		fondo.add(Descripcion);
 		
 		JSeparator separator_4 = new JSeparator();
 		separator_4.setForeground(new Color(45, 51, 107));
 		separator_4.setBackground(new Color(45, 51, 107));
 		separator_4.setBounds(28, 140, 473, 2);
-		panel_4.add(separator_4);
+		Descripcion.add(separator_4);
 		
 		JLabel panelDescripcion = new JLabel("Descripcion:");
 		panelDescripcion.setForeground(Color.WHITE);
 		panelDescripcion.setFont(new Font("Verdana", Font.BOLD, 14));
 		panelDescripcion.setBounds(28, 13, 118, 16);
-		panel_4.add(panelDescripcion);
-		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBorder(null);
-		textField_3.setBounds(28, 42, 473, 100);
-		panel_4.add(textField_3);
+		Descripcion.add(panelDescripcion);
 		
 		JLabel label_10 = new JLabel("");
 		label_10.setBounds(635, 46, 56, 16);
-		panel_4.add(label_10);
+		Descripcion.add(label_10);
+		
+		txtDescripcion = new JTextArea();
+		txtDescripcion.setBounds(28, 42, 471, 98);
+		Descripcion.add(txtDescripcion);
 		
 		JPanel Registrar = new JPanel();
+		Registrar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String descripcion = txtDescripcion.getText();
+				if(descripcion.trim().isEmpty())
+					descripcion = "No hay descripcion actualmente";
+				
+				if(txtNombre.getText().trim().isEmpty() || enfermedad == null) {
+					JOptionPane.showMessageDialog(null, "Existen campos invalidos, asegure de llenar la información");
+				}else {
+					if(vac == null) {
+						Vacuna aux = new Vacuna(txtCodigo.getText(), txtNombre.getText(), enfermedad, descripcion);
+						aux.setControlada(enfermedad.isControlada());
+						Clinica.getInstance().addVacuna(aux);
+						JOptionPane.showMessageDialog(null, "Se ha registrado con exito la vacuna "+aux.getCodigo());
+						limpiar();
+					}else {
+						vac.setControlada(enfermedad.isControlada());
+						vac.setDescripcion(descripcion);
+						vac.setEnfermedad(enfermedad);
+						JOptionPane.showMessageDialog(null, "Se ha modificado con exito la enfermedad "+vac.getCodigo());
+						dispose();
+					}
+				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				Registrar.setBackground(new Color(120, 134, 199));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				Registrar.setBackground(new Color(169, 181, 223));
+			}
+		});
 		Registrar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		Registrar.setBackground(new Color(169, 181, 223));
 		Registrar.setBounds(348, 488, 85, 28);
 		fondo.add(Registrar);
 		
-		JLabel label_11 = new JLabel("Registrar");
-		label_11.setForeground(Color.BLACK);
-		label_11.setFont(new Font("Verdana", Font.PLAIN, 14));
-		Registrar.add(label_11);
+		ingresar = new JLabel("Registrar");
+		ingresar.setForeground(Color.BLACK);
+		ingresar.setFont(new Font("Verdana", Font.PLAIN, 14));
+		Registrar.add(ingresar);
 		
 		JPanel Cancelar = new JPanel();
+		Cancelar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				Cancelar.setBackground(new Color(120, 134, 199));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				Cancelar.setBackground(new Color(169, 181, 223));
+			}
+		});
 		Cancelar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		Cancelar.setBackground(new Color(169, 181, 223));
 		Cancelar.setBounds(463, 488, 85, 28);
@@ -246,5 +316,29 @@ public class RegistrarVacuna extends JDialog {
 		label_12.setForeground(Color.BLACK);
 		label_12.setFont(new Font("Verdana", Font.PLAIN, 14));
 		Cancelar.add(label_12);
+	}
+	
+	private void cargar(Vacuna vac) {
+		txtCodigo.setText(vac.getCodigo());
+		txtDescripcion.setText(vac.getDescripcion());
+		txtNombre.setText(vac.getCodigo());
+		txtNombre.setEnabled(false);
+		enfermedad = vac.getEnfermedad();
+		if(vac.isControlada()) {
+			rdbtSi.setSelected(true);
+			rdbtNo.setSelected(false);
+		}else {
+			rdbtNo.setSelected(true);
+			rdbtSi.setSelected(false);
+		}
+	}
+	
+	public void limpiar() {
+		txtCodigo.setText("V-"+Clinica.getInstance().genVacuna);
+		txtNombre.setText("");
+		txtDescripcion.setText("");
+		enfermedad = null;
+		rdbtSi.setSelected(true);
+		rdbtNo.setSelected(false);
 	}
 }
