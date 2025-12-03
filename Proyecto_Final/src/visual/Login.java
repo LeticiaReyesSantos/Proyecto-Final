@@ -162,7 +162,7 @@ public class Login extends JFrame {
 		lblNewLabel_2.setFont(new Font("Verdana", Font.BOLD, 40));
 		lblNewLabel_2.setBackground(new Color(255, 255, 255));
 		lblNewLabel_2.setForeground(new Color(255, 255, 255));
-		lblNewLabel_2.setBounds(43, 212, 385, 90);
+		lblNewLabel_2.setBounds(27, 212, 385, 90);
 		fondo.add(lblNewLabel_2);
 		barPanel.setBounds(0, 0, 923, 25);
 		fondo.add(barPanel);

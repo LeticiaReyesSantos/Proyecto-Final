@@ -13,6 +13,7 @@ public class Medico extends Persona {
 	private String especialidad;
 	private int maxCitas;
 	private ArrayList<Paciente> pacientes;
+	private boolean activo;
 
 
 	public Medico(String codigo, String cedula, String nombres, String apellidos, LocalDate fechaNacimiento,
@@ -22,6 +23,7 @@ public class Medico extends Persona {
 		this.especialidad = especialidad;
 		this.maxCitas = maxCitas;
 		pacientes = new ArrayList<>();
+		this.activo = true;
 	}
 
 	public String getEspecialidad() {
@@ -46,6 +48,14 @@ public class Medico extends Persona {
 
 	public void addPaciente(Paciente aux) {
 		pacientes.add(aux);
+	}
+
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
 	}
 
 	public boolean puedeEjercer() {

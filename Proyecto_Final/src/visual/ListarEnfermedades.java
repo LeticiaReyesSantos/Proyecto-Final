@@ -255,6 +255,45 @@ public class ListarEnfermedades extends JDialog {
 		label_2.setForeground(Color.WHITE);
 		label_2.setFont(new Font("Verdana", Font.PLAIN, 14));
 		modificarPanel.add(label_2);
+		
+		//SINGLE SELECTION MODE MANEJAR
+		JPanel eliminarPanel = new JPanel();
+		eliminarPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int selectedRow = table.getSelectedRow();
+
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(null, "Seleccione una enfermedad primero");
+					return;
+				}
+
+				String codigoEnf = (String) table.getValueAt(selectedRow, 0);
+				String nombreEnf = (String) table.getValueAt(selectedRow, 1);
+
+				int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea eliminar la enfermedad?\n" + nombreEnf + " (" +codigoEnf + ")","Confirmar Eliminación",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+
+				if (confirm == JOptionPane.YES_OPTION) {
+					if (Clinica.getInstance().eliminarEnfermedad(codigoEnf)) {
+						JOptionPane.showMessageDialog(null, "Enfermedad eliminada exitosamente");
+						cargarMultipleSlection();
+						cargarSingleSelection();
+					} else {
+						JOptionPane.showMessageDialog(null, "No se puede eliminar la enfermedad.\n" +"Fue diagnosticada a uno o más pacientes.");
+					}
+				}
+			}
+		});
+
+		eliminarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		eliminarPanel.setBackground(new Color(120, 134, 199));
+		eliminarPanel.setBounds(25, 225, 132, 35);
+		panel.add(eliminarPanel);
+		
+		JLabel lblEliminar = new JLabel("Eliminar");
+		lblEliminar.setForeground(Color.WHITE);
+		lblEliminar.setFont(new Font("Verdana", Font.PLAIN, 14));
+		eliminarPanel.add(lblEliminar);
 
 		JLabel lblListaDeEnfermedades = new JLabel("LISTA DE ENFERMEDADES");
 		lblListaDeEnfermedades.setForeground(new Color(120, 134, 199));
@@ -266,6 +305,7 @@ public class ListarEnfermedades extends JDialog {
 		scrollPane.setBounds(219, 109, 715, 282);
 		fondo.add(scrollPane);
 
+		table = new JTable();
 		modelMultipleSelection = new DefaultTableModel(
 				new Object[][] {},
 				new String[] {"C\u00F3digo", "Nombre", "Tipo", "Control", "Seleccion"}
@@ -290,7 +330,6 @@ public class ListarEnfermedades extends JDialog {
 			}
 		};
 
-		table = new JTable();
 		scrollPane.setViewportView(table);
 		cambiarMode(mode);
 

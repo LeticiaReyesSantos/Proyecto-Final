@@ -10,6 +10,7 @@ public class Paciente extends Persona {
 	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Vacuna> vacunas;
+	private ArrayList<Enfermedad> enfermedades;
 	private String tipoSangre;
 
 	public Paciente(String codigo, String cedula, String nombres, String apellidos, LocalDate fechaNacimiento,
@@ -18,6 +19,7 @@ public class Paciente extends Persona {
 		
 		this.tipoSangre = tipoSangre;
 		vacunas = new ArrayList<>();
+		enfermedades = new ArrayList<>();
 	}
 
 	public ArrayList<Vacuna> getVacunas() {
@@ -34,6 +36,14 @@ public class Paciente extends Persona {
 
 	public void setTipoSangre(String tipoSangre) {
 		this.tipoSangre = tipoSangre;
+	}
+
+	public ArrayList<Enfermedad> getEnfermedades() {
+		return enfermedades;
+	}
+
+	public void addEnfermedad (Enfermedad aux) {
+		enfermedades.add(aux);
 	}
 
 	public boolean esMayorDeEdad() {
@@ -59,16 +69,5 @@ public class Paciente extends Persona {
 		}
 		return aplicada;
 	}
-	
-	/*Funcion: getVacunasPaciente
-	 * Retorna: list*/
-	public ArrayList<Vacuna> getVacunasPaciente(){
-		ArrayList<Vacuna> vacap = new ArrayList<>();
-		for (Vacuna vac : vacunas) {
-			if(vac.isAplicada()) {
-				vacap.add(vac);
-			}
-		}
-		return vacap;
-	}
+
 }

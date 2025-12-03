@@ -11,6 +11,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.print.attribute.standard.MediaSize.Engineering;
 
 public class Clinica implements Serializable {
 
@@ -383,25 +389,6 @@ public class Clinica implements Serializable {
 		return lista;
 	}
 
-	/*Funcion: historialPacienteByMed
-	 * Parametro: Paciente, Medico
-	 * Retorna: lista*/
-	public ArrayList<Consulta> consultasMedicoByMes(Medico med, LocalDateTime fecha){
-		ArrayList<Consulta> consultasMensuales = new ArrayList<>();
-		Month month = fecha.getMonth();
-		int year = fecha.getYear();
-		for (Cita cita : med.getHistorial()) {
-			if(cita instanceof Consulta) {
-				Consulta cons = (Consulta) cita;
-				if(cita.getFecha().getMonth() == month && cita.getFecha().getYear() == year) {
-					consultasMensuales.add(cons);
-				}
-			}
-		}
-		return consultasMensuales;
-	}//se le agrega las consultas al historial y el usuario las busca por mes de ese annio
-
-
 	/*Funcion: getVacunasControladas
 	 * Retorna: Lista*/
 	public ArrayList<Vacuna> getVacunasControladas(){
@@ -510,7 +497,7 @@ public class Clinica implements Serializable {
 		}
 		return creada;
 	}
-	
+
 	public boolean modificarPersona(String id, String nuevaDireccion, String nuevoTelefono, String nuevoEmail) {
 		Persona pers = personaById(id);
 		if(pers != null) {
@@ -521,7 +508,7 @@ public class Clinica implements Serializable {
 		}
 		return false;
 	}
-	
+
 	public boolean visibilidadConsulta(Consulta cons) {
 		boolean esVisible = false;
 		for (Enfermedad enf : cons.getDiagonistco().getEnfDiagnosticadas()) {
@@ -532,7 +519,7 @@ public class Clinica implements Serializable {
 		}
 		return esVisible;
 	}
-	
+
 	public ArrayList<Consulta> consultasVisibles(){
 		ArrayList<Consulta> visibles = new ArrayList<>();
 		for (Cita c : citas) {
@@ -545,16 +532,15 @@ public class Clinica implements Serializable {
 		}
 		return visibles;
 	}
-	
-	/*
+
 	public boolean medicoPuedeVerConsulta(Medico med, Consulta cons) {
 		boolean puede = false;
 		if(cons.isVisibilidad() || cons.getMedico().getEspecialidad().equalsIgnoreCase(med.getEspecialidad())) {
 			puede = true;
 		}
 		return puede;
-	}*/
-	
+	}
+
 	public Enfermedad buscarEnfByCode(String code) {
 		for (Enfermedad enf : enfermedades) {
 			if(enf.getCodigo().equalsIgnoreCase(code)) {
@@ -563,7 +549,7 @@ public class Clinica implements Serializable {
 		}
 		return null;
 	}
-	
+
 	public boolean modificarEnfermedad(String codigo, String nuevoTratamiento, boolean nuevoControl, ArrayList<String> nuevosSintomas) {
 		Enfermedad enf = buscarEnfByCode(codigo);
 		if(enf!= null) {
@@ -574,7 +560,7 @@ public class Clinica implements Serializable {
 		}
 		return false;
 	}
-	
+
 	public Vacuna buscarVacByCode(String code) {
 		for (Vacuna vac : vacunas) {
 			if(vac.getCodigo().equalsIgnoreCase(code)) {
@@ -583,7 +569,7 @@ public class Clinica implements Serializable {
 		}
 		return null;
 	}
-	
+
 	public boolean modificarVacuna(String codigo, String nuevaDescripcion) {
 		Vacuna vac = buscarVacByCode(codigo);
 		if(vac!= null) {
@@ -592,5 +578,124 @@ public class Clinica implements Serializable {
 		}
 		return false;
 	}
+
+	public boolean desactivarMedico(String codigoMedico) {
+	    Persona pers = personaById(codigoMedico);
+	    if(pers instanceof Medico) {
+	        Medico med = (Medico) pers;
+	        for (Cita cita : med.historial) {
+	            if(!cita.isEstado() && !cita.getFecha().isBefore(LocalDate.now())) {
+	                return false;
+	            }
+	        }
+	        med.setActivo(false);
+	        return true;
+	    }
+	    return false;
+	}
+
+	public boolean eliminarVacuna(String codigoVac) {
+		Vacuna vac = buscarVacByCode(codigoVac);
+		for (Persona pers : personas) {
+			if(pers instanceof Paciente) {
+				Paciente pac = (Paciente) pers;
+				for (Vacuna vacunasPac : pac.getVacunas()) {
+					if(vacunasPac.getCodigo().equalsIgnoreCase(codigoVac)) {
+						return false;
+					}
+				}
+			}
+		}
+		vacunas.remove(vac);
+		return true;
+	}
 	
+	public boolean eliminarEnfermedad(String codeEnf) {
+		Enfermedad enf = buscarEnfByCode(codeEnf);
+		for (Persona pers : personas) {
+			if(pers instanceof Paciente) {
+				Paciente pac = (Paciente) pers;
+				for (Enfermedad enfermedad : pac.getEnfermedades()) {
+					if(enfermedad.getCodigo().equalsIgnoreCase(codeEnf)) {
+						return false;
+					}
+				}
+			}
+		}
+		enfermedades.remove(enf);
+		return true;
+	}
+	
+	
+	//IMPLEMENTACION DE HASHMAPS PARA REPORTES
+	public HashMap<String, Integer> vacunasMasAplicadas(){
+		HashMap<String, Integer> vacunasMap = new HashMap<>();
+		for (Persona pers : personas) {
+			if(pers instanceof Paciente) {
+				Paciente pac = (Paciente) pers;
+				for (Vacuna vac : pac.getVacunas()) {
+					String nombreVac = vac.getNombre();
+					vacunasMap.put(nombreVac, vacunasMap.getOrDefault(nombreVac, 0)+1);
+				}
+			}
+		}
+		return ordenarHashMapPorValor(vacunasMap);
+	}
+	
+	public HashMap<String, Integer> enfermedadesMasFrecuentes(){
+		HashMap<String, Integer> enfermedadesMap = new HashMap<>();
+		for (Persona pers : personas) {
+			if(pers instanceof Paciente) {
+				Paciente pac = (Paciente) pers;
+				for (Enfermedad enf : pac.getEnfermedades()) {
+					String nombreEnf = enf.getNombre();
+					enfermedadesMap.put(nombreEnf, enfermedadesMap.getOrDefault(nombreEnf, 0)+1);
+				}
+			}
+		}
+		return ordenarHashMapPorValor(enfermedadesMap);
+	}
+	
+	public HashMap<String, Integer> consultasByEspecialidad(){
+		HashMap<String, Integer> consultasMap = new HashMap<>();
+		for (Cita cita : citas) {
+			if(cita instanceof Consulta) {
+				String especialidad = cita.getMedico().getEspecialidad();
+				consultasMap.put(especialidad, consultasMap.getOrDefault(especialidad, 0)+1);
+				
+			}
+		}
+		return ordenarHashMapPorValor(consultasMap);
+	}
+	
+	public HashMap<String, Integer> estadoCitas() {
+	    HashMap<String, Integer> citasMap = new HashMap<>();
+	    int pendientes = 0;
+	    int completadas = 0;
+	    
+	    for (Cita cita : citas) {
+	        if (cita.isEstado()) {
+	            completadas++;
+	        } else {
+	            pendientes++;
+	        }
+	    }
+	    citasMap.put("Citas Completadas", completadas);
+	    citasMap.put("Citas Pendientes", pendientes);
+	    return citasMap;
+	}
+
+
+	private HashMap<String, Integer> ordenarHashMapPorValor(HashMap<String, Integer> map) {
+	    return map.entrySet()
+	            .stream()
+	            .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+	            .collect(Collectors.toMap(
+	                Map.Entry::getKey,
+	                Map.Entry::getValue,
+	                (e1, e2) -> e1,
+	                LinkedHashMap::new
+	            ));
+	}
+
 }
