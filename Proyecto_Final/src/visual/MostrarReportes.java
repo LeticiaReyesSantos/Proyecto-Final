@@ -156,6 +156,7 @@ public class MostrarReportes extends JDialog {
 	}
 	
 	private void graficoCitas() {
+		
 		DefaultPieDataset data = reporte.citasByEstado();
 		if(data == null || data.getItemCount()==0) {
 			mensaje(stat4);

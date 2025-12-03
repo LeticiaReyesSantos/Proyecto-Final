@@ -153,6 +153,33 @@ public class ListarCitas extends JDialog {
 		seleccionarPanel.add(seleccionarlbl);
 
 		JPanel reagendarPanel = new JPanel();
+		reagendarPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int selectedRow = table.getSelectedRow();
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(null, "Por favor, seleccione una cita primero", "Error", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				String codigoCita = (String) table.getValueAt(selectedRow, 0);
+				Cita cita = Clinica.getInstance().buscarCitaByCode(codigoCita);
+				
+				if (cita == null) {
+					JOptionPane.showMessageDialog(null, "No se encontró la cita seleccionada", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (cita.isEstado()) { 
+					JOptionPane.showMessageDialog(null, "No se puede reagendar una cita finalizada o cancelada", "Error", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				RegistrarCita reagendarCita = new RegistrarCita(1, cita);
+				reagendarCita.setModal(true);
+				reagendarCita.setLocationRelativeTo(null);
+				reagendarCita.setVisible(true);
+				actualizar();
+			}
+		});
 		reagendarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		reagendarPanel.setBackground(new Color(120, 134, 199));
 		reagendarPanel.setBounds(22, 82, 132, 35);
@@ -164,41 +191,40 @@ public class ListarCitas extends JDialog {
 		reagendarPanel.add(lblReagendar);
 
 		JPanel cancelarCita = new JPanel();
+		cancelarCita.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int selectedRow = table.getSelectedRow();
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(null, "Por favor, seleccione una cita primero", "Error", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				String codigoCita = (String) table.getValueAt(selectedRow, 0);
+				String nombrePersona = (String) table.getValueAt(selectedRow, 1);
+				String medicoNombre = (String) table.getValueAt(selectedRow, 2);
+				String fechaCita = (String) table.getValueAt(selectedRow, 3);
+
+				String mensaje = "¿Está seguro que desea cancelar la cita?\n\n" +"Código: " + codigoCita + "\n" +"Persona: " + nombrePersona + "\n" +"Médico: " + medicoNombre + "\n" +"Fecha: " + fechaCita;
+
+				int confirmacion = JOptionPane.showConfirmDialog(null, mensaje,"Confirmar Cancelación",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+
+				if (confirmacion == JOptionPane.YES_OPTION) {
+					if (Clinica.getInstance().cancelarCita(codigoCita)) {
+						JOptionPane.showMessageDialog(null,"Cita cancelada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+						actualizar();
+
+					} else {
+						JOptionPane.showMessageDialog(null, "No se pudo cancelar la cita.\n" +"La cita ya fue completada o no existe.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
 		cancelarCita.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		cancelarCita.setBackground(new Color(120, 134, 199));
 		cancelarCita.setBounds(25, 133, 132, 35);
 		panel.add(cancelarCita);
 
-		JLabel lblCancelar = new JLabel("Cancelar");
-		lblCancelar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				 int selectedRow = table.getSelectedRow();
-			        if (selectedRow == -1) {
-			            JOptionPane.showMessageDialog(null, "Por favor, seleccione una cita primero", "Error", JOptionPane.WARNING_MESSAGE);
-			            return;
-			        }
-			        String codigoCita = (String) table.getValueAt(selectedRow, 0);
-			        String nombrePersona = (String) table.getValueAt(selectedRow, 1);
-			        String medicoNombre = (String) table.getValueAt(selectedRow, 2);
-			        String fechaCita = (String) table.getValueAt(selectedRow, 3);
-			        
-			        String mensaje = "¿Está seguro que desea cancelar la cita?\n\n" +"Código: " + codigoCita + "\n" +"Persona: " + nombrePersona + "\n" +"Médico: " + medicoNombre + "\n" +"Fecha: " + fechaCita;
-	        
-	        int confirmacion = JOptionPane.showConfirmDialog(null, mensaje,"Confirmar Cancelación",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
-	        
-	        if (confirmacion == JOptionPane.YES_OPTION) {
-	            if (Clinica.getInstance().cancelarCita(codigoCita)) {
-	                JOptionPane.showMessageDialog(null,"Cita cancelada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-	                actualizar();
-	                
-	            } else {
-	                JOptionPane.showMessageDialog(null, "No se pudo cancelar la cita.\n" +"La cita ya fue completada o no existe.", "Error", JOptionPane.ERROR_MESSAGE);
-	            }
-	        }
-	    }
-	});
-			   
+		JLabel lblCancelar = new JLabel("Cancelar");	   
 		lblCancelar.setForeground(Color.WHITE);
 		lblCancelar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		cancelarCita.add(lblCancelar);

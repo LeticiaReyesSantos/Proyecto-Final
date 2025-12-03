@@ -133,7 +133,7 @@ public class ListarConsultas extends JDialog {
 		seleccionPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//if(table.getSelectedRow()>-1)
+				if(table.getSelectedRow()>-1)
 					dispose();
 			}
 		});
