@@ -178,9 +178,17 @@ public class Principal2 extends JFrame {
 		});
 
 		configuracionPanel = new JPanel();
+		configuracionPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				configuracionPanel.setVisible(true);
+
+		        fondo.setComponentZOrder(configuracionPanel, 0);
+			}
+		});
 		configuracionPanel.setVisible(false);
 		configuracionPanel.setBackground(new Color(45, 51, 107));
-		configuracionPanel.setBounds(dim.width-260, 92, 256, 375);
+		configuracionPanel.setBounds(dim.width-260, 90, 256, 375);
 		fondo.add(configuracionPanel);
 		configuracionPanel.setLayout(null);
 
@@ -192,6 +200,15 @@ public class Principal2 extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				realizarRespaldo();
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				respaldoPanel.setBackground(new Color(0, 0, 128));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				respaldoPanel.setBackground(new Color(120, 134, 199));
+			}
+
 		});
 		respaldoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		respaldoPanel.setBackground(new Color(120, 134, 199));
@@ -249,7 +266,7 @@ public class Principal2 extends JFrame {
 				File archivo = buscarRespaldo();
 				if(archivo!= null) {
 					int respuesta  = JOptionPane.showConfirmDialog(null, "Estas seguro de querer sobreescribir el archivo actual?");
-					
+
 					if(respuesta == JOptionPane.YES_OPTION) {
 						Clinica.getInstance().save();
 						cargarRespaldo(archivo);
@@ -335,7 +352,7 @@ public class Principal2 extends JFrame {
 		JLabel label_1 = new JLabel(usuario.getNombres()+" "+usuario.getApellidos());
 		label_1.setForeground(Color.WHITE);
 		label_1.setFont(new Font("Verdana", Font.PLAIN, 40));
-		label_1.setBounds(371, 13, 255, 41);
+		label_1.setBounds(371, 13, 582, 41);
 		bienvenidoPanel.add(label_1);
 
 		usuarioIcon = new JLabel("");
@@ -349,6 +366,7 @@ public class Principal2 extends JFrame {
 				}
 			}
 		});
+		usuarioIcon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		usuarioIcon.setBounds(dim.width-60, 11, 53, 54);
 		bienvenidoPanel.add(usuarioIcon);
 		usuarioIcon.setIcon(new ImageIcon(Principal2.class.getResource("/imagenes/Usuario.png")));
@@ -416,7 +434,7 @@ public class Principal2 extends JFrame {
 			}
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
-				regMedicoPanel.setBackground(new Color (120, 134, 199));
+				regMedicoPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -445,7 +463,7 @@ public class Principal2 extends JFrame {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				listMedicoPanel.setBackground(new Color(120, 134, 199));
+				listMedicoPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -531,7 +549,7 @@ public class Principal2 extends JFrame {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				regEnfermedadPanel.setBackground(new Color(120, 134, 199));
+				regEnfermedadPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -655,7 +673,7 @@ public class Principal2 extends JFrame {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				listCitasPanel.setBackground(new Color(120, 134, 199));
+				listCitasPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -673,28 +691,26 @@ public class Principal2 extends JFrame {
 		lblListar.setFont(new Font("Verdana", Font.PLAIN, 40));
 		listCitasPanel.add(lblListar);
 
-		vacunaPanel = new JPanel();
-		vacunaPanel.setLayout(null);
-		vacunaPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		vacunaPanel.setBackground(new Color(120, 134, 199));
-		vacunaPanel.setBounds(1132, 188, 386, 146);
-		fondo.add(vacunaPanel);
-
-		JLabel lblReportes = new JLabel("Vacunas");
-		lblReportes.setForeground(Color.WHITE);
-		lblReportes.setFont(new Font("Verdana", Font.BOLD, 40));
-		lblReportes.setBounds(36, 54, 209, 41);
-		vacunaPanel.add(lblReportes);
-
-		vacunaIcon = new JLabel("");
-		vacunaIcon.setBounds(209, 0, 197, 148);
-		vacunaIcon.setIcon(new ImageIcon(Principal2.class.getResource("/imagenes/jeringaIcon.png")));
-		icon = (ImageIcon)vacunaIcon.getIcon();
-		img = icon.getImage().getScaledInstance(vacunaIcon.getWidth(), vacunaIcon.getHeight(), Image.SCALE_SMOOTH);
-		vacunaIcon.setIcon(new ImageIcon(img));
-		vacunaPanel.add(vacunaIcon);
-
 		reportePanel = new JPanel();
+		reportePanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				MostrarReportes reportes = new MostrarReportes();
+				reportes.setModal(true);
+				reportes.setVisible(true);
+
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				reportePanel.setBackground(new Color(45, 51, 107));
+			}
+
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				reportePanel.setBackground(new Color(120, 134, 199));
+			}
+		});
 		reportePanel.setLayout(null);
 		reportePanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		reportePanel.setBackground(new Color(120, 134, 199));
@@ -711,12 +727,14 @@ public class Principal2 extends JFrame {
 		registrarVacunaPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+
 				RegistrarVacuna regVacuna = new RegistrarVacuna(null);
 				regVacuna.setModal(true); 
 				regVacuna.setVisible(true);
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
+				configuracionPanel.setVisible(false);
 				registrarVacunaPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
@@ -738,13 +756,15 @@ public class Principal2 extends JFrame {
 		listVacunasPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				configuracionPanel.setVisible(false);
 				ListarVacuna listVac = new ListarVacuna();
 				listVac.setModal(true); 
 				listVac.setVisible(true);
 			}
-			
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
+				configuracionPanel.setVisible(false);
 				listVacunasPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
@@ -790,10 +810,57 @@ public class Principal2 extends JFrame {
 		label_3.setFont(new Font("Verdana", Font.BOLD, 40));
 		label_3.setBounds(667, 503, 367, 41);
 		fondo.add(label_3);
+
+		vacunaPanel = new JPanel();
+		vacunaPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+
+				if(!registrarVacunaPanel.isVisible()) {
+					registrarVacunaPanel.setVisible(true);
+					listVacunasPanel.setVisible(true);
+				}else {
+					registrarVacunaPanel.setVisible(false);
+					listVacunasPanel.setVisible(false);
+				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				vacunaPanel.setBackground(new Color(45, 51, 107));
+				fondo.setComponentZOrder(configuracionPanel, 0);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				vacunaPanel.setBackground(new Color(120, 134, 199));
+			}
+		});
+		vacunaPanel.setLayout(null);
+		vacunaPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		vacunaPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		vacunaPanel.setBackground(new Color(120, 134, 199));
+		vacunaPanel.setBounds(1132, 188, 386, 146);
+		fondo.add(vacunaPanel);
+
+		JLabel lblReportes = new JLabel("Vacunas");
+		lblReportes.setForeground(Color.WHITE);
+		lblReportes.setFont(new Font("Verdana", Font.BOLD, 40));
+		lblReportes.setBounds(36, 54, 209, 41);
+		vacunaPanel.add(lblReportes);
+
+		vacunaIcon = new JLabel("");
+		vacunaIcon.setBounds(209, 0, 197, 148);
+		vacunaIcon.setIcon(new ImageIcon(Principal2.class.getResource("/imagenes/jeringaIcon.png")));
+		icon = (ImageIcon)vacunaIcon.getIcon();
+		img = icon.getImage().getScaledInstance(vacunaIcon.getWidth(), vacunaIcon.getHeight(), Image.SCALE_SMOOTH);
+		vacunaIcon.setIcon(new ImageIcon(img));
+		vacunaPanel.add(vacunaIcon);
 		scrollPane.setVisible(false);
 
 		if(usuario.getUser().getTipo().equals("Medico"))
 			cargarMedico();
+		
+		fondo.setComponentZOrder(vacunaPanel, fondo.getComponentCount() - 1);
+		fondo.setComponentZOrder(configuracionPanel, 0);
 
 
 	}

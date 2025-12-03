@@ -87,7 +87,7 @@ public class RegistrarPersona extends JDialog {
 	private ButtonGroup grupo2 = new ButtonGroup();
 	private JRadioButton adminRadio;
 	private JLabel lblRango;
-	private JComboBox sangreBox;
+	private JComboBox<Object> sangreBox;
 	private JPanel generalPanel;
 	private JPanel cancelarPanel;
 	private JSeparator border3;
@@ -576,7 +576,7 @@ public class RegistrarPersona extends JDialog {
 
 	private void registrarMedico() {
 		if(!camposGeneralesVacios() && !camposMedicoVacios()) {
-			Persona aux = null;
+			
 			String codigo ="Me-"+Clinica.getInstance().genMedico;
 			String nombres = nombreField.getText();
 			String apellidos = apellidoField.getText();
@@ -590,8 +590,7 @@ public class RegistrarPersona extends JDialog {
 			int maxCitas = (int) maxCitasSpinner.getValue();
 			User usuario = new User("Medico", codigo, codigo);
 
-			aux = new Medico(codigo, cedula, nombres, apellidos, 
-					fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario, true);
+			Persona aux = new Medico(codigo, cedula, nombres, apellidos, fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario);
 
 			Clinica.getInstance().addPersona(aux);
 
