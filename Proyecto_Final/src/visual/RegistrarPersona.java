@@ -671,6 +671,8 @@ public class RegistrarPersona extends JDialog {
 
 			aux = new Persona(codigo, cedula, nombres, apellidos, 
 					fechaNacimiento, genero, telefono, direccion, email, usuario);
+			
+			Clinica.getInstance().addAdmin();
 
 			Clinica.getInstance().addPersona(aux);
 
