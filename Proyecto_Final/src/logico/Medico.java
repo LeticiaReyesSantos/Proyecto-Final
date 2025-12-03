@@ -17,7 +17,7 @@ public class Medico extends Persona {
 
 
 	public Medico(String codigo, String cedula, String nombres, String apellidos, LocalDate fechaNacimiento,
-			char genero, String telefono, String direccion, String email, String especialidad, int maxCitas, User user) {
+		char genero, String telefono, String direccion, String email, String especialidad, int maxCitas, User user) {
 		super(codigo, cedula, nombres, apellidos, fechaNacimiento, genero, telefono, direccion, email, user);
 
 		this.especialidad = especialidad;
@@ -61,19 +61,19 @@ public class Medico extends Persona {
 	public boolean puedeEjercer() {
 		return getEdad() >=24;
 	}
-	
+
 	public ArrayList<Cita> citasPendientesHoy() {
-	    ArrayList<Cita> citas = new ArrayList<>();
-	    LocalDate hoy = LocalDate.now();
+		ArrayList<Cita> citas = new ArrayList<>();
+		LocalDate hoy = LocalDate.now();
 
-	    for(Cita c : historial) {
-	        if(c.getFecha().equals(hoy)
-	           && !c.isEstado()) {
-	            citas.add(c);
-	        }
-	    }
+		for(Cita c : historial) {
+			if(c.getFecha().equals(hoy)
+					&& !c.isEstado()) {
+				citas.add(c);
+			}
+		}
 
-	    return citas;
+		return citas;
 	}
 
 
@@ -90,6 +90,6 @@ public class Medico extends Persona {
 		}
 		return cant;
 	}
-	
+
 
 }

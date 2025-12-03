@@ -124,7 +124,7 @@ public class Login extends JFrame {
 	 */
 	public Login() {
 		setUndecorated(true);//Quitar la barra superior
-
+		setLocation(420, 250);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 923, 518);
 		contentPane = new JPanel();

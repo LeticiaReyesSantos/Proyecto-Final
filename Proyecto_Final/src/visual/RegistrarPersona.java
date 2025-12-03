@@ -2,6 +2,7 @@ package visual;
 
 import java.awt.BorderLayout;
 
+
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -86,11 +87,13 @@ public class RegistrarPersona extends JDialog {
 	private ButtonGroup grupo2 = new ButtonGroup();
 	private JRadioButton adminRadio;
 	private JLabel lblRango;
-	private JComboBox sangreBox;
+	private JComboBox<Object> sangreBox;
 	private JPanel generalPanel;
 	private JPanel cancelarPanel;
 	private JSeparator border3;
 	private JLabel tituloLbl;
+	
+	private JLabel mensajeLabel;
 	/**
 	 * Launch the application.
 	 */
@@ -178,6 +181,13 @@ public class RegistrarPersona extends JDialog {
 		lblDireccion.setBounds(497, 138, 79, 16);
 		generalPanel.add(lblDireccion);
 
+		mensajeLabel = new JLabel("Cedula repetida*");
+		mensajeLabel.setForeground(new Color(255, 0, 0));
+		mensajeLabel.setFont(new Font("Verdana", Font.PLAIN, 13));
+		mensajeLabel.setBounds(202, 45, 118, 16);
+		mensajeLabel.setVisible(false);
+		generalPanel.add(mensajeLabel);
+
 		JLabel lblCorreo = new JLabel("Correo");
 		lblCorreo.setForeground(new Color(255, 255, 255));
 		lblCorreo.setFont(new Font("Verdana", Font.BOLD, 14));
@@ -185,18 +195,45 @@ public class RegistrarPersona extends JDialog {
 		generalPanel.add(lblCorreo);
 
 		nombreField = new JTextField();
+		nombreField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if(!Character.isAlphabetic(c) && c != ' ') {
+					e.consume();
+				}
+			}
+		});
 		nombreField.setColumns(10);
 		nombreField.setBorder(null);
 		nombreField.setBounds(12, 104, 181, 22);
 		generalPanel.add(nombreField);
 
 		apellidoField = new JTextField();
+		apellidoField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if(!Character.isAlphabetic(c) && c != ' ') {
+					e.consume();
+				}
+			}
+		});
 		apellidoField.setColumns(10);
 		apellidoField.setBorder(null);
 		apellidoField.setBounds(12, 167, 181, 22);
 		generalPanel.add(apellidoField);
 
 		direccionField = new JTextField();
+		direccionField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if(!Character.isAlphabetic(c) && c != ' ' && c!= '-' && !Character.isDigit(c)) {
+					e.consume();
+				}
+			}
+		});
 		direccionField.setColumns(10);
 		direccionField.setBorder(null);
 		direccionField.setBounds(497, 166, 181, 22);
@@ -238,8 +275,12 @@ public class RegistrarPersona extends JDialog {
 		dateChooser = new JDateChooser();
 		dateChooser.getCalendarButton().setFont(new Font("Verdana", Font.PLAIN, 13));
 		dateChooser.setMinSelectableDate(calendario.getTime());
-
-		calendario.set(LocalDate.now().getYear(), LocalDate.now().getMonthValue()-1, LocalDate.now().getDayOfMonth());
+		if(user.getTipo().equals("Medico")) {
+			calendario.set(LocalDate.now().getYear(), LocalDate.now().getMonthValue()-1, LocalDate.now().getDayOfMonth());
+		}else {
+			calendario.set(LocalDate.now().getYear()-25, LocalDate.now().getMonthValue()-1, LocalDate.now().getDayOfMonth());
+		}
+		dateChooser.setDate(calendario.getTime());
 		dateChooser.setMaxSelectableDate(calendario.getTime());
 
 		dateChooser.setBorder(null);
@@ -313,7 +354,6 @@ public class RegistrarPersona extends JDialog {
 
 		try {
 			maskCedula = new MaskFormatter("###-#######-#");
-			//maskCedula.setPlaceholderCharacter('_');
 		}catch(Exception e) {
 
 		}
@@ -399,14 +439,14 @@ public class RegistrarPersona extends JDialog {
 		separator_6.setBounds(553, 69, 181, 2);
 		medicoPanel.add(separator_6);
 
-		maxCitasSpinner = new JSpinner(new SpinnerNumberModel(5, 5, 30, 1));
-		maxCitasSpinner.setBounds(162, 48, 118, 22);
+		maxCitasSpinner = new JSpinner(new SpinnerNumberModel(5, 5, 20, 1));
+		maxCitasSpinner.setBounds(187, 48, 118, 22);
 		medicoPanel.add(maxCitasSpinner);
 
-		lblCanitdadMaximasDe = new JLabel("Citas maximas");
+		lblCanitdadMaximasDe = new JLabel("Citas maximas al dia");
 		lblCanitdadMaximasDe.setForeground(new Color(255, 255, 255));
 		lblCanitdadMaximasDe.setFont(new Font("Verdana", Font.BOLD, 14));
-		lblCanitdadMaximasDe.setBounds(32, 49, 118, 18);
+		lblCanitdadMaximasDe.setBounds(12, 49, 163, 18);
 		medicoPanel.add(lblCanitdadMaximasDe);
 
 		lblNewLabel_3 = new JLabel("Especialidad");
@@ -416,6 +456,15 @@ public class RegistrarPersona extends JDialog {
 		medicoPanel.add(lblNewLabel_3);
 
 		especialidadField = new JTextField();
+		especialidadField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if(!Character.isAlphabetic(c) && c != ' ') {
+					e.consume();
+				}
+			}
+		});
 		especialidadField.setColumns(10);
 		especialidadField.setBorder(null);
 		especialidadField.setBounds(553, 48, 181, 22);
@@ -432,34 +481,34 @@ public class RegistrarPersona extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-			    if (camposGeneralesVacios()) {
-			        JOptionPane.showMessageDialog(null, "Aun faltan campos generales por rellenar");
-			        return;
-			    }
+				if (camposGeneralesVacios()) {
+					JOptionPane.showMessageDialog(null, "Aun faltan campos generales por rellenar");
+					return;
+				}
 
-			    if (user.getTipo().equals("Administrador")) {
+				if (user.getTipo().equals("Administrador")) {
 
-			        if (medicoRadio.isSelected()) {
+					if (medicoRadio.isSelected()) {
 
-			            if (camposMedicoVacios()) {
-			                JOptionPane.showMessageDialog(null, "Aun faltan campos del médico por rellenar");
-			                return;
-			            }
+						if (camposMedicoVacios()) {
+							JOptionPane.showMessageDialog(null, "Aun faltan campos del médico por rellenar");
+							return;
+						}
+						
+						registrarMedico();
+						return;
+					}
 
-			            registrarMedico();
-			            return;
-			        }
+					registrarAdmin();
+					return;
+				}
 
-			        registrarAdmin();
-			        return;
-			    }
-
-			    registrarPaciente();
+				registrarPaciente();
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				aceptarPanel.setBackground(new Color(120, 134, 199));
+				aceptarPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -486,7 +535,7 @@ public class RegistrarPersona extends JDialog {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				cancelarPanel.setBackground(new Color(120, 134, 199));
+				cancelarPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -523,17 +572,21 @@ public class RegistrarPersona extends JDialog {
 		border3.setBackground(new Color(45, 51, 107));
 		border3.setBounds(0, 662, 844, 2);
 		fondo.add(border3);
-		
+
 		if(user.getTipo().equals("Medico"))
 			panelPacienteShow();
-		
+
 	}
 
 	private boolean camposGeneralesVacios() {
-
+		boolean cedulaUnica = Clinica.getInstance().cedulaUnica(cedulaField.getText());
+		if(!cedulaUnica) mensajeLabel.setVisible(true);
+		else mensajeLabel.setVisible(false);
+		
 		return nombreField.getText().trim().isEmpty() || apellidoField.getText().trim().isEmpty() || cedulaField.getText().trim().isEmpty()  ||
 				telefonoField.getText().trim().isEmpty() || direccionField.getText().trim().isEmpty() 
-				|| correoField.getText().trim().isEmpty() || dateChooser.getDate() == null || !Clinica.getInstance().cedulaUnica(cedulaField.getText());
+				|| correoField.getText().trim().isEmpty() || dateChooser.getDate() == null || !cedulaUnica || cedulaField.getText().trim().length()<13 
+				|| telefonoField.getText().trim().length() < 12;
 	}
 
 	private boolean camposMedicoVacios() {
@@ -575,7 +628,7 @@ public class RegistrarPersona extends JDialog {
 
 	private void registrarMedico() {
 		if(!camposGeneralesVacios() && !camposMedicoVacios()) {
-			Persona aux = null;
+
 			String codigo ="Me-"+Clinica.getInstance().genMedico;
 			String nombres = nombreField.getText();
 			String apellidos = apellidoField.getText();
@@ -589,17 +642,18 @@ public class RegistrarPersona extends JDialog {
 			int maxCitas = (int) maxCitasSpinner.getValue();
 			User usuario = new User("Medico", codigo, codigo);
 
-			aux = new Medico(codigo, cedula, nombres, apellidos, fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario);
+			Persona aux = new Medico(codigo, cedula, nombres, apellidos, fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario);
 
 			Clinica.getInstance().addPersona(aux);
 
 			JOptionPane.showMessageDialog(null, "Se ha registrado con exito");
 			JOptionPane.showMessageDialog(null, "Usuario generado: "+usuario.getUserName()+" Contraseña: "+usuario.getPass());
+			clean();
 
 		}	
 	}
-	
-	
+
+
 	private void registrarAdmin() {
 		if(!camposGeneralesVacios()) {
 			Persona aux = null;
@@ -622,10 +676,10 @@ public class RegistrarPersona extends JDialog {
 
 			JOptionPane.showMessageDialog(null, "Se ha registrado un nuevo administrador con exito");
 			JOptionPane.showMessageDialog(null, "Usuario generado: "+usuario.getUserName()+" Contraseña: "+usuario.getPass());
-
+			clean();
 		}	
 	}
-	
+
 	private void registrarPaciente() {
 		if(!camposGeneralesVacios()) {
 			Persona aux = null;
@@ -645,12 +699,13 @@ public class RegistrarPersona extends JDialog {
 			Clinica.getInstance().addPersona(aux);
 
 			JOptionPane.showMessageDialog(null, "Se ha registrado un nuevo administrador con exito");
+			clean();
 		}	
 	}
-	
+
 	private void panelPacienteShow() {
-		
-		
+
+
 		lblRango.setText("Tipo de sangre:");
 		sangreBox = new JComboBox<Object>(new String[]{"O+","A+","B+","AB+","O-","A-","B-","AB-"}) ;
 		sangreBox.setBounds(140, 278, 50, 22);
@@ -667,6 +722,23 @@ public class RegistrarPersona extends JDialog {
 		medicoRadio.setVisible(false);
 		adminRadio.setVisible(false);
 		medicoPanel.setVisible(false);
+	}
+	
+	
+	private void clean() {
+		
+		cedulaField.setText("");
+		nombreField.setText("");
+		apellidoField.setText("");
+		mRadioBt.setSelected(true);
+		fRadioBt.setSelected(false);
+		medicoRadio.setSelected(true);
+		adminRadio.setSelected(false);
+		dateChooser.setDate(calendario.getTime());
+		dateChooser.setMaxSelectableDate(calendario.getTime());
+		telefonoField.setText("");
+		direccionField.setText("");
+		habilitarMedicoPanel();
 	}
 }
 

@@ -319,14 +319,17 @@ public class ListarEnfermedades extends JDialog {
 		};
 
 		modelSingleSelection = new DefaultTableModel(
-				new Object[][] {},
-				new String[] {"C\u00F3digo", "Nombre", "Tipo", "Control", "Seleccion"}
-				) {
-			Class[] columnTypes = new Class[] {
-					Object.class, Object.class, Object.class, Object.class, Boolean.class
+			new Object[][] {
+			},
+			new String[] {
+				"C\u00F3digo", "Nombre", "Tipo", "Control"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false
 			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
 			}
 		};
 
