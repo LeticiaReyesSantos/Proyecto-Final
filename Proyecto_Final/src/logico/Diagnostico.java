@@ -1,8 +1,8 @@
 package logico;
 
-import java.io.Serializable;
+import java.io.Serializable
+;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Diagnostico implements Serializable{

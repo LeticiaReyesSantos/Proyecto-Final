@@ -2,6 +2,7 @@ package visual;
 
 import java.awt.BorderLayout;
 
+
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -37,7 +38,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 
 import logico.Clinica;
-import logico.Horario;
 import logico.Medico;
 import logico.Persona;
 import logico.User;
@@ -591,7 +591,7 @@ public class RegistrarPersona extends JDialog {
 			User usuario = new User("Medico", codigo, codigo);
 
 			aux = new Medico(codigo, cedula, nombres, apellidos, 
-					fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario);
+					fechaNacimiento, genero, telefono, direccion, email, especialidad, maxCitas, usuario, true);
 
 			Clinica.getInstance().addPersona(aux);
 
