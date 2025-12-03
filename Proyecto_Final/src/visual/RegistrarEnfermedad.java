@@ -44,6 +44,7 @@ public class RegistrarEnfermedad extends JDialog {
 	private JLabel Titulo;
 	private JTextArea txtTratamiento;
 	private ArrayList<String> sintomas = new ArrayList<>();
+	private JLabel ingresar;
 	
 	/**
 	 * Launch the application.
@@ -324,10 +325,10 @@ public class RegistrarEnfermedad extends JDialog {
 		Registrar.setBounds(348, 488, 85, 28);
 		fondo.add(Registrar);
 		
-		JLabel label = new JLabel("Registrar");
-		label.setForeground(Color.BLACK);
-		label.setFont(new Font("Verdana", Font.PLAIN, 14));
-		Registrar.add(label);
+		ingresar = new JLabel("Registrar");
+		ingresar.setForeground(Color.BLACK);
+		ingresar.setFont(new Font("Verdana", Font.PLAIN, 14));
+		Registrar.add(ingresar);
 		
 		JPanel Cancelar = new JPanel();
 		Cancelar.addMouseListener(new MouseAdapter() {
@@ -358,11 +359,13 @@ public class RegistrarEnfermedad extends JDialog {
 		if(enf == null) {
 			Titulo.setText("Registrar Enfermedad");
 			txtCodigo.setText("E-"+Clinica.getInstance().genEnfermedad);
+			ingresar.setText("Registrar");
 		}
 		else{
 			Titulo.setText("Registrar Enfermedad");
 			cargar(enf);
 			txtNombre.setEnabled(false);
+			ingresar.setText("Modificar");
 		}
 		Titulo.setForeground(new Color(120, 134, 199));
 		Titulo.setFont(new Font("Verdana", Font.BOLD, 28));

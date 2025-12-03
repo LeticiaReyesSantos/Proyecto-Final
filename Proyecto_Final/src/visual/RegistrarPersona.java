@@ -37,7 +37,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 
 import logico.Clinica;
-import logico.Horario;
 import logico.Medico;
 import logico.Persona;
 import logico.User;
