@@ -11,7 +11,6 @@ public class Consulta extends Cita {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Double precio;
-	private Paciente paciente;
 	private boolean visibilidad;
 	private Diagnostico diagonistco;
 	private ArrayList<Vacuna> vacunas;
@@ -20,7 +19,6 @@ public class Consulta extends Cita {
 			Paciente paciente, boolean visibilidad, Diagnostico diagonistco) {
 		super(codigo, persona, medico, fecha);
 		this.precio = precio;
-		this.paciente = paciente;
 		this.visibilidad = visibilidad;
 		this.diagonistco = diagonistco;
 		vacunas = new ArrayList<>();
@@ -32,14 +30,6 @@ public class Consulta extends Cita {
 
 	public void setPrecio(Double precio) {
 		this.precio = precio;
-	}
-
-	public Paciente getPaciente() {
-		return paciente;
-	}
-
-	public void setPaciente(Paciente paciente) {
-		this.paciente = paciente;
 	}
 
 	public boolean isVisibilidad() {

@@ -25,6 +25,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -49,6 +50,10 @@ public class RegistrarEnfermedad extends JDialog {
 	private JLabel ingresar;
 	private int mode = 0; //0 reg 1 mod
 	private Enfermedad enfermedadModificar = null;
+	private int x1;
+	private int x2;
+	private int y1;
+	private int y2;
 
 	/**
 	 * Launch the application.
@@ -89,6 +94,24 @@ public class RegistrarEnfermedad extends JDialog {
 		fondo.setLayout(null);
 		{
 			JPanel barra = new JPanel();
+			barra.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mousePressed(MouseEvent e) {
+					x1= e.getX();
+					y1 = e.getY();
+				}
+			});
+			barra.addMouseMotionListener(new MouseMotionAdapter() {
+				@Override
+				public void mouseDragged(MouseEvent arg0) {
+					//toma la posicion actual de la ventana
+					x2= arg0.getXOnScreen();
+					y2 = arg0.getYOnScreen();
+					//actualiza la posicion de la ventana
+					setLocation(x2-x1, y2-y1);
+				}
+			});
+			
 			barra.setLayout(null);
 			barra.setBackground(new Color(45, 51, 107));
 			barra.setBounds(0, 0, 590, 25);
@@ -407,6 +430,8 @@ public class RegistrarEnfermedad extends JDialog {
 		Titulo.setFont(new Font("Verdana", Font.BOLD, 28));
 		Titulo.setBounds(118, 38, 350, 35);
 		fondo.add(Titulo);
+		
+		setLocationRelativeTo(null);
 	}
 
 	public void cargar(Enfermedad enf) {

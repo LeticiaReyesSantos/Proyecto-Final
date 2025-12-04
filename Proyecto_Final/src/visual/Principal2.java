@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 
 import logico.Cita;
 import logico.Clinica;
+import logico.Consulta;
 import logico.Enfermedad;
 import logico.Persona;
 import servidor.Servidor;
@@ -282,6 +283,7 @@ public class Principal2 extends JFrame {
 					if(respuesta == JOptionPane.YES_OPTION) {
 						Clinica.getInstance().save();
 						cargarRespaldo(archivo);
+						cargarCitasActuales();
 					}
 				}
 			}
@@ -666,6 +668,7 @@ public class Principal2 extends JFrame {
 				RegistrarCita regCita = new RegistrarCita();
 				regCita.setModal(true);
 				regCita.setVisible(true);
+				cargarCitasActuales();
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -944,7 +947,7 @@ public class Principal2 extends JFrame {
 
 
 		for(Cita c: citas) {
-			if(c.getFecha().equals(LocalDate.now()) && !c.isEstado()) {
+			if(c.getFecha().equals(LocalDate.now()) && !(c instanceof Consulta)) {
 				Object[] fila = {c.getCodigo(), c.getPersona().getNombres()+" "+c.getPersona().getApellidos(), 
 						c.getFecha(), !c.isEstado() ? "Pendiente" : "Completada"};
 				model.addRow(fila);

@@ -9,6 +9,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
 import java.awt.Color;
+import java.awt.Cursor;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -62,6 +64,11 @@ public class RegistrarCita extends JDialog {
 	private MaskFormatter maskCedula;
 	private MaskFormatter maskTelefono;
 	private JFormattedTextField telefonoField;
+	private JLabel lblBuscar;
+	private JLabel label_2;
+	private JLabel lblAgendar;
+	private JPanel volverPanel;
+	private JLabel lblVolver;
 	/**
 	 * Launch the application.
 	 */
@@ -128,8 +135,16 @@ public class RegistrarCita extends JDialog {
 		JPanel cerrarPanel = new JPanel();
 		cerrarPanel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void mouseClicked(MouseEvent e) {
 				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				cerrarPanel.setBackground(Color.RED);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cerrarPanel.setBackground(new Color(45, 51, 107));
 			}
 		});
 		cerrarPanel.setForeground(Color.BLACK);
@@ -221,13 +236,25 @@ public class RegistrarCita extends JDialog {
 				}
 
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				buscarMedicoPanel.setBackground(new Color(45, 51, 107));
+				label_2.setForeground(Color.white);
+				
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				buscarMedicoPanel.setBackground(new Color(169, 181, 223));
+				label_2.setForeground(Color.black);
+			}
 		});
 		buscarMedicoPanel.setBounds(628, 39, 114, 28);
 		generalPanel.add(buscarMedicoPanel);
 		buscarMedicoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		buscarMedicoPanel.setBackground(new Color(169, 181, 223));
+		buscarMedicoPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-		JLabel label_2 = new JLabel("Buscar");
+		label_2 = new JLabel("Buscar");
 		label_2.setForeground(new Color(0, 0, 0));
 		label_2.setFont(new Font("Verdana", Font.PLAIN, 14));
 		buscarMedicoPanel.add(label_2);
@@ -289,14 +316,27 @@ public class RegistrarCita extends JDialog {
 					habilitarEdicionDeCampos();
 					mensajeLabel.setVisible(true);
 				}
+				
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				buscarPanel.setBackground(new Color(45, 51, 107));
+				lblBuscar.setForeground(Color.white);
+			}	
+			@Override
+			public void mouseExited(MouseEvent e) {
+				buscarPanel.setBackground(new Color(169, 181, 223));
+				lblBuscar.setForeground(Color.black);
+				
 			}
 		});
 		buscarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		buscarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		buscarPanel.setBackground(new Color(169, 181, 223));
 		buscarPanel.setBounds(349, 115, 135, 28);
 		fondo.add(buscarPanel);
 
-		JLabel lblBuscar = new JLabel("Buscar");
+		lblBuscar = new JLabel("Buscar");
 		lblBuscar.setForeground(new Color(0, 0, 0));
 		lblBuscar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		buscarPanel.add(lblBuscar);
@@ -319,34 +359,56 @@ public class RegistrarCita extends JDialog {
 				}
 
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				agendarPanel.setBackground(new Color(45, 51, 107));
+				lblAgendar.setForeground(Color.white);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				agendarPanel.setBackground(new Color(169, 181, 223));
+				lblAgendar.setForeground(Color.black);
+			}
 		});
 		agendarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		agendarPanel.setBackground(new Color(169, 181, 223));
+		agendarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		agendarPanel.setBounds(622, 459, 114, 28);
 		fondo.add(agendarPanel);
 
 		String txtButton = (mode == 1) ? "Reagendar" : "Agendar";
-		JLabel lblAgendar = new JLabel(txtButton);
+		lblAgendar = new JLabel(txtButton);
 		lblAgendar.setForeground(new Color(0, 0, 0));
 		lblAgendar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		agendarPanel.add(lblAgendar);
 
-		JPanel panel_2 = new JPanel();
-		panel_2.addMouseListener(new MouseAdapter() {
+		volverPanel = new JPanel();
+		volverPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				dispose();
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				volverPanel.setBackground(new Color(45, 51, 107));
+				lblVolver.setForeground(Color.white);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				volverPanel.setBackground(new Color(169, 181, 223));
+				lblVolver.setForeground(Color.black);
+			}
 		});
-		panel_2.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_2.setBackground(new Color(169, 181, 223));
-		panel_2.setBounds(763, 459, 114, 28);
-		fondo.add(panel_2);
+		volverPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		volverPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		volverPanel.setBackground(new Color(169, 181, 223));
+		volverPanel.setBounds(763, 459, 114, 28);
+		fondo.add(volverPanel);
 
-		JLabel lblVolver = new JLabel("Volver");
+		lblVolver = new JLabel("Volver");
 		lblVolver.setForeground(new Color(0, 0, 0));
 		lblVolver.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_2.add(lblVolver);
+		volverPanel.add(lblVolver);
 
 
 
@@ -370,9 +432,12 @@ public class RegistrarCita extends JDialog {
 		telefonoField.setBounds(12, 181, 190, 22);
 		generalPanel.add(telefonoField);
 
+
 		if (mode == 1 && codigoCitaReag != null) {
 			cargarDatosReagendar();
 		}
+
+		setLocationRelativeTo(null);
 	}
 
 	private void cargarPersona() {
@@ -400,8 +465,7 @@ public class RegistrarCita extends JDialog {
 
 	private boolean validarCampos() {
 		return !nombreField.getText().isEmpty() && !apellidoField.getText().isEmpty() && !telefonoField.getText().isEmpty() &&
-				!cedulaField.getText().isEmpty() && !medicoField.getText().isEmpty() && dateChooser.getDate() != null && 
-				Clinica.getInstance().cedulaUnica(cedulaField.getText());
+				!cedulaField.getText().isEmpty() && !medicoField.getText().isEmpty() && dateChooser.getDate() != null;
 	}
 
 	private LocalDate dateToLocalDate() {

@@ -449,5 +449,7 @@ public class Login extends JFrame {
 		fondo.add(lblIniciarSesion);
 		icon = new ImageIcon(Login.class.getResource("/imagenes/Princi.png"));
 		
+		setLocationRelativeTo(null);
+		
 	}
 }

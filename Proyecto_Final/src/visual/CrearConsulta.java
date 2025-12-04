@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 
 import javax.swing.JDialog;
@@ -43,6 +44,10 @@ public class CrearConsulta extends JDialog {
 	private ArrayList<Enfermedad> enfermedadesSeleccionadas = new ArrayList<>();
 	private Vacuna vacunaSeleccionada = null;
 	private Persona persona;
+	private int x1;
+	private int x2;
+	private int y1;
+	private int y2;
 
 	private JTextField codigoField;
 	private JScrollPane scrollPane; 
@@ -85,6 +90,24 @@ public class CrearConsulta extends JDialog {
 		fondo.setLayout(null);
 
 		JPanel barPanel = new JPanel();
+		barPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				x1= e.getX();
+				y1 = e.getY();
+			}
+		});
+		barPanel.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				//toma la posicion actual de la ventana
+				x2= arg0.getXOnScreen();
+				y2 = arg0.getYOnScreen();
+				//actualiza la posicion de la ventana
+				setLocation(x2-x1, y2-y1);
+			}
+		});
+		
 		barPanel.setBounds(-96, 0, 985, 25);
 		fondo.add(barPanel);
 		barPanel.setLayout(null);
@@ -93,8 +116,16 @@ public class CrearConsulta extends JDialog {
 		JPanel cerrarPanel = new JPanel();
 		cerrarPanel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent arg0) {
 				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				cerrarPanel.setBackground(Color.RED);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cerrarPanel.setBackground(new Color(45, 51, 107));
 			}
 		});
 		cerrarPanel.setForeground(Color.BLACK);
@@ -134,8 +165,6 @@ public class CrearConsulta extends JDialog {
 				enfermedadesSeleccionadas = listarEnfermedades.objectsSelected();
 				cargarSintomasByEnfermedad();
 				System.out.println(enfermedadesSeleccionadas.size());
-
-
 			}
 		});
 		enfermedad.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -343,6 +372,13 @@ public class CrearConsulta extends JDialog {
 				}
 				
 
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				realizarPanel.setBackground(new Color(169, 181, 223));
 			}
 		});
 		realizarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));

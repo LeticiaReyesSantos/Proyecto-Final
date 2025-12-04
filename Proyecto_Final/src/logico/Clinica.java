@@ -325,7 +325,7 @@ public class Clinica implements Serializable {
 			if( c instanceof Consulta) {
 				Consulta cons = (Consulta) c;
 				if(cons.getMedico().equals(med)) {
-					Paciente p = cons.getPaciente();
+					Paciente p = (Paciente) cons.getPersona();
 					if(!lista.contains(p)) {
 						lista.add(p);
 					}
@@ -422,7 +422,7 @@ public class Clinica implements Serializable {
 					personaLogueada = personas.get(i);
 					valido = true;
 				}
-				
+
 			}
 			i++;
 		}
@@ -490,11 +490,8 @@ public class Clinica implements Serializable {
 		if(aux != null && !(aux.isEstado())) {
 			Paciente pac = (Paciente) aux.getPersona();
 			Diagnostico diag = new Diagnostico("D-" +genDiagnostico, aux.getFecha(), sintomas, tratamiento);
-			Consulta cons = new Consulta("CN-" +genCita, aux.getPersona(), aux.getMedico(), aux.getFecha(), precio, pac, false, diag);
+			aux = new Consulta("CN-" +genCita, aux.getPersona(), aux.getMedico(), aux.getFecha(), precio, pac, false, diag);
 			addDiagnostico(diag);
-			addCita(cons);
-			pac.addHistorial(cons);
-			aux.getMedico().addHistorial(cons);
 			aux.getMedico().addPaciente(pac);
 			aux.setEstado(true);
 			creada = true;
@@ -690,6 +687,18 @@ public class Clinica implements Serializable {
 		return citasMap;
 	}
 
+	public HashMap<String, Integer> medicosMasConsultas(){
+		HashMap<String, Integer> masConsultas = new HashMap<>();
+		for (Cita cita : citas) {
+			if(cita instanceof Consulta) {
+				Medico med = cita.getMedico();
+				String nombreMedico = med.getNombres() + " " + med.getApellidos();
+				masConsultas.put(nombreMedico, masConsultas.getOrDefault(nombreMedico, 0)+1);
+			}
+		}
+		return ordenarHashMapPorValor(masConsultas);
+
+	}
 
 	private HashMap<String, Integer> ordenarHashMapPorValor(HashMap<String, Integer> map) {
 		return map.entrySet()

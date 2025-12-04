@@ -77,6 +77,13 @@ public class ListarConsultas extends JDialog {
 		fondo.setLayout(null);
 
 		barPanel = new JPanel();
+		barPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				x1= e.getX();
+				y1 = e.getY();
+			}
+		});
 		barPanel.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
@@ -87,14 +94,7 @@ public class ListarConsultas extends JDialog {
 				setLocation(x2-x1, y2-y1);
 			}
 		});
-		barPanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				//Toma la posicion actual del panel
-				x1= e.getX();
-				y1 = e.getY();
-			}
-		});
+		
 		barPanel.setBounds(0, 0, 989, 25);
 		fondo.add(barPanel);
 		barPanel.setLayout(null);
@@ -107,12 +107,12 @@ public class ListarConsultas extends JDialog {
 				dispose();
 			}
 			@Override
-			public void mouseEntered(MouseEvent e) {
-
+			public void mouseEntered(MouseEvent arg0) {
+				cerrarPanel.setBackground(Color.RED);
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-
+				cerrarPanel.setBackground(new Color(45, 51, 107));
 			}
 		});
 		cerrarPanel.setForeground(Color.BLACK);
@@ -234,7 +234,7 @@ public class ListarConsultas extends JDialog {
 		for (Cita cita : cl.getCitas()) {
 			if(cita instanceof Consulta) {
 				Consulta cons = (Consulta) cita;
-				Object[] fila = {cons.getCodigo(), cons.getPaciente().getNombres(),cons.getMedico().getNombres(), cons.getFecha(), cons.getPrecio()};
+				Object[] fila = {cons.getCodigo(), cons.getPersona().getNombres(),cons.getMedico().getNombres(), cons.getFecha(), cons.getPrecio()};
 				model.addRow(fila);
 			}
 		}
