@@ -489,22 +489,28 @@ public class Clinica implements Serializable {
 	}
 
 	public boolean crearConsulta(String codigoCita, Double precio, ArrayList<String> sintomas, String tratamiento) {
-		boolean creada = false;
-		Cita aux = buscarCitaByCode(codigoCita);
-		if(aux != null && !(aux.isEstado())) {
-			Paciente pac = (Paciente) aux.getPersona();
-			Diagnostico diag = new Diagnostico("D-" +genDiagnostico, aux.getFecha(), sintomas, tratamiento);
-			Consulta nuevo = new Consulta("CN-" +genCita, aux.getPersona(), aux.getMedico(), aux.getFecha(), precio, pac, false, diag);
-			
-			int index = citas.indexOf(aux);
-			citas.set(index, nuevo);
-			
-			addDiagnostico(diag);
-			aux.getMedico().addPaciente(pac);
-			aux.setEstado(true);
-			creada = true;
-		}
-		return creada;
+	    boolean creada = false;
+	    Cita aux = buscarCitaByCode(codigoCita);
+
+	    if (aux != null && !aux.isEstado()) {
+
+	        Paciente pac = (Paciente) aux.getPersona();
+	        Diagnostico diag = new Diagnostico("D-" + genDiagnostico, aux.getFecha(), sintomas, tratamiento);
+
+	        Consulta nuevo = new Consulta("CN-" + genCita,aux.getPersona(), aux.getMedico(),aux.getFecha(),precio,pac,false,diag);
+	        int index = citas.indexOf(aux);
+	        if (index != -1) {
+	            citas.set(index, nuevo);
+	        }
+
+	        addDiagnostico(diag);
+	        nuevo.getMedico().addPaciente(pac);
+	        nuevo.setEstado(true);
+
+	        creada = true;
+	    }
+
+	    return creada;
 	}
 
 	public boolean modificarPersona(String id, String nuevaDireccion, String nuevoTelefono, String nuevoEmail) {
