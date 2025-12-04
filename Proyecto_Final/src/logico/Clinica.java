@@ -114,7 +114,7 @@ public class Clinica implements Serializable {
 		vacunas.add(aux);
 		genVacuna++;
 	}
-	
+
 	public void addAdmin() {
 		genAdmin+=1;
 	}
@@ -552,7 +552,7 @@ public class Clinica implements Serializable {
 		}
 		return aux;
 	}
-	
+
 
 	public boolean modificarEnfermedad(String codigo, String nuevoTratamiento, boolean nuevoControl, ArrayList<String> nuevosSintomas) {
 		Enfermedad enf = buscarEnfByCode(codigo);
@@ -584,18 +584,18 @@ public class Clinica implements Serializable {
 	}
 
 	public boolean desactivarMedico(String codigoMedico) {
-	    Persona pers = personaById(codigoMedico);
-	    if(pers instanceof Medico) {
-	        Medico med = (Medico) pers;
-	        for (Cita cita : med.historial) {
-	            if(!cita.isEstado() && !cita.getFecha().isBefore(LocalDate.now())) {
-	                return false;
-	            }
-	        }
-	        med.setActivo(false);
-	        return true;
-	    }
-	    return false;
+		Persona pers = personaById(codigoMedico);
+		if(pers instanceof Medico) {
+			Medico med = (Medico) pers;
+			for (Cita cita : med.historial) {
+				if(!cita.isEstado() && !cita.getFecha().isBefore(LocalDate.now())) {
+					return false;
+				}
+			}
+			med.setActivo(false);
+			return true;
+		}
+		return false;
 	}
 
 	public boolean eliminarVacuna(String codigoVac) {
@@ -613,7 +613,7 @@ public class Clinica implements Serializable {
 		vacunas.remove(vac);
 		return true;
 	}
-	
+
 	public boolean eliminarEnfermedad(String codeEnf) {
 		Enfermedad enf = buscarEnfByCode(codeEnf);
 		for (Persona pers : personas) {
@@ -629,8 +629,8 @@ public class Clinica implements Serializable {
 		enfermedades.remove(enf);
 		return true;
 	}
-	
-	
+
+
 	//IMPLEMENTACION DE HASHMAPS PARA REPORTES
 	public HashMap<String, Integer> vacunasMasAplicadas(){
 		HashMap<String, Integer> vacunasMap = new HashMap<>();
@@ -645,7 +645,7 @@ public class Clinica implements Serializable {
 		}
 		return ordenarHashMapPorValor(vacunasMap);
 	}
-	
+
 	public HashMap<String, Integer> enfermedadesMasFrecuentes(){
 		HashMap<String, Integer> enfermedadesMap = new HashMap<>();
 		for (Persona pers : personas) {
@@ -659,47 +659,60 @@ public class Clinica implements Serializable {
 		}
 		return ordenarHashMapPorValor(enfermedadesMap);
 	}
-	
+
 	public HashMap<String, Integer> consultasByEspecialidad(){
 		HashMap<String, Integer> consultasMap = new HashMap<>();
 		for (Cita cita : citas) {
 			if(cita instanceof Consulta) {
 				String especialidad = cita.getMedico().getEspecialidad();
 				consultasMap.put(especialidad, consultasMap.getOrDefault(especialidad, 0)+1);
-				
+
 			}
 		}
 		return ordenarHashMapPorValor(consultasMap);
 	}
-	
+
 	public HashMap<String, Integer> estadoCitas() {
-	    HashMap<String, Integer> citasMap = new HashMap<>();
-	    int pendientes = 0;
-	    int completadas = 0;
-	    
-	    for (Cita cita : citas) {
-	        if (cita.isEstado()) {
-	            completadas++;
-	        } else {
-	            pendientes++;
-	        }
-	    }
-	    citasMap.put("Citas Completadas", completadas);
-	    citasMap.put("Citas Pendientes", pendientes);
-	    return citasMap;
+		HashMap<String, Integer> citasMap = new HashMap<>();
+		int pendientes = 0;
+		int completadas = 0;
+
+		for (Cita cita : citas) {
+			if (cita.isEstado()) {
+				completadas++;
+			} else {
+				pendientes++;
+			}
+		}
+		citasMap.put("Citas Completadas", completadas);
+		citasMap.put("Citas Pendientes", pendientes);
+		return citasMap;
+	}
+
+	public HashMap<String, Integer> medicosMasConsultas(){
+		HashMap<String, Integer> masConsultas = new HashMap<>();
+		for (Cita cita : citas) {
+			if(cita instanceof Consulta) {
+				Medico med = cita.getMedico();
+				String nombreMedico = med.getNombres() + " " + med.getApellidos();
+				masConsultas.put(nombreMedico, masConsultas.getOrDefault(nombreMedico, 0)+1);
+			}
+		}
+		return ordenarHashMapPorValor(masConsultas);
 	}
 
 
-	private HashMap<String, Integer> ordenarHashMapPorValor(HashMap<String, Integer> map) {
-	    return map.entrySet()
-	            .stream()
-	            .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-	            .collect(Collectors.toMap(
-	                Map.Entry::getKey,
-	                Map.Entry::getValue,
-	                (e1, e2) -> e1,
-	                LinkedHashMap::new
-	            ));
-	}
+
+private HashMap<String, Integer> ordenarHashMapPorValor(HashMap<String, Integer> map) {
+	return map.entrySet()
+			.stream()
+			.sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+			.collect(Collectors.toMap(
+					Map.Entry::getKey,
+					Map.Entry::getValue,
+					(e1, e2) -> e1,
+					LinkedHashMap::new
+					));
+}
 
 }

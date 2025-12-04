@@ -17,6 +17,8 @@ import java.awt.Font;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -28,7 +30,7 @@ public class MostrarReportes extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTabbedPane tabs;
-	private JPanel stat1, stat2, stat3, stat4;
+	private JPanel stat1, stat2, stat3, stat4, stat5;
 	private Clinica clinica;
 	private Reporte reporte;
 
@@ -74,8 +76,16 @@ public class MostrarReportes extends JDialog {
 		JPanel cerrarPanel = new JPanel();
 		cerrarPanel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent arg0) {
 				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				cerrarPanel.setBackground(Color.RED);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cerrarPanel.setBackground(new Color(45, 51, 107));
 			}
 		});
 		cerrarPanel.setForeground(Color.BLACK);
@@ -100,11 +110,13 @@ public class MostrarReportes extends JDialog {
 		stat2 = new JPanel();
 		stat3 = new JPanel();
 		stat4 = new JPanel();
+		stat5 = new JPanel();
 
 		tabs.addTab("Vacunas Más Aplicadas", stat1);
 		tabs.addTab("Enfermedades Frecuentes", stat2);
 		tabs.addTab("Consultas por Especialidad", stat3);
 		tabs.addTab("Estado de Citas", stat4);
+		tabs.addTab("Médicos Más Consultas", stat5);
 		tabs.setFont(new Font("Verdana", Font.PLAIN, 12));
 
 		graphs();
@@ -116,6 +128,7 @@ public class MostrarReportes extends JDialog {
 		graficoEnfermedades();
 		graficoConsultas();
 		graficoCitas();
+		graficoMedicos();
 	}
 
 	private void graficoVacunas() {
@@ -168,6 +181,18 @@ public class MostrarReportes extends JDialog {
 		}
 	}
 
+	private void graficoMedicos() {
+		DefaultCategoryDataset data = reporte.top5MedicoMasConsulta();
+		if(data == null || data.getRowCount()==0) {
+			mensaje(stat5);
+		}else {
+			JFreeChart chart = ChartFactory.createBarChart("Top 5 Médicos con más consultas","Cantidad de Consultas","Médicos",data,PlotOrientation.HORIZONTAL,true, true, false);
+			ChartPanel medicoPanel = new ChartPanel(chart);
+			stat5.setLayout(new BorderLayout());
+			stat5.add(medicoPanel, BorderLayout.CENTER);
+		}
+	}
+	
 	private void mensaje(JPanel panel) {
 		panel.removeAll();
 		panel.setLayout(new BorderLayout());

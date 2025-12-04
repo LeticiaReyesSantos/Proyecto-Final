@@ -99,8 +99,16 @@ public class RegistrarCita extends JDialog {
 		JPanel cerrarPanel = new JPanel();
 		cerrarPanel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void mouseClicked(MouseEvent e) {
 				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				cerrarPanel.setBackground(Color.RED);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cerrarPanel.setBackground(new Color(45, 51, 107));
 			}
 		});
 		cerrarPanel.setForeground(Color.BLACK);
