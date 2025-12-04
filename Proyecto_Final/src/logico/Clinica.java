@@ -114,6 +114,10 @@ public class Clinica implements Serializable {
 		vacunas.add(aux);
 		genVacuna++;
 	}
+	
+	public void addAdmin() {
+		genAdmin++;
+	}
 
 
 	public Paciente buscarPacienteByCedula(String cedula) {
@@ -540,14 +544,14 @@ public class Clinica implements Serializable {
 	}
 
 	public Enfermedad buscarEnfByCode(String code) {
-		Enfermedad aux = null;
 		for (Enfermedad enf : enfermedades) {
 			if(enf.getCodigo().equalsIgnoreCase(code)) {
-				aux = enf;
+				return enf;
 			}
 		}
-		return aux;
+		return null;
 	}
+	
 
 	public boolean modificarEnfermedad(String codigo, String nuevoTratamiento, boolean nuevoControl, ArrayList<String> nuevosSintomas) {
 		Enfermedad enf = buscarEnfByCode(codigo);

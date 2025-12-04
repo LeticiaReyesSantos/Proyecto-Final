@@ -29,6 +29,14 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JSeparator;
 import javax.swing.border.BevelBorder;
 import javax.swing.JTextField;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
+import javax.swing.ButtonGroup;
+import javax.swing.ComboBoxModel;
+import javax.swing.JRadioButton;
 
 public class ListarPersonas extends JDialog {
 
@@ -41,13 +49,19 @@ public class ListarPersonas extends JDialog {
 	private JTable table;
 	private JLabel tituloLabel;
 	private DefaultTableModel model;
-	
+
 	private int x1;
 	private int x2;
 	private int y1;
 	private int y2;
 	private JPanel barPanel;
 	private JTextField textField;
+	private JComboBox<String> filtroBox;
+	private JPanel eliminarPanel;
+	private JLabel lblDeshabilitar;
+	private ButtonGroup grupo1 = new ButtonGroup();
+	private JRadioButton habilitadoRadio;
+	private JRadioButton retiradoRadio;
 
 	/**
 	 * Launch the application.
@@ -67,7 +81,9 @@ public class ListarPersonas extends JDialog {
 	 */
 	public ListarPersonas() {
 		setUndecorated(true);
+		
 		setBounds(100, 100, 989, 481);
+		setLocation(320, 250);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -135,7 +151,7 @@ public class ListarPersonas extends JDialog {
 
 		tituloLabel.setForeground(new Color(120, 134, 199));
 		tituloLabel.setFont(new Font("Verdana", Font.BOLD, 28));
-		tituloLabel.setBounds(438, 63, 322, 35);
+		tituloLabel.setBounds(431, 24, 322, 35);
 		fondo.add(tituloLabel);
 
 		JPanel menuPanel = new JPanel();
@@ -143,6 +159,12 @@ public class ListarPersonas extends JDialog {
 		menuPanel.setBounds(0, 24, 169, 457);
 		fondo.add(menuPanel);
 		menuPanel.setLayout(null);
+
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setForeground(new Color(45, 51, 107));
+		separator_1.setBackground(new Color(45, 51, 107));
+		separator_1.setBounds(0, 455, 1001, 2);
+		menuPanel.add(separator_1);
 
 		JLabel lblMenu = new JLabel("Men\u00FA");
 		lblMenu.setBounds(57, 5, 55, 23);
@@ -157,6 +179,17 @@ public class ListarPersonas extends JDialog {
 		menuPanel.add(separator);
 
 		JPanel panel_2 = new JPanel();
+		panel_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
 		panel_2.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_2.setBackground(new Color(120, 134, 199));
 		panel_2.setBounds(25, 82, 132, 35);
@@ -174,16 +207,22 @@ public class ListarPersonas extends JDialog {
 				if(table.getSelectedRow()>-1) {
 					String id = table.getValueAt(table.getSelectedRow(), 0).toString();
 					Persona aux = Clinica.getInstance().personaById(id);
-					
+
 					JOptionPane.showMessageDialog(null, "El usuario es: "+aux.getUser().getUserName()+" La contraseña es: "+aux.getUser().getPass());;
-					
-					
+
+
 				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
 			}
 		});
 		panel_3.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_3.setBackground(new Color(120, 134, 199));
-		panel_3.setBounds(25, 180, 132, 35);
+		panel_3.setBounds(25, 254, 132, 35);
 		menuPanel.add(panel_3);
 
 		JLabel lblVerUsuario = new JLabel("Ver usuario");
@@ -198,6 +237,12 @@ public class ListarPersonas extends JDialog {
 				if(table.getSelectedRow()>-1)
 					dispose();
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
 		});
 		panel_4.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_4.setBackground(new Color(120, 134, 199));
@@ -210,6 +255,17 @@ public class ListarPersonas extends JDialog {
 		panel_4.add(lblSeleccionar);
 
 		JPanel panel_5 = new JPanel();
+		panel_5.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
 		panel_5.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_5.setBackground(new Color(120, 134, 199));
 		panel_5.setBounds(25, 129, 132, 35);
@@ -220,10 +276,46 @@ public class ListarPersonas extends JDialog {
 		lblModificar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		panel_5.add(lblModificar);
 
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setOrientation(SwingConstants.VERTICAL);
+		separator_2.setForeground(new Color(45, 51, 107));
+		separator_2.setBackground(new Color(45, 51, 107));
+		separator_2.setBounds(0, 0, 2, 457);
+		menuPanel.add(separator_2);
+
+		JSeparator separator_3 = new JSeparator();
+		separator_3.setOrientation(SwingConstants.VERTICAL);
+		separator_3.setForeground(new Color(45, 51, 107));
+		separator_3.setBackground(new Color(45, 51, 107));
+		separator_3.setBounds(167, -11, 2, 473);
+		menuPanel.add(separator_3);
+
+		eliminarPanel = new JPanel();
+		eliminarPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
+		eliminarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		eliminarPanel.setBackground(new Color(120, 134, 199));
+		eliminarPanel.setBounds(25, 176, 132, 35);
+		menuPanel.add(eliminarPanel);
+
+		lblDeshabilitar = new JLabel("Deshabilitar");
+		lblDeshabilitar.setForeground(Color.WHITE);
+		lblDeshabilitar.setFont(new Font("Verdana", Font.PLAIN, 14));
+		eliminarPanel.add(lblDeshabilitar);
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(181, 122, 796, 323);
 		fondo.add(scrollPane);
-
+		
 		table = new JTable();
 		model = new DefaultTableModel(
 				new Object[][] {
@@ -231,62 +323,165 @@ public class ListarPersonas extends JDialog {
 				new String[] {
 						"ID", "Nombre", "Apellido", "Cedula", "Edad", "Genero", "Telefono"
 				}
-				);
+				) {
+			boolean[] columnEditables = new boolean[] {
+					false, false, false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		};
 		table.setModel(model);
 		scrollPane.setViewportView(table);
 
-		JPanel panel = new JPanel();
-		panel.addMouseListener(new MouseAdapter() {
+		JPanel volverPanel = new JPanel();
+		volverPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				dispose();
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+
+			}
 		});
-		panel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel.setBackground(new Color(169, 181, 223));
-		panel.setBounds(874, 449, 85, 28);
-		fondo.add(panel);
+		volverPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		volverPanel.setBackground(new Color(169, 181, 223));
+		volverPanel.setBounds(874, 449, 85, 28);
+		fondo.add(volverPanel);
 
 		JLabel lblVolver = new JLabel("Volver");
 		lblVolver.setForeground(Color.BLACK);
 		lblVolver.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel.add(lblVolver);
-		
+		volverPanel.add(lblVolver);
+
 		textField = new JTextField();
-		textField.setBounds(388, 453, 303, 22);
+		textField.setBounds(361, 449, 303, 22);
 		fondo.add(textField);
 		textField.setColumns(10);
-		
+
 		JPanel panel_1 = new JPanel();
+		panel_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
 		panel_1.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_1.setBackground(new Color(169, 181, 223));
-		panel_1.setBounds(703, 449, 85, 28);
+		panel_1.setBounds(676, 449, 85, 28);
 		fondo.add(panel_1);
-		
+
 		JLabel lblBuscar = new JLabel("Buscar");
 		lblBuscar.setForeground(Color.BLACK);
 		lblBuscar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		panel_1.add(lblBuscar);
 
-		actualizarTableMedicos();
-		
+		filtroBox = new JComboBox<String>(new DefaultComboBoxModel<>(new String[] {"Medico","Administrador"}));
+		filtroBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String seleccion = filtroBox.getSelectedItem().toString();
+				if(seleccion.equals("Administrador")) {
+					actualizarTableAdmin();
+					habilitadoRadio.setVisible(false);
+					retiradoRadio.setVisible(false);
+				}
+				else {
+					actualizarTableMedicosActivo();
+					habilitadoRadio.setVisible(true);
+					retiradoRadio.setVisible(true);
+				}
+			}
+		});
+		filtroBox.setBounds(226, 91, 125, 22);
+		fondo.add(filtroBox);
+
+		JLabel lblNewLabel = new JLabel("Filtro");
+		lblNewLabel.setFont(new Font("Verdana", Font.PLAIN, 14));
+		lblNewLabel.setBounds(181, 93, 56, 16);
+		fondo.add(lblNewLabel);
+
+		habilitadoRadio = new JRadioButton("En accion");
+		habilitadoRadio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(habilitadoRadio.isSelected()) 
+					actualizarTableMedicosActivo();
+			}
+		});
+		habilitadoRadio.setBackground(new Color(120, 134, 199));
+		habilitadoRadio.setSelected(true);
+		habilitadoRadio.setBounds(361, 90, 85, 25);
+		fondo.add(habilitadoRadio);
+
+		retiradoRadio = new JRadioButton("retirado");
+		retiradoRadio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(retiradoRadio.isSelected())
+					actualizarTableMedicosInactivos();
+			}
+		});
+		retiradoRadio.setBackground(new Color(120, 134, 199));
+		retiradoRadio.setBounds(458, 90, 85, 25);
+		fondo.add(retiradoRadio);
+
+		grupo1.add(retiradoRadio);
+		grupo1.add(habilitadoRadio);
+
+		actualizarTableMedicosActivo();
+
 		if(user.getUser().getTipo().equals("Medico"))
 			cargarListaPacientes();
 	}
 
 
-	private void actualizarTableMedicos() {
+	private void actualizarTableMedicosActivo() {
 		Clinica cl = Clinica.getInstance();
 		model.setRowCount(0);
 
 		for(Persona p: cl.getPersonas()) {
 			if(p instanceof Medico) {
+				if(((Medico) p).isActivo()) {
+					Object[] fila = {p.getCodigo(), p.getNombres(), p.getApellidos(), p.getCedula(), p.getEdad(), p.getGenero(), p.getTelefono()};
+					model.addRow(fila);
+				}
+			}
+		}
+	}
+	
+	private void actualizarTableMedicosInactivos() {
+		Clinica cl = Clinica.getInstance();
+		model.setRowCount(0);
+
+		for(Persona p: cl.getPersonas()) {
+			if(p instanceof Medico) {
+				if(!((Medico) p).isActivo()) {
+					Object[] fila = {p.getCodigo(), p.getNombres(), p.getApellidos(), p.getCedula(), p.getEdad(), p.getGenero(), p.getTelefono()};
+					model.addRow(fila);
+				}
+			}
+		}
+	}
+
+	private void actualizarTableAdmin() {
+		Clinica cl = Clinica.getInstance();
+		model.setRowCount(0);
+
+		for(Persona p: cl.getPersonas()) {
+			if(p.getUser().getTipo().equals("Administrador")) {
 				Object[] fila = {p.getCodigo(), p.getNombres(), p.getApellidos(), p.getCedula(), p.getEdad(), p.getGenero(), p.getTelefono()};
 				model.addRow(fila);
 			}
 		}
 	}
-	
+
 	private void actualizarTablePacientes() {
 		Clinica cl = Clinica.getInstance();
 		model.setRowCount(0);
@@ -298,13 +493,14 @@ public class ListarPersonas extends JDialog {
 			}
 		}
 	}
-	
+
+
 	public Persona objectoSeleccionado() {
 		if(table.getSelectedRow()>-1) 
 			return Clinica.getInstance().personaById(table.getValueAt(table.getSelectedRow(), 0).toString());
 		else return null;
 	}
-	
+
 	private void cargarListaPacientes() {
 		tituloLabel.setText("Lista de pacientes");
 		actualizarTablePacientes();

@@ -47,13 +47,15 @@ public class RegistrarEnfermedad extends JDialog {
 	private JTextArea txtTratamiento;
 	private ArrayList<String> sintomas = new ArrayList<>();
 	private JLabel ingresar;
+	private int mode = 0; //0 reg 1 mod
+	private Enfermedad enfermedadModificar = null;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistrarEnfermedad dialog = new RegistrarEnfermedad(null);
+			RegistrarEnfermedad dialog = new RegistrarEnfermedad();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -64,7 +66,15 @@ public class RegistrarEnfermedad extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistrarEnfermedad(Enfermedad enf) {
+	
+	public RegistrarEnfermedad() {
+		this(0, null);
+	}
+	
+	public RegistrarEnfermedad(int mode, Enfermedad enf) {
+		this.mode = mode;
+		this.enfermedadModificar = enf;
+		
 		setUndecorated(true);
 		setBounds(100, 100, 590, 540);
 		getContentPane().setLayout(new BorderLayout());
@@ -315,21 +325,23 @@ public class RegistrarEnfermedad extends JDialog {
 				if(txtNombre.getText().trim().isEmpty() || tipo.equals("<<Seleccionar>>") || sintomas.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Existen campos invalidos, asegure de llenar la información");
 				}else {
-					if(enf == null) {
+					if(mode== 0) {
 						Enfermedad aux = new Enfermedad(txtCodigo.getText(),txtNombre.getText(), tratamiento, tipo , controlada);
 						aux.setSintomas(sintomas);
 						Clinica.getInstance().addEnfermedad(aux);
 						JOptionPane.showMessageDialog(null, "Se ha registrado con exito la enfermedad "+aux.getCodigo());
 						limpiar();
 					}else {
-						enf.setControlada(controlada);
-						enf.setTipo(tipo);
-						enf.setTratamiento(tratamiento);
-						enf.setSintomas(sintomas);
-						JOptionPane.showMessageDialog(null, "Se ha modificado con exito la enfermedad "+enf.getCodigo());
-						dispose();
+						if(enfermedadModificar != null) {
+							if(Clinica.getInstance().modificarEnfermedad(enfermedadModificar.getCodigo(), tratamiento, controlada, sintomas)) {
+								 JOptionPane.showMessageDialog(null, "Se ha modificado con exito la enfermedad "+enfermedadModificar.getCodigo());
+			                        dispose();
+			                    } else {
+			                        JOptionPane.showMessageDialog(null, "Error al modificar la enfermedad");
+			                    }
+							}
+						}
 					}
-				}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {

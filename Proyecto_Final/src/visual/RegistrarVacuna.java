@@ -195,7 +195,7 @@ public class RegistrarVacuna extends JDialog {
 		enfermedadPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ListarEnfermedades list = new ListarEnfermedades(0);
+				ListarEnfermedades list = new ListarEnfermedades(0, new ArrayList<Enfermedad>());
 				list.setModal(true);
 				list.setVisible(true);
 				enfermedad = list.getSelectedEnfermedad();

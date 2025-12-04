@@ -369,9 +369,7 @@ public class SintomasSelection extends JDialog {
 	}
 	
 	private void cargarSintomas() {
-		actualizarSeleccionGlobal();
-		
-		
+		actualizarSeleccionGlobal();	
 		
 		model.setRowCount(0);
 		
@@ -414,6 +412,8 @@ public class SintomasSelection extends JDialog {
 	        }
 	    }
 	}
+	
+	
 	
 	private void desSelectedAll() {
 		for(int i= 0; i<model.getRowCount(); i++) {

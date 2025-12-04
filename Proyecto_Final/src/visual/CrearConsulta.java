@@ -17,9 +17,11 @@ import javax.swing.JSeparator;
 import java.awt.Font;
 import javax.swing.JTextField;
 
-
+import logico.Cita;
 import logico.Clinica;
 import logico.Enfermedad;
+import logico.Paciente;
+import logico.Persona;
 import logico.Vacuna;
 
 import javax.swing.JSpinner;
@@ -38,18 +40,24 @@ public class CrearConsulta extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private ArrayList<String> sintomas = new ArrayList<>();
-    private ArrayList<Enfermedad> enfermedadesSeleccionadas = new ArrayList<>();
-    private Vacuna vacunaSeleccionada = null;
-    
+	private ArrayList<Enfermedad> enfermedadesSeleccionadas = new ArrayList<>();
+	private Vacuna vacunaSeleccionada = null;
+	private Persona persona;
+
 	private JTextField codigoField;
 	private JScrollPane scrollPane; 
+	private JTextField pacienteField;
+
+	private String codigo;
+	private Cita cita;
+	private JPanel realizarPanel;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			CrearConsulta dialog = new CrearConsulta();
+			CrearConsulta dialog = new CrearConsulta("");
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -60,8 +68,10 @@ public class CrearConsulta extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public CrearConsulta() {
+	public CrearConsulta(String codigo) {
 		setUndecorated(true);
+		this.codigo = codigo;
+		cita = Clinica.getInstance().buscarCitaByCode(codigo);
 		setBounds(100, 100, 889, 500);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -117,10 +127,14 @@ public class CrearConsulta extends JDialog {
 		enfermedad.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ListarEnfermedades listarEnfermedades = new ListarEnfermedades(1);
+				ListarEnfermedades listarEnfermedades = new ListarEnfermedades(1, enfermedadesSeleccionadas);
 				listarEnfermedades.setModal(true); 
 				listarEnfermedades.setLocationRelativeTo(null); 
 				listarEnfermedades.setVisible(true);
+				enfermedadesSeleccionadas = listarEnfermedades.objectsSelected();
+				cargarSintomasByEnfermedad();
+				System.out.println(enfermedadesSeleccionadas.size());
+
 
 			}
 		});
@@ -171,11 +185,11 @@ public class CrearConsulta extends JDialog {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				sintomasPanel.setBackground(new Color (120, 134, 199));
+				sintomasPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				sintomasPanel.setBackground(new Color(169, 181, 223));
+				sintomasPanel.setBackground(new Color(120, 134, 199));
 			}
 		});
 		sintomasPanel.setBounds(12, 93, 217, 28);
@@ -187,6 +201,42 @@ public class CrearConsulta extends JDialog {
 		label_7.setForeground(new Color(255, 255, 255));
 		label_7.setFont(new Font("Verdana", Font.PLAIN, 14));
 		sintomasPanel.add(label_7);
+
+		JSeparator separator_4 = new JSeparator();
+		separator_4.setForeground(new Color(45, 51, 107));
+		separator_4.setBackground(new Color(45, 51, 107));
+		separator_4.setBounds(12, 276, 217, 12);
+		panel.add(separator_4);
+
+		JLabel lblPaciente = new JLabel("Paciente");
+		lblPaciente.setForeground(new Color(45, 51, 107));
+		lblPaciente.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblPaciente.setBounds(12, 288, 79, 16);
+		panel.add(lblPaciente);
+
+		JSeparator separator_5 = new JSeparator();
+		separator_5.setForeground(new Color(45, 51, 107));
+		separator_5.setBackground(new Color(45, 51, 107));
+		separator_5.setBounds(12, 337, 217, 2);
+		panel.add(separator_5);
+
+		pacienteField = new JTextField();
+		pacienteField.setEditable(false);
+		pacienteField.setText(cita.getPersona().getNombres()+" "+cita.getPersona().getApellidos());
+		pacienteField.setColumns(10);
+		pacienteField.setBounds(12, 317, 217, 22);
+		panel.add(pacienteField);
+
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panel_2.setBackground(new Color(120, 134, 199));
+		panel_2.setBounds(12, 361, 217, 28);
+		panel.add(panel_2);
+
+		JLabel lblVerHistorial = new JLabel("Ver historial");
+		lblVerHistorial.setForeground(Color.WHITE);
+		lblVerHistorial.setFont(new Font("Verdana", Font.PLAIN, 14));
+		panel_2.add(lblVerHistorial);
 
 		JLabel lblRealizarConsulta = new JLabel("REALIZAR CONSULTA");
 		lblRealizarConsulta.setForeground(new Color(120, 134, 199));
@@ -200,10 +250,6 @@ public class CrearConsulta extends JDialog {
 		panel_1.setBackground(new Color(240, 248, 255));
 		panel_1.setBounds(295, 136, 541, 238);
 		fondo.add(panel_1);
-
-		JTextArea tratamiento = new JTextArea();
-		tratamiento.setBounds(35, 114, 473, 84);
-		panel_1.add(tratamiento);
 
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setForeground(new Color(45, 51, 107));
@@ -240,7 +286,7 @@ public class CrearConsulta extends JDialog {
 		panel_1.add(lblPrecio);
 
 		codigoField = new JTextField();
-		codigoField.setEnabled(false);
+		codigoField.setEditable(false);
 		codigoField.setColumns(10);
 		codigoField.setBounds(28, 44, 190, 22);
 		panel_1.add(codigoField);
@@ -250,36 +296,51 @@ public class CrearConsulta extends JDialog {
 		scrollPane.setBounds(35, 114, 473, 84);
 		panel_1.add(scrollPane);
 
+		JTextArea tratamiento = new JTextArea();
+		scrollPane.setViewportView(tratamiento);
+
 		JLabel lblTratamiento = new JLabel("Tratamiento");
 		lblTratamiento.setForeground(new Color(0, 0, 51));
 		lblTratamiento.setFont(new Font("Verdana", Font.BOLD, 14));
 		lblTratamiento.setBounds(28, 82, 109, 16);
 		panel_1.add(lblTratamiento);
-		
+
 		JSpinner precioSpinner = new JSpinner();
 		precioSpinner.setModel(new SpinnerNumberModel(1500, 1500, 6000, 500));
 		precioSpinner.setBounds(318, 40, 190, 26);
 		panel_1.add(precioSpinner);
 
-		JPanel realizarPanel = new JPanel();
+		realizarPanel = new JPanel();
 		realizarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(validarCampos()) {
-					String codigoCita = codigoField.getText();
-					double precio = ((Number) precioSpinner.getValue()).doubleValue();
-					JTextArea tratamientoArea = (JTextArea) scrollPane.getViewport().getView();
-					String tratamientoText = tratamientoArea.getText();
+				
+				persona = cita.getPersona();
+				if(!(persona instanceof Paciente)) {
 
-					if(Clinica.getInstance().crearConsulta(codigoCita, precio, sintomas, tratamientoText)) {
-						JOptionPane.showMessageDialog(null, "Se ha realizado la consulta con éxito");
-						dispose();
-					} else {
-						JOptionPane.showMessageDialog(null, "Ha surgido un error al realizar la consulta");
-					}
-				} else {
-					JOptionPane.showMessageDialog(null, "Aún hay campos por rellenar");
+					RegistrarPersona regiPersona = new RegistrarPersona(persona, 1);
+					regiPersona.setModal(true);
+					regiPersona.setVisible(true);
+					//persona = Clinica.getInstance().getPersonas().get(Clinica.getInstance().getPersonas().size()-1);
 				}
+				
+		        if (!(persona instanceof Paciente)) {
+		            JOptionPane.showMessageDialog(null, "Debe completar el registro del paciente antes de continuar.");
+		            return;
+		        }
+				
+				String codigoCita = cita.getCodigo();
+				double precio = ((Number) precioSpinner.getValue()).doubleValue();
+				JTextArea tratamientoArea = (JTextArea) scrollPane.getViewport().getView();
+				String tratamientoText = tratamientoArea.getText();
+
+				if(Clinica.getInstance().crearConsulta(codigoCita, precio, sintomas, tratamientoText)) {
+					JOptionPane.showMessageDialog(null, "Se ha realizado la consulta con éxito");
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(null, "Ha surgido un error al realizar la consulta");
+				}
+
 			}
 		});
 		realizarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -310,14 +371,25 @@ public class CrearConsulta extends JDialog {
 		volverPanel.add(label_2);
 
 	}
-	
-	 private boolean validarCampos() {
-	        JTextArea tratamientoArea = (JTextArea) scrollPane.getViewport().getView();
-	        String tratamientoText = tratamientoArea.getText();
-	        
-	        if(tratamientoText.isEmpty()) {
-	            return false;
-	        }
-	        return true;
-	    }
+
+	private boolean validarCampos() {
+		JTextArea tratamientoArea = (JTextArea) scrollPane.getViewport().getView();
+		String tratamientoText = tratamientoArea.getText();
+
+		if(tratamientoText.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+
+	private void cargarSintomasByEnfermedad() {
+
+		sintomas.removeAll(sintomas);
+
+		for(Enfermedad e: enfermedadesSeleccionadas) {
+			for(String s: e.getSintomas()) {
+				sintomas.add(s);
+			}
+		}
+	}
 }

@@ -39,6 +39,7 @@ import javax.swing.JSeparator;
 
 import logico.Clinica;
 import logico.Medico;
+import logico.Paciente;
 import logico.Persona;
 import logico.User;
 
@@ -92,14 +93,17 @@ public class RegistrarPersona extends JDialog {
 	private JPanel cancelarPanel;
 	private JSeparator border3;
 	private JLabel tituloLbl;
-	
+
+	private Persona person;
+	private int mode;
+
 	private JLabel mensajeLabel;
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistrarPersona dialog = new RegistrarPersona();
+			RegistrarPersona dialog = new RegistrarPersona(null, 0);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -110,10 +114,12 @@ public class RegistrarPersona extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistrarPersona() {
+	public RegistrarPersona(Persona person, int mode) {
+		this.person = person;
+		this.mode = mode;
 		setUndecorated(true);
 		setBounds(100, 100, 845, 664);
-		setLocation(420, 250);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -480,30 +486,29 @@ public class RegistrarPersona extends JDialog {
 		aceptarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+			    if (mode == 0) {
+			        if (camposGeneralesVacios()) {
+			            JOptionPane.showMessageDialog(null, "Aún faltan campos generales por rellenar");
+			            return;
+			        }
 
-				if (camposGeneralesVacios()) {
-					JOptionPane.showMessageDialog(null, "Aun faltan campos generales por rellenar");
-					return;
-				}
+			        if (user.getTipo().equals("Administrador")) {
+			            if (medicoRadio.isSelected()) {
+			                if (camposMedicoVacios()) {
+			                    JOptionPane.showMessageDialog(null, "Aún faltan campos del médico por rellenar");
+			                    return;
+			                }
+			                registrarMedico();
+			                return;
+			            }
 
-				if (user.getTipo().equals("Administrador")) {
-
-					if (medicoRadio.isSelected()) {
-
-						if (camposMedicoVacios()) {
-							JOptionPane.showMessageDialog(null, "Aun faltan campos del médico por rellenar");
-							return;
-						}
-						
-						registrarMedico();
-						return;
-					}
-
-					registrarAdmin();
-					return;
-				}
-
-				registrarPaciente();
+			            registrarAdmin();
+			            return;
+			        }
+			    } 
+			    else if (mode == 1) { 
+			        registrarPaciente();
+			    }
 			}
 
 			@Override
@@ -575,6 +580,9 @@ public class RegistrarPersona extends JDialog {
 
 		if(user.getTipo().equals("Medico"))
 			panelPacienteShow();
+		
+		if(person!= null && mode == 1 )
+			 cargarRegistroPaciente();  
 
 	}
 
@@ -582,11 +590,10 @@ public class RegistrarPersona extends JDialog {
 		boolean cedulaUnica = Clinica.getInstance().cedulaUnica(cedulaField.getText());
 		if(!cedulaUnica) mensajeLabel.setVisible(true);
 		else mensajeLabel.setVisible(false);
-		
+
 		return nombreField.getText().trim().isEmpty() || apellidoField.getText().trim().isEmpty() || cedulaField.getText().trim().isEmpty()  ||
 				telefonoField.getText().trim().isEmpty() || direccionField.getText().trim().isEmpty() 
-				|| correoField.getText().trim().isEmpty() || dateChooser.getDate() == null || !cedulaUnica || cedulaField.getText().trim().length()<13 
-				|| telefonoField.getText().trim().length() < 12;
+				|| correoField.getText().trim().isEmpty() || dateChooser.getDate() == null || !cedulaUnica || telefonoField.getText().trim().length() < 12;
 	}
 
 	private boolean camposMedicoVacios() {
@@ -672,6 +679,8 @@ public class RegistrarPersona extends JDialog {
 			aux = new Persona(codigo, cedula, nombres, apellidos, 
 					fechaNacimiento, genero, telefono, direccion, email, usuario);
 
+			Clinica.getInstance().addAdmin();
+
 			Clinica.getInstance().addPersona(aux);
 
 			JOptionPane.showMessageDialog(null, "Se ha registrado un nuevo administrador con exito");
@@ -683,7 +692,7 @@ public class RegistrarPersona extends JDialog {
 	private void registrarPaciente() {
 		if(!camposGeneralesVacios()) {
 			Persona aux = null;
-			String codigo ="Pa-"+Clinica.getInstance().genMedico;
+			String codigo ="Pa-"+Clinica.getInstance().genPaciente;
 			String nombres = nombreField.getText();
 			String apellidos = apellidoField.getText();
 			String cedula = cedulaField.getText();
@@ -692,14 +701,15 @@ public class RegistrarPersona extends JDialog {
 			String email = correoField.getText();
 			char genero = genero();
 			LocalDate fechaNacimiento = dateToLocalDate();
+			String tipoSangre = sangreBox.getSelectedItem().toString();
 
-			aux = new Persona(codigo, cedula, nombres, apellidos, 
-					fechaNacimiento, genero, telefono, direccion, email, null);
+			aux = new Paciente(codigo, cedula, nombres, apellidos, 
+					fechaNacimiento, genero, telefono, direccion, email, tipoSangre, null);
 
 			Clinica.getInstance().addPersona(aux);
 
-			JOptionPane.showMessageDialog(null, "Se ha registrado un nuevo administrador con exito");
-			clean();
+			JOptionPane.showMessageDialog(null, "Se ha registrado un nuevo paciente con exito");
+			dispose();
 		}	
 	}
 
@@ -723,10 +733,10 @@ public class RegistrarPersona extends JDialog {
 		adminRadio.setVisible(false);
 		medicoPanel.setVisible(false);
 	}
-	
-	
+
+
 	private void clean() {
-		
+
 		cedulaField.setText("");
 		nombreField.setText("");
 		apellidoField.setText("");
@@ -739,6 +749,20 @@ public class RegistrarPersona extends JDialog {
 		telefonoField.setText("");
 		direccionField.setText("");
 		habilitarMedicoPanel();
+	}
+
+	private void cargarRegistroPaciente() {
+
+		nombreField.setText(person.getNombres());
+		apellidoField.setText(person.getApellidos());
+		telefonoField.setText(person.getTelefono());
+		cedulaField.setText(person.getCedula());
+		nombreField.setEditable(false);
+		apellidoField.setEditable(false);
+		cedulaField.setEnabled(false);
+		cedulaField.setDisabledTextColor(Color.BLACK);
+		cedulaField.setBackground(Color.WHITE);
+		
 	}
 }
 
