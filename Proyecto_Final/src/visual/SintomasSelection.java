@@ -6,6 +6,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 import java.awt.Color;
+import java.awt.Cursor;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -39,6 +41,9 @@ public class SintomasSelection extends JDialog {
 	private JTable table;
 	private DefaultTableModel model;
 	private JTextField buscarField;
+	private JPanel buscarPanel;
+	private JPanel volverPanel;
+	private JPanel seleccionPanel;
 
 	/**
 	 * Launch the application.
@@ -109,7 +114,7 @@ public class SintomasSelection extends JDialog {
 		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(table);
 		
-		JPanel seleccionPanel = new JPanel();
+		seleccionPanel = new JPanel();
 		seleccionPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -121,10 +126,19 @@ public class SintomasSelection extends JDialog {
 				}
 				
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				seleccionPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				seleccionPanel.setBackground(new Color(169, 181, 223));
+			}
 		});
 		seleccionPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		seleccionPanel.setBackground(new Color(169, 181, 223));
 		seleccionPanel.setBounds(499, 407, 85, 28);
+		seleccionPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		contentPanel.add(seleccionPanel);
 		
 		JLabel lblAceptar = new JLabel("Seleccionar");
@@ -132,23 +146,32 @@ public class SintomasSelection extends JDialog {
 		lblAceptar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		seleccionPanel.add(lblAceptar);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.addMouseListener(new MouseAdapter() {
+		volverPanel = new JPanel();
+		volverPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				desSelectedAll();
 				dispose();
 			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				volverPanel.setBackground(new Color(169, 181, 223));
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				volverPanel.setBackground(new Color(45, 51, 107));
+			}
 		});
-		panel_1.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_1.setBackground(new Color(169, 181, 223));
-		panel_1.setBounds(596, 407, 85, 28);
-		contentPanel.add(panel_1);
+		volverPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		volverPanel.setBackground(new Color(169, 181, 223));
+		volverPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		volverPanel.setBounds(596, 407, 85, 28);
+		contentPanel.add(volverPanel);
 		
 		JLabel lblVolver = new JLabel("Volver");
 		lblVolver.setForeground(new Color(0, 0, 0));
 		lblVolver.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_1.add(lblVolver);
+		volverPanel.add(lblVolver);
 		
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -346,8 +369,8 @@ public class SintomasSelection extends JDialog {
 		buscarField.setBounds(40, 407, 295, 22);
 		contentPanel.add(buscarField);
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.addMouseListener(new MouseAdapter() {
+		buscarPanel = new JPanel();
+		buscarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if(buscarField.getText().isEmpty()) 
@@ -355,16 +378,25 @@ public class SintomasSelection extends JDialog {
 				else
 					buscarSintomas();
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				buscarPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				buscarPanel.setBackground(new Color(169, 181, 223));
+			}
 		});
-		panel_2.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_2.setBackground(new Color(169, 181, 223));
-		panel_2.setBounds(347, 407, 85, 28);
-		contentPanel.add(panel_2);
+		buscarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		buscarPanel.setBackground(new Color(169, 181, 223));
+		buscarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		buscarPanel.setBounds(347, 407, 85, 28);
+		contentPanel.add(buscarPanel);
 		
 		JLabel lblBuscar = new JLabel("Buscar");
 		lblBuscar.setForeground(new Color(0, 0, 0));
 		lblBuscar.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_2.add(lblBuscar);
+		buscarPanel.add(lblBuscar);
 		cargarSintomas();
 	}
 	

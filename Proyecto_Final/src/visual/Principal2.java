@@ -108,6 +108,8 @@ public class Principal2 extends JFrame {
 	private Servidor servidor = new Servidor(9000);
 	private JPanel consultaPanel;
 	private JLabel lblIniciarConsulta;
+	private JLabel Solicitar;
+	private JPanel solicitarVacuna;
 
 	/**
 	 * Launch the application.
@@ -762,9 +764,9 @@ public class Principal2 extends JFrame {
 				registrarVacunaPanel.setBackground(new Color(169, 181, 223));
 			}
 		});
-		registrarVacunaPanel.setVisible(false);
 		registrarVacunaPanel.setBackground(new Color(169, 181, 223));
 		registrarVacunaPanel.setBounds(1132, 333, 386, 67);
+		registrarVacunaPanel.setVisible(false);
 		fondo.add(registrarVacunaPanel);
 
 		JLabel lblRegistrar_1 = new JLabel("Registrar");
@@ -838,12 +840,17 @@ public class Principal2 extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if (configuracionPanel.isVisible()) return;
-				if(!registrarVacunaPanel.isVisible()) {
-					registrarVacunaPanel.setVisible(true);
+				if(!listVacunasPanel.isVisible()) {
+					if(usuario.getUser().getTipo().equals("Administrador"))
+						registrarVacunaPanel.setVisible(true);
+					else 
+						solicitarVacuna.setVisible(true);
+					
 					listVacunasPanel.setVisible(true);
 				}else {
 					registrarVacunaPanel.setVisible(false);
 					listVacunasPanel.setVisible(false);
+					solicitarVacuna.setVisible(false);
 				}
 			}
 			@Override
@@ -923,6 +930,17 @@ public class Principal2 extends JFrame {
 		lblIniciarConsulta.setForeground(Color.WHITE);
 		lblIniciarConsulta.setFont(new Font("Verdana", Font.PLAIN, 33));
 		consultaPanel.add(lblIniciarConsulta);
+		
+		solicitarVacuna = new JPanel();
+		solicitarVacuna.setBackground(new Color(169, 181, 223));
+		solicitarVacuna.setBounds(1132, 466, 386, 67);
+		fondo.add(solicitarVacuna);
+		
+		Solicitar = new JLabel("Solicitar");
+		Solicitar.setForeground(Color.WHITE);
+		solicitarVacuna.setVisible(false);
+		Solicitar.setFont(new Font("Verdana", Font.PLAIN, 40));
+		solicitarVacuna.add(Solicitar);
 		scrollPane.setVisible(false);
 
 		if(usuario.getUser().getTipo().equals("Medico"))
@@ -948,6 +966,7 @@ public class Principal2 extends JFrame {
 		consultaPanel.setVisible(true);
 		regMedicoPanel.setBounds(0, 0, 386, 67);
 		listMedicoPanel.setBounds(142, 333, 386, 67);
+		solicitarVacuna.setBounds(1132, 333, 386, 67);
 		cargarCitasActuales();
 
 	}
