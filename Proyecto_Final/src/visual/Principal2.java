@@ -18,6 +18,7 @@ import logico.Cita;
 import logico.Clinica;
 import logico.Consulta;
 import logico.Enfermedad;
+import logico.Paciente;
 import logico.Persona;
 import servidor.Servidor;
 
@@ -63,6 +64,7 @@ public class Principal2 extends JFrame {
 	DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
 	private Dimension dim;
 	private Persona usuario = Clinica.getLoginUser();
+	private Persona paciente;
 	private int x1;
 	private int x2;
 	private int y1;
@@ -694,7 +696,9 @@ public class Principal2 extends JFrame {
 		listCitasPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				ListarCitas list = new ListarCitas();
+				list.setVisible(true);
+				list.setModal(true);
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -890,9 +894,24 @@ public class Principal2 extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if(table.getSelectedRow()>-1) {
 					String id = table.getValueAt(table.getSelectedRow(), 0).toString();
+					Cita cita =Clinica.getInstance().buscarCitaByCode(id);
+					
+					if(cita != null) {
+						paciente = cita.getPersona();
+						if(!(paciente instanceof Paciente)) {
+					        JOptionPane.showMessageDialog(null, "Debe completar el registro del paciente antes de continuar.");
+							RegistrarPersona regiPersona = new RegistrarPersona(paciente, 1);
+							regiPersona.setModal(true);
+							regiPersona.setVisible(true);
+							paciente = Clinica.getInstance().getPersonas().get(Clinica.getInstance().getPersonas().size()-1);
+							cita.setPersona(paciente);
+						}
+					}
 					CrearConsulta consulta = new CrearConsulta(id);
+				
 					consulta.setModal(true);
 					consulta.setVisible(true);
+					cargarCitasActuales();
 				}
 			}
 			@Override

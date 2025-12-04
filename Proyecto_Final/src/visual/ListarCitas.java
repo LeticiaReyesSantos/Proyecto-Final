@@ -141,6 +141,14 @@ public class ListarCitas extends JDialog {
 				if(table.getSelectedRow()>-1)
 					dispose();
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				seleccionarPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				seleccionarPanel.setBackground(new Color(120, 134, 199));
+			}
 		});
 		seleccionarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		seleccionarPanel.setBackground(new Color(120, 134, 199));
@@ -178,6 +186,14 @@ public class ListarCitas extends JDialog {
 				reagendarCita.setLocationRelativeTo(null);
 				reagendarCita.setVisible(true);
 				actualizar();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				reagendarPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				reagendarPanel.setBackground(new Color(120, 134, 199));
 			}
 		});
 		reagendarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -217,6 +233,14 @@ public class ListarCitas extends JDialog {
 						JOptionPane.showMessageDialog(null, "No se pudo cancelar la cita.\n" +"La cita ya fue completada o no existe.", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				cancelarCita.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cancelarCita.setBackground(new Color(120, 134, 199));
 			}
 		});
 		cancelarCita.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -263,6 +287,14 @@ public class ListarCitas extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				volverPanel.setBackground(new Color(120, 134, 199));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				volverPanel.setBackground(new Color(169, 181, 223));
 			}
 		});
 
