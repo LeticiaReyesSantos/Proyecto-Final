@@ -166,6 +166,14 @@ public class CrearConsulta extends JDialog {
 				cargarSintomasByEnfermedad();
 				System.out.println(enfermedadesSeleccionadas.size());
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				enfermedad.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				enfermedad.setBackground(new Color(120, 134, 199));
+			}
 		});
 		enfermedad.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		enfermedad.setBackground(new Color(120, 134, 199));
@@ -185,6 +193,14 @@ public class CrearConsulta extends JDialog {
 				listarVacuna.setModal(true); 
 				listarVacuna.setLocationRelativeTo(null); 
 				listarVacuna.setVisible(true);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				vacunas.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				vacunas.setBackground(new Color(120, 134, 199));
 			}
 		});
 		vacunas.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -319,7 +335,7 @@ public class CrearConsulta extends JDialog {
 		codigoField.setColumns(10);
 		codigoField.setBounds(28, 44, 190, 22);
 		panel_1.add(codigoField);
-		codigoField.setText("CN-"+Clinica.getInstance().genCita);
+		codigoField.setText(cita.getCodigo());
 
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(35, 114, 473, 84);
@@ -345,20 +361,6 @@ public class CrearConsulta extends JDialog {
 			public void mouseClicked(MouseEvent e) {
 				
 				persona = cita.getPersona();
-				if(!(persona instanceof Paciente)) {
-
-					RegistrarPersona regiPersona = new RegistrarPersona(persona, 1);
-					regiPersona.setModal(true);
-					regiPersona.setVisible(true);
-					persona = Clinica.getInstance().getPersonas().get(Clinica.getInstance().getPersonas().size()-1);
-					cita.setPersona(persona);
-				}
-				
-		        if (!(persona instanceof Paciente)) {
-		            JOptionPane.showMessageDialog(null, "Debe completar el registro del paciente antes de continuar.");
-		            return;
-		        }
-				
 				String codigoCita = cita.getCodigo();
 				double precio = ((Number) precioSpinner.getValue()).doubleValue();
 				JTextArea tratamientoArea = (JTextArea) scrollPane.getViewport().getView();
@@ -370,11 +372,10 @@ public class CrearConsulta extends JDialog {
 				} else {
 					JOptionPane.showMessageDialog(null, "Ha surgido un error al realizar la consulta");
 				}
-				
-
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
+				realizarPanel.setBackground(new Color(120, 134, 199));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -396,6 +397,14 @@ public class CrearConsulta extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				volverPanel.setBackground(new Color(120, 134, 199));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				volverPanel.setBackground(new Color(169, 181, 223));
 			}
 		});
 		volverPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));

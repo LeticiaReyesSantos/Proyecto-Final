@@ -191,14 +191,14 @@ public class Clinica implements Serializable {
 		boolean realizado = false;
 		Persona aux = buscarPacienteByCedula(cedula);
 		if(aux != null) {
-			Cita cita = new Cita("Ci-"+genCita, aux, med , fecha); 
+			Cita cita = new Cita("C-"+genCita, aux, med , fecha); 
 			addCita(cita);
 			med.addHistorial(cita);
 			aux.addHistorial(cita);
 			realizado = true;
 		}else if(aux == null){
 			aux = new Persona("", cedula, nombre, apellido, LocalDate.now(), ' ', telefono, "", "", null);
-			Cita cita = new Cita("Ci-"+genCita, aux, med , fecha);
+			Cita cita = new Cita("C-"+genCita, aux, med , fecha);
 			addCita(cita); 
 			med.addHistorial(cita);
 			aux.addHistorial(cita);
