@@ -365,9 +365,17 @@ public class ListarVacuna extends JDialog {
 		Clinica cl = Clinica.getInstance();
 		model.setRowCount(0);
 		for (Vacuna vac : cl.getVacunas()) {
-			Object[] fila = {vac.getCodigo(), vac.getNombre(), vac.getEnfermedad(), vac.isControlada()? "SI": "NO"};
+			Object[] fila = {vac.getCodigo(), vac.getNombre(), vac.getEnfermedad().getNombre(), vac.isControlada()? "SI": "NO"};
 			model.addRow(fila);
 		}
-
+	}
+	
+	public Vacuna getSelectedVacuna() {
+		Vacuna vac = null;
+		int index = table.getSelectedRow();
+		if(index > -1) {
+			vac = Clinica.getInstance().getVacunas().get(index);
+		}
+		return vac;
 	}
 }

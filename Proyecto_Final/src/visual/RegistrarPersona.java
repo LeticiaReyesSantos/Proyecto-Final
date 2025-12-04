@@ -759,6 +759,7 @@ public class RegistrarPersona extends JDialog {
 		dateChooser.setMaxSelectableDate(calendario.getTime());
 		telefonoField.setText("");
 		direccionField.setText("");
+		correoField.setText("");
 		habilitarMedicoPanel();
 	}
 

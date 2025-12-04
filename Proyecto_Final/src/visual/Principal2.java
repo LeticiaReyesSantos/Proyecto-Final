@@ -21,6 +21,7 @@ import logico.Enfermedad;
 import logico.Medico;
 import logico.Paciente;
 import logico.Persona;
+import logico.Vacuna;
 import servidor.Servidor;
 
 import java.awt.Color;
@@ -110,6 +111,7 @@ public class Principal2 extends JFrame {
 	private JLabel lblIniciarConsulta;
 	private JLabel Solicitar;
 	private JPanel solicitarVacuna;
+	private Medico medico;
 
 	/**
 	 * Launch the application.
@@ -749,7 +751,7 @@ public class Principal2 extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (configuracionPanel.isVisible()) return;
-				RegistrarVacuna regVacuna = new RegistrarVacuna(null, 0);
+				RegistrarVacuna regVacuna = new RegistrarVacuna(null,0);
 				regVacuna.setModal(true); 
 				regVacuna.setVisible(true);
 			}
@@ -856,7 +858,6 @@ public class Principal2 extends JFrame {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				if (configuracionPanel.isVisible()) return;
-
 				vacunaPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
@@ -932,6 +933,35 @@ public class Principal2 extends JFrame {
 		consultaPanel.add(lblIniciarConsulta);
 		
 		solicitarVacuna = new JPanel();
+		solicitarVacuna.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(Clinica.getInstance().getVacunas().size() >= 10) {
+					ListarVacuna list = new ListarVacuna();
+					list.setModal(true);
+					list.setVisible(true);
+					Vacuna vac = list.getSelectedVacuna();
+					medico = (Medico) Clinica.getInstance().personaById(usuario.getCodigo());
+					
+					if(vac != null) {
+						if(medico.getVacunasMedicos().contains(vac)) {
+							JOptionPane.showInternalMessageDialog(null, "Ya posee la vacuna habilitada");
+						}else {
+							medico.addVacuna(vac);
+							JOptionPane.showMessageDialog(null, "Se ha habilitado la vacuna");
+						}
+					}
+				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				solicitarVacuna.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				solicitarVacuna.setBackground(new Color(169, 181, 223));
+			}
+		});
 		solicitarVacuna.setBackground(new Color(169, 181, 223));
 		solicitarVacuna.setBounds(1132, 466, 386, 67);
 		fondo.add(solicitarVacuna);

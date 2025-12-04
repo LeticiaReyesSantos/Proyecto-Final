@@ -220,33 +220,35 @@ public class RegistrarVacuna extends JDialog {
 		Informacion.add(rdbtNo);
 
 		JPanel enfermedadPanel = new JPanel();
-		enfermedadPanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ListarEnfermedades list = new ListarEnfermedades(0, new ArrayList<Enfermedad>());
-				list.setModal(true);
-				list.setVisible(true);
-				enfermedad = list.getSelectedEnfermedad();
-				if(enfermedad == null)
-					return;
+		if(mode == 0) {
+			enfermedadPanel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					ListarEnfermedades list = new ListarEnfermedades(0, new ArrayList<Enfermedad>());
+					list.setModal(true);
+					list.setVisible(true);
+					enfermedad = list.getSelectedEnfermedad();
+					if(enfermedad == null)
+						return;
 
-				if(enfermedad.isControlada()) {
-					rdbtSi.setSelected(true);
-					rdbtNo.setSelected(false);
-				}else {
-					rdbtNo.setSelected(true);
-					rdbtSi.setSelected(false);
+					if(enfermedad.isControlada()) {
+						rdbtSi.setSelected(true);
+						rdbtNo.setSelected(false);
+					}else {
+						rdbtNo.setSelected(true);
+						rdbtSi.setSelected(false);
+					}
 				}
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				enfermedadPanel.setBackground(new Color (120, 134, 199));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				enfermedadPanel.setBackground(new Color(169, 181, 223));
-			}
-		});
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					enfermedadPanel.setBackground(new Color (120, 134, 199));
+				}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					enfermedadPanel.setBackground(new Color(169, 181, 223));
+				}
+			});
+		}
 		enfermedadPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		enfermedadPanel.setBackground(new Color(169, 181, 223));
 		enfermedadPanel.setBounds(318, 38, 181, 28);
@@ -359,7 +361,6 @@ public class RegistrarVacuna extends JDialog {
 			Titulo.setText("Modificar Vacuna");
 			cargar(vac);
 			ingresar.setText("Modificar");
-			txtNombre.setEnabled(false);
 		} else {
 			Titulo.setText("Registrar Vacuna");
 			txtCodigo.setText("V-"+Clinica.getInstance().genVacuna);
@@ -371,8 +372,8 @@ public class RegistrarVacuna extends JDialog {
 	private void cargar(Vacuna vac) {
 		txtCodigo.setText(vac.getCodigo());
 		txtDescripcion.setText(vac.getDescripcion());
-		txtNombre.setText(vac.getCodigo());
-		txtNombre.setEnabled(false);
+		txtNombre.setText(vac.getNombre());
+		txtNombre.setEditable(false);
 		enfermedad = vac.getEnfermedad();
 		if(vac.isControlada()) {
 			rdbtSi.setSelected(true);

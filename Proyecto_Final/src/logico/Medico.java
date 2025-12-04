@@ -13,6 +13,7 @@ public class Medico extends Persona {
 	private String especialidad;
 	private int maxCitas;
 	private ArrayList<Paciente> pacientes;
+	private ArrayList<Vacuna> vacunasMedicos;
 	private boolean activo;
 
 
@@ -23,6 +24,7 @@ public class Medico extends Persona {
 		this.especialidad = especialidad;
 		this.maxCitas = maxCitas;
 		pacientes = new ArrayList<>();
+		vacunasMedicos = new ArrayList<>();
 		this.activo = true;
 	}
 
@@ -91,5 +93,12 @@ public class Medico extends Persona {
 		return cant;
 	}
 
+	public ArrayList<Vacuna> getVacunasMedicos() {
+		return vacunasMedicos;
+	}
+	
+	public void addVacuna(Vacuna aux) {
+		vacunasMedicos.add(aux);
+	}
 
 }
