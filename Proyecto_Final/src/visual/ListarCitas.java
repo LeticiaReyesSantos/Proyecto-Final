@@ -2,6 +2,7 @@ package visual;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -29,6 +30,7 @@ import logico.Persona;
 import logico.Vacuna;
 
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 
 public class ListarCitas extends JDialog {
 
@@ -159,6 +161,7 @@ public class ListarCitas extends JDialog {
 		seleccionarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		seleccionarPanel.setBackground(new Color(120, 134, 199));
 		seleccionarPanel.setBounds(22, 247, 135, 35);
+		seleccionarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panel.add(seleccionarPanel);
 
 		JLabel seleccionarlbl = new JLabel("Seleccionar");
@@ -204,6 +207,7 @@ public class ListarCitas extends JDialog {
 		});
 		reagendarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		reagendarPanel.setBackground(new Color(120, 134, 199));
+		reagendarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		reagendarPanel.setBounds(22, 82, 132, 35);
 		panel.add(reagendarPanel);
 
@@ -252,12 +256,26 @@ public class ListarCitas extends JDialog {
 		cancelarCita.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		cancelarCita.setBackground(new Color(120, 134, 199));
 		cancelarCita.setBounds(25, 133, 132, 35);
+		cancelarCita.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panel.add(cancelarCita);
 
 		JLabel lblCancelar = new JLabel("Cancelar");	   
 		lblCancelar.setForeground(Color.WHITE);
 		lblCancelar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		cancelarCita.add(lblCancelar);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setOrientation(SwingConstants.VERTICAL);
+		separator_1.setForeground(new Color(45, 51, 107));
+		separator_1.setBackground(new Color(45, 51, 107));
+		separator_1.setBounds(0, 0, 2, 457);
+		panel.add(separator_1);
+		
+		JSeparator separator_4 = new JSeparator();
+		separator_4.setForeground(new Color(45, 51, 107));
+		separator_4.setBackground(new Color(45, 51, 107));
+		separator_4.setBounds(-334, 455, 1001, 2);
+		panel.add(separator_4);
 
 		JLabel lblListaDeCitas = new JLabel("LISTA DE CITAS");
 		lblListaDeCitas.setForeground(new Color(120, 134, 199));
@@ -299,7 +317,7 @@ public class ListarCitas extends JDialog {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				volverPanel.setBackground(new Color(120, 134, 199));
+				volverPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -316,6 +334,7 @@ public class ListarCitas extends JDialog {
 
 		volverPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		volverPanel.setBackground(new Color(169, 181, 223));
+		volverPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		volverPanel.setBounds(824, 437, 114, 28);
 		fondo.add(volverPanel);
 
@@ -323,13 +342,27 @@ public class ListarCitas extends JDialog {
 		label_2.setForeground(Color.BLACK);
 		label_2.setFont(new Font("Verdana", Font.PLAIN, 14));
 		volverPanel.add(label_2);
+		
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setOrientation(SwingConstants.VERTICAL);
+		separator_2.setForeground(new Color(45, 51, 107));
+		separator_2.setBackground(new Color(45, 51, 107));
+		separator_2.setBounds(166, 24, 2, 457);
+		fondo.add(separator_2);
+		
+		JSeparator separator_3 = new JSeparator();
+		separator_3.setOrientation(SwingConstants.VERTICAL);
+		separator_3.setForeground(new Color(45, 51, 107));
+		separator_3.setBackground(new Color(45, 51, 107));
+		separator_3.setBounds(167, 8, 2, 473);
+		fondo.add(separator_3);
 	}
 
 	private void actualizarAdmin() {
 		Clinica cl = Clinica.getInstance();
 		model.setRowCount(0);
 		for (Cita cita : cl.getCitas()) {
-			if(!(cita instanceof Consulta) && !cita.isEstado() && (cita.getFecha().isAfter(LocalDate.now()) || 
+			if(cita != null && !(cita instanceof Consulta) && !cita.isEstado() && (cita.getFecha().isAfter(LocalDate.now()) || 
 					cita.getFecha().equals(LocalDate.now()))) {
 				Object[] fila = {cita.getCodigo(), cita.getPersona().getNombres(),cita.getMedico().getNombres(), cita.getFecha()};
 				model.addRow(fila);

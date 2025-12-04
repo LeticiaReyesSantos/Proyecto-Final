@@ -35,6 +35,7 @@ import java.awt.event.KeyEvent;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.JSeparator;
 import javax.swing.JFormattedTextField;
+import javax.swing.SwingConstants;
 
 public class RegistrarCita extends JDialog {
 
@@ -191,15 +192,37 @@ public class RegistrarCita extends JDialog {
 		generalPanel.add(lblApellido);
 
 		nombreField = new JTextField();
+		nombreField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if(!Character.isAlphabetic(c) && c != ' ') {
+					e.consume();
+				}
+			}
+		});
 		nombreField.setEditable(false);
 		nombreField.setColumns(10);
 		nombreField.setBounds(12, 45, 190, 22);
+		nombreField.setBackground(Color.white);
+		nombreField.setForeground(Color.black);
 		generalPanel.add(nombreField);
 
 		apellidoField = new JTextField();
+		apellidoField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if(!Character.isAlphabetic(c) && c != ' ') {
+					e.consume();
+				}
+			}
+		});
 		apellidoField.setEditable(false);
 		apellidoField.setColumns(10);
 		apellidoField.setBounds(12, 111, 190, 22);
+		apellidoField.setBackground(Color.white);
+		apellidoField.setForeground(Color.black);
 		generalPanel.add(apellidoField);
 
 		JLabel lblTelefono = new JLabel("Telefono");
@@ -392,6 +415,16 @@ public class RegistrarCita extends JDialog {
 					agendarCita(medicoParaCita); 
 				}
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				agendarPanel.setBackground(new Color(45, 51, 107));
+				lblAgendar.setForeground(Color.white);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				agendarPanel.setBackground(new Color(169, 181, 223));
+				lblAgendar.setForeground(Color.black);
+			}
 		});
 		agendarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		agendarPanel.setBackground(new Color(169, 181, 223));
@@ -453,7 +486,29 @@ public class RegistrarCita extends JDialog {
 		telefonoField = new JFormattedTextField(maskTelefono);
 		telefonoField.setEditable(false);
 		telefonoField.setBounds(12, 181, 190, 22);
+		telefonoField.setBackground(Color.white);
+		telefonoField.setForeground(Color.black);
 		generalPanel.add(telefonoField);
+		
+		JSeparator separator_5 = new JSeparator();
+		separator_5.setOrientation(SwingConstants.VERTICAL);
+		separator_5.setForeground(new Color(0, 0, 128));
+		separator_5.setBackground(new Color(0, 0, 128));
+		separator_5.setBounds(0, 23, 20, 477);
+		fondo.add(separator_5);
+		
+		JSeparator separator_6 = new JSeparator();
+		separator_6.setForeground(new Color(0, 0, 128));
+		separator_6.setBackground(new Color(0, 0, 128));
+		separator_6.setBounds(0, 498, 901, 16);
+		fondo.add(separator_6);
+		
+		JSeparator separator_7 = new JSeparator();
+		separator_7.setOrientation(SwingConstants.VERTICAL);
+		separator_7.setForeground(new Color(0, 0, 128));
+		separator_7.setBackground(new Color(0, 0, 128));
+		separator_7.setBounds(887, 23, 20, 477);
+		fondo.add(separator_7);
 
 
 		if (mode == 1 && codigoCitaReag != null) {
@@ -548,8 +603,5 @@ public class RegistrarCita extends JDialog {
 			medicoField.setText(user.getNombres()+" "+user.getApellidos());
 		}
 	}
-
-
-
 }
 
