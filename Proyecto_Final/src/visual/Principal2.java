@@ -449,7 +449,7 @@ public class Principal2 extends JFrame {
 		regMedicoPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				RegistrarPersona regiP = new RegistrarPersona();
+				RegistrarPersona regiP = new RegistrarPersona(null, 0);
 				regiP.setModal(true);
 				regiP.setVisible(true);
 			}
