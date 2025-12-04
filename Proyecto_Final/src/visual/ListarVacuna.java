@@ -69,6 +69,13 @@ public class ListarVacuna extends JDialog {
 		fondo.setLayout(null);
 
 		barPanel = new JPanel();
+		barPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				x1= e.getX();
+				y1 = e.getY();
+			}
+		});
 		barPanel.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
@@ -79,14 +86,7 @@ public class ListarVacuna extends JDialog {
 				setLocation(x2-x1, y2-y1);
 			}
 		});
-		barPanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				//Toma la posicion actual del panel
-				x1= e.getX();
-				y1 = e.getY();
-			}
-		});
+		
 		barPanel.setBounds(0, 0, 989, 25);
 		fondo.add(barPanel);
 		barPanel.setLayout(null);
@@ -97,6 +97,14 @@ public class ListarVacuna extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				cerrarPanel.setBackground(Color.RED);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cerrarPanel.setBackground(new Color(45, 51, 107));
 			}
 		});
 		cerrarPanel.setForeground(Color.BLACK);
@@ -277,6 +285,7 @@ public class ListarVacuna extends JDialog {
 		lblListaDeVacunas.setBounds(414, 41, 322, 35);
 		fondo.add(lblListaDeVacunas);
 
+		setLocationRelativeTo(null);
 
 	}
 

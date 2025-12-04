@@ -63,4 +63,18 @@ public class Reporte {
         
         return data;
     }
+    
+    public DefaultCategoryDataset top5MedicoMasConsulta() {
+    	DefaultCategoryDataset data = new DefaultCategoryDataset();
+    	HashMap<String, Integer> datos = clinica.medicosMasConsultas();
+    	int count = 0;
+    	for (Map.Entry<String, Integer> entry : datos.entrySet()) {
+    		if(count < 5) {
+    			data.addValue(entry.getValue(), "Consultas", entry.getKey());
+    			count++;
+    		}
+        }
+    	return data;
+    	
+    }
 }

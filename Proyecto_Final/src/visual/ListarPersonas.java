@@ -57,7 +57,7 @@ public class ListarPersonas extends JDialog {
 	private JPanel barPanel;
 	private JTextField textField;
 	private JComboBox<String> filtroBox;
-	private JPanel eliminarPanel;
+	private JPanel deshabilitarPanel;
 	private JLabel lblDeshabilitar;
 	private ButtonGroup grupo1 = new ButtonGroup();
 	private JRadioButton habilitadoRadio;
@@ -81,7 +81,7 @@ public class ListarPersonas extends JDialog {
 	 */
 	public ListarPersonas() {
 		setUndecorated(true);
-		
+
 		setBounds(100, 100, 989, 481);
 		setLocation(320, 250);
 		getContentPane().setLayout(new BorderLayout());
@@ -289,33 +289,52 @@ public class ListarPersonas extends JDialog {
 		separator_3.setBackground(new Color(45, 51, 107));
 		separator_3.setBounds(167, -11, 2, 473);
 		menuPanel.add(separator_3);
+		deshabilitarPanel = new JPanel();
+		deshabilitarPanel.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		        int selectedRow = table.getSelectedRow();
+		        
+		        if (selectedRow == -1) {JOptionPane.showMessageDialog(null, "Por favor, seleccione un médico primero", "Error", JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
 
-		eliminarPanel = new JPanel();
-		eliminarPanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
+		        String codigoMedico = (String) table.getValueAt(selectedRow, 0);
+		        String nombreMedico = (String) table.getValueAt(selectedRow, 1) + (String) table.getValueAt(selectedRow, 2);
+		        int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea desactivar al médico?\n" + nombreMedico + " (" + codigoMedico + ")\n\n","Confirmar Desactivación",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+		        
+		        if (confirm == JOptionPane.YES_OPTION) {
+		            boolean resultado = Clinica.getInstance().desactivarMedico(codigoMedico);
+		            if (resultado) {
+		                JOptionPane.showMessageDialog(null, "Médico desactivado exitosamente\n", "Éxito",JOptionPane.INFORMATION_MESSAGE);
+		                actualizarTableMedicosActivo();
+		                actualizarTableMedicosInactivos();
+		            } else {
+		                JOptionPane.showMessageDialog(null, "No se puede desactivar el médico porque ya tiene citas.\n", "Error",JOptionPane.ERROR_MESSAGE);
+		            }
+		        }
+		    }
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+		        deshabilitarPanel.setBackground(Color.RED);
+		    }
+		    
 		});
-		eliminarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		eliminarPanel.setBackground(new Color(120, 134, 199));
-		eliminarPanel.setBounds(25, 176, 132, 35);
-		menuPanel.add(eliminarPanel);
+		
+		deshabilitarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		deshabilitarPanel.setBackground(new Color(120, 134, 199));
+		deshabilitarPanel.setBounds(25, 176, 132, 35);
+		menuPanel.add(deshabilitarPanel);
 
 		lblDeshabilitar = new JLabel("Deshabilitar");
 		lblDeshabilitar.setForeground(Color.WHITE);
 		lblDeshabilitar.setFont(new Font("Verdana", Font.PLAIN, 14));
-		eliminarPanel.add(lblDeshabilitar);
+		deshabilitarPanel.add(lblDeshabilitar);
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(181, 122, 796, 323);
 		fondo.add(scrollPane);
-		
+
 		table = new JTable();
 		model = new DefaultTableModel(
 				new Object[][] {
@@ -455,7 +474,7 @@ public class ListarPersonas extends JDialog {
 			}
 		}
 	}
-	
+
 	private void actualizarTableMedicosInactivos() {
 		Clinica cl = Clinica.getInstance();
 		model.setRowCount(0);

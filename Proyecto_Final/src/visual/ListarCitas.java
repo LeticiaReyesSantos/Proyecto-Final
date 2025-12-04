@@ -70,6 +70,13 @@ public class ListarCitas extends JDialog {
 		fondo.setLayout(null);
 
 		barPanel = new JPanel();
+		barPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				x1= e.getX();
+				y1 = e.getY();
+			}
+		});
 		barPanel.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
@@ -80,14 +87,7 @@ public class ListarCitas extends JDialog {
 				setLocation(x2-x1, y2-y1);
 			}
 		});
-		barPanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				//Toma la posicion actual del panel
-				x1= e.getX();
-				y1 = e.getY();
-			}
-		});
+
 		barPanel.setBounds(0, 0, 989, 25);
 		fondo.add(barPanel);
 		barPanel.setLayout(null);
@@ -100,12 +100,12 @@ public class ListarCitas extends JDialog {
 				dispose();
 			}
 			@Override
-			public void mouseEntered(MouseEvent e) {
-
+			public void mouseEntered(MouseEvent arg0) {
+				cerrarPanel.setBackground(Color.RED);
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-
+				cerrarPanel.setBackground(new Color(45, 51, 107));
 			}
 		});
 		cerrarPanel.setForeground(Color.BLACK);
@@ -161,10 +161,10 @@ public class ListarCitas extends JDialog {
 					JOptionPane.showMessageDialog(null, "Por favor, seleccione una cita primero", "Error", JOptionPane.WARNING_MESSAGE);
 					return;
 				}
-				
+
 				String codigoCita = (String) table.getValueAt(selectedRow, 0);
 				Cita cita = Clinica.getInstance().buscarCitaByCode(codigoCita);
-				
+
 				if (cita == null) {
 					JOptionPane.showMessageDialog(null, "No se encontró la cita seleccionada", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
