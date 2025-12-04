@@ -154,6 +154,14 @@ public class ListarVacuna extends JDialog {
 					JOptionPane.showMessageDialog(null, "Seleccione una vacuna primero");
 				}
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				detallarPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				detallarPanel.setBackground(new Color(120, 134, 199));
+			}
 		});
 		detallarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		detallarPanel.setBackground(new Color(120, 134, 199));
@@ -172,6 +180,14 @@ public class ListarVacuna extends JDialog {
 				if(table.getSelectedRow()>-1)
 					dispose();
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				selectionPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				selectionPanel.setBackground(new Color(120, 134, 199));
+			}
 		});
 		selectionPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		selectionPanel.setBackground(new Color(120, 134, 199));
@@ -184,6 +200,20 @@ public class ListarVacuna extends JDialog {
 		selectionPanel.add(label_4);
 
 		JPanel modificarPanel = new JPanel();
+		modificarPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				modificarPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				modificarPanel.setBackground(new Color(120, 134, 199));
+			}
+			
+		});
 		modificarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		modificarPanel.setBackground(new Color(120, 134, 199));
 		modificarPanel.setBounds(25, 129, 132, 35);
@@ -226,6 +256,14 @@ public class ListarVacuna extends JDialog {
 					}
 				}
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				eliminarPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				eliminarPanel.setBackground(new Color(120, 134, 199));
+			}
 		});
 		eliminarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		eliminarPanel.setBackground(new Color(120, 134, 199));
@@ -265,6 +303,14 @@ public class ListarVacuna extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				volverPanel.setBackground(new Color(120, 134, 199));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				volverPanel.setBackground(new Color(169, 181, 223));
 			}
 		});
 		volverPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));

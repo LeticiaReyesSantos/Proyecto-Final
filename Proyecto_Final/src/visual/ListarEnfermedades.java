@@ -175,6 +175,14 @@ public class ListarEnfermedades extends JDialog {
 					}
 				}
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				sintomasPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				sintomasPanel.setBackground(new Color(120, 134, 199));
+			}
 		});
 		sintomasPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		sintomasPanel.setBackground(new Color(120, 134, 199));
@@ -197,6 +205,14 @@ public class ListarEnfermedades extends JDialog {
 					if(table.getSelectedRow()>-1)
 						dispose();
 				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				selectionPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				selectionPanel.setBackground(new Color(120, 134, 199));
 			}
 		});
 		selectionPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -242,6 +258,14 @@ public class ListarEnfermedades extends JDialog {
 				}
 
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				tratamientosPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				tratamientosPanel.setBackground(new Color(120, 134, 199));
+			}
 		});
 		tratamientosPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		tratamientosPanel.setBackground(new Color(120, 134, 199));
@@ -286,6 +310,14 @@ public class ListarEnfermedades extends JDialog {
 					}
 				}
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				modificarPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				modificarPanel.setBackground(new Color(120, 134, 199));
+			}
 		});
 		modificarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		modificarPanel.setBackground(new Color(120, 134, 199));
@@ -323,6 +355,14 @@ public class ListarEnfermedades extends JDialog {
 						JOptionPane.showMessageDialog(null, "No se puede eliminar la enfermedad.\n" +"Fue diagnosticada a uno o más pacientes.");
 					}
 				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				eliminarPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				eliminarPanel.setBackground(new Color(120, 134, 199));
 			}
 		});
 
@@ -388,6 +428,14 @@ public class ListarEnfermedades extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				volverPanel.setBackground(new Color(120, 134, 199));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				volverPanel.setBackground(new Color(169, 181, 223));
 			}
 		});
 		volverPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
