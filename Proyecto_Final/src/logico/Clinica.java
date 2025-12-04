@@ -116,7 +116,7 @@ public class Clinica implements Serializable {
 	}
 	
 	public void addAdmin() {
-		genAdmin+=1;
+		genAdmin++;
 	}
 
 
@@ -544,13 +544,12 @@ public class Clinica implements Serializable {
 	}
 
 	public Enfermedad buscarEnfByCode(String code) {
-		Enfermedad aux = null;
 		for (Enfermedad enf : enfermedades) {
 			if(enf.getCodigo().equalsIgnoreCase(code)) {
-				aux = enf;
+				return enf;
 			}
 		}
-		return aux;
+		return null;
 	}
 	
 

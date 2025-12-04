@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
@@ -50,6 +51,12 @@ public class RegistrarCita extends JDialog {
 	private Calendar calendario = Calendar.getInstance();
 	private int mode =0;
 	private String codigoCitaReag;
+	private JPanel barPanel;
+	
+	private int x1;
+	private int x2;
+	private int y1;
+	private int y2;
 	/**
 	 * Launch the application.
 	 */
@@ -90,7 +97,24 @@ public class RegistrarCita extends JDialog {
 		contentPanel.add(fondo);
 		fondo.setLayout(null);
 
-		JPanel barPanel = new JPanel();
+		barPanel = new JPanel();
+		barPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				x1= e.getX();
+				y1 = e.getY();
+			}
+		});
+		barPanel.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				//toma la posicion actual de la ventana
+				x2= arg0.getXOnScreen();
+				y2 = arg0.getYOnScreen();
+				//actualiza la posicion de la ventana
+				setLocation(x2-x1, y2-y1);
+			}
+		});
 		barPanel.setBounds(-96, 0, 985, 25);
 		fondo.add(barPanel);
 		barPanel.setLayout(null);
