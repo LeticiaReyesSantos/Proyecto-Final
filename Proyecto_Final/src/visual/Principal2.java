@@ -18,6 +18,7 @@ import logico.Cita;
 import logico.Clinica;
 import logico.Consulta;
 import logico.Enfermedad;
+import logico.Medico;
 import logico.Paciente;
 import logico.Persona;
 import servidor.Servidor;
@@ -221,8 +222,8 @@ public class Principal2 extends JFrame {
 		changeUserPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				servidor.detener();
 				Clinica.getInstance().save();
+				servidor.detener();
 				Login login = new Login();
 				login.setVisible(true);
 
@@ -657,6 +658,7 @@ public class Principal2 extends JFrame {
 				RegistrarCita regCita = new RegistrarCita();
 				regCita.setModal(true);
 				regCita.setVisible(true);
+				Clinica.getInstance().save();
 				cargarCitasActuales();
 			}
 			@Override
@@ -686,7 +688,7 @@ public class Principal2 extends JFrame {
 				ListarCitas list = new ListarCitas();
 				list.setModal(true);
 				list.setVisible(true);
-				
+
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -788,7 +790,7 @@ public class Principal2 extends JFrame {
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				
+
 				listVacunasPanel.setBackground(new Color(169, 181, 223));
 			}
 		});
@@ -847,7 +849,7 @@ public class Principal2 extends JFrame {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				if (configuracionPanel.isVisible()) return;
-				
+
 				vacunaPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
@@ -875,7 +877,7 @@ public class Principal2 extends JFrame {
 		img = icon.getImage().getScaledInstance(vacunaIcon.getWidth(), vacunaIcon.getHeight(), Image.SCALE_SMOOTH);
 		vacunaIcon.setIcon(new ImageIcon(img));
 		vacunaPanel.add(vacunaIcon);
-		
+
 		consultaPanel = new JPanel();
 		consultaPanel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -883,11 +885,11 @@ public class Principal2 extends JFrame {
 				if(table.getSelectedRow()>-1) {
 					String id = table.getValueAt(table.getSelectedRow(), 0).toString();
 					Cita cita =Clinica.getInstance().buscarCitaByCode(id);
-					
+
 					if(cita != null) {
 						paciente = cita.getPersona();
 						if(!(paciente instanceof Paciente)) {
-					        JOptionPane.showMessageDialog(null, "Debe completar el registro del paciente antes de continuar.");
+							JOptionPane.showMessageDialog(null, "Debe completar el registro del paciente antes de continuar.");
 							RegistrarPersona regiPersona = new RegistrarPersona(paciente, 1);
 							regiPersona.setModal(true);
 							regiPersona.setVisible(true);
@@ -896,7 +898,7 @@ public class Principal2 extends JFrame {
 						}
 					}
 					CrearConsulta consulta = new CrearConsulta(id);
-				
+
 					consulta.setModal(true);
 					consulta.setVisible(true);
 				}
@@ -916,7 +918,7 @@ public class Principal2 extends JFrame {
 		consultaPanel.setBounds(1008, dim.height-150, 313, 61);
 		consultaPanel.setVisible(false);
 		fondo.add(consultaPanel);
-		
+
 		lblIniciarConsulta = new JLabel("Iniciar consulta");
 		lblIniciarConsulta.setForeground(Color.WHITE);
 		lblIniciarConsulta.setFont(new Font("Verdana", Font.PLAIN, 33));
@@ -954,12 +956,17 @@ public class Principal2 extends JFrame {
 		model.setRowCount(0);
 		ArrayList<Cita> citas = usuario.getHistorial();
 
+		Persona usuarioActualizado = Clinica.getInstance().personaById(usuario.getCodigo());
 
-		for(Cita c: citas) {
-			if(c.getFecha().equals(LocalDate.now()) && !(c instanceof Consulta)) {
-				Object[] fila = {c.getCodigo(), c.getPersona().getNombres()+" "+c.getPersona().getApellidos(), 
-						c.getFecha(), !c.isEstado() ? "Pendiente" : "Completada"};
-				model.addRow(fila);
+		if (usuarioActualizado != null) {
+			citas = usuarioActualizado.getHistorial();
+
+			for(Cita c: citas) {
+				if(c.getFecha().equals(LocalDate.now()) && !(c instanceof Consulta)) {
+					Object[] fila = {c.getCodigo(), c.getPersona().getNombres()+" "+c.getPersona().getApellidos(), 
+							c.getFecha(), !c.isEstado() ? "Pendiente" : "Completada"};
+					model.addRow(fila);
+				}
 			}
 		}
 	}
@@ -1044,8 +1051,8 @@ public class Principal2 extends JFrame {
 			}
 		}
 	}
-	
-	
+
+
 	private void cerrarPaneles() {
 		regMedicoPanel.setVisible(false);
 		listMedicoPanel.setVisible(false);

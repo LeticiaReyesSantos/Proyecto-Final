@@ -9,7 +9,6 @@ public class Cita implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	//Prueba
 	protected String codigo;
 	protected Persona persona;
 	protected Medico medico;

@@ -462,6 +462,8 @@ public class Clinica implements Serializable {
 			objeto = new ObjectInputStream(file);
 			Clinica aux = (Clinica)objeto.readObject();
 			Clinica.setClinica(aux);
+			
+			
 			objeto.close();
 			file.close();
 			val = true;

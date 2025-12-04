@@ -355,33 +355,42 @@ public class RegistrarCita extends JDialog {
 		agendarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-			    LocalDate fecha = dateChooser.getDate().toInstant()              
-                        .atZone(java.time.ZoneId.systemDefault()) 
-                        .toLocalDate();   
 				
-			    if(user.getUser().getTipo().equals("Medico"))
-			    	medico = (Medico)user;
-			    
-			    
-				if(medico.cantCitasDia(fecha) > medico.getMaxCitas()){
-					JOptionPane.showMessageDialog(null, "El medico ha alcanzado el maximo citas para la fecha solicitada");
+				LocalDate fecha = null;
+				
+				if(dateChooser.getDate() != null) {
+					 fecha = dateChooser.getDate().toInstant()              
+							.atZone(java.time.ZoneId.systemDefault()) 
+							.toLocalDate();   
+				}
+				
+				if(fecha == null)
 					return;
-				}else if(mode == 1) {
-					reagendarCita();
+
+				Medico medicoParaCita = null;
+				System.out.println(user.getUser().getTipo());
+				if(user.getUser().getTipo().equals("Medico")) {
+					medicoParaCita = (Medico)Clinica.getInstance().personaById(user.getCodigo());
 				} else {
-					agendarCita();
+					medicoParaCita = medico; // Para admin
 				}
 
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				agendarPanel.setBackground(new Color(45, 51, 107));
-				lblAgendar.setForeground(Color.white);
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				agendarPanel.setBackground(new Color(169, 181, 223));
-				lblAgendar.setForeground(Color.black);
+				if(medicoParaCita == null) {
+					JOptionPane.showMessageDialog(null, "Error: Médico no disponible");
+					return;
+				}
+
+				if(medicoParaCita.cantCitasDia(fecha) > medicoParaCita.getMaxCitas()){
+					JOptionPane.showMessageDialog(null, 
+							"El médico ha alcanzado el máximo de citas para la fecha solicitada");
+					return;
+				}
+
+				if(mode == 1) {
+					reagendarCita();
+				} else {
+					agendarCita(medicoParaCita); 
+				}
 			}
 		});
 		agendarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -452,7 +461,7 @@ public class RegistrarCita extends JDialog {
 		}
 
 		setLocationRelativeTo(null);
-		
+
 		cargarMedico();
 	}
 
@@ -517,33 +526,30 @@ public class RegistrarCita extends JDialog {
 		}
 	}
 
-	private void agendarCita() {
-		
-		if(user.getUser().getTipo().equals("Medico"))
-			medico = (Medico)user;
-		
+	private void agendarCita(Medico medicoParaCita) {
 		if(validarCampos()) {
 			LocalDate fecha = dateToLocalDate();
 
-			if(Clinica.getInstance().hacerCita(cedulaField.getText(), nombreField.getText(), apellidoField.getText(), telefonoField.getText(), medico, fecha)) {
+			if(Clinica.getInstance().hacerCita(cedulaField.getText(), nombreField.getText(), 
+					apellidoField.getText(), telefonoField.getText(), medicoParaCita, fecha)) {
 				JOptionPane.showMessageDialog(null, "Se ha guardado la cita con éxito");
 				dispose();
-			}else {
+			} else {
 				JOptionPane.showMessageDialog(null, "Ha surgido un error al guardar la cita");
 			}
-		}else {
+		} else {
 			JOptionPane.showMessageDialog(null, "Aún hay campos por rellenar");
 		}
 	}
-	
+
 	private void cargarMedico() {
 		if(user.getUser().getTipo().equals("Medico")) {
 			buscarMedicoPanel.setVisible(false);
 			medicoField.setText(user.getNombres()+" "+user.getApellidos());
 		}
 	}
-	
-	
-	
+
+
+
 }
 
