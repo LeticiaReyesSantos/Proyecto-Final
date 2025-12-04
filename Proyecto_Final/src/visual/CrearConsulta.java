@@ -134,8 +134,6 @@ public class CrearConsulta extends JDialog {
 				enfermedadesSeleccionadas = listarEnfermedades.objectsSelected();
 				cargarSintomasByEnfermedad();
 				System.out.println(enfermedadesSeleccionadas.size());
-
-
 			}
 		});
 		enfermedad.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));

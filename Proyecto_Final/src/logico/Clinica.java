@@ -325,7 +325,7 @@ public class Clinica implements Serializable {
 			if( c instanceof Consulta) {
 				Consulta cons = (Consulta) c;
 				if(cons.getMedico().equals(med)) {
-					Paciente p = cons.getPaciente();
+					Paciente p = (Paciente) cons.getPersona();
 					if(!lista.contains(p)) {
 						lista.add(p);
 					}
@@ -488,12 +488,9 @@ public class Clinica implements Serializable {
 		if(aux != null && !(aux.isEstado())) {
 			Paciente pac = (Paciente) aux.getPersona();
 			Diagnostico diag = new Diagnostico("D-" +genDiagnostico, aux.getFecha(), sintomas, tratamiento);
-			Consulta cons = new Consulta("CN-" +genCita, aux.getPersona(), aux.getMedico(), aux.getFecha(), precio, pac, false, diag);
+			aux = new Consulta("CN-" +genCita, aux.getPersona(), aux.getMedico(), aux.getFecha(), precio, pac, false, diag);
 			addDiagnostico(diag);
-			addCita(cons);
 			aux.setEstado(true);
-			pac.addHistorial(cons);
-			aux.getMedico().addHistorial(cons);
 			aux.getMedico().addPaciente(pac);
 			creada = true;
 		}

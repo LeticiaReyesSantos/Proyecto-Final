@@ -234,7 +234,7 @@ public class ListarConsultas extends JDialog {
 		for (Cita cita : cl.getCitas()) {
 			if(cita instanceof Consulta) {
 				Consulta cons = (Consulta) cita;
-				Object[] fila = {cons.getCodigo(), cons.getPaciente().getNombres(),cons.getMedico().getNombres(), cons.getFecha(), cons.getPrecio()};
+				Object[] fila = {cons.getCodigo(), cons.getPersona().getNombres(),cons.getMedico().getNombres(), cons.getFecha(), cons.getPrecio()};
 				model.addRow(fila);
 			}
 		}
