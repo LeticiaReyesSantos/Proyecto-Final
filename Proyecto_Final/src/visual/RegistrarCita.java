@@ -378,6 +378,8 @@ public class RegistrarCita extends JDialog {
 		 if (mode == 1 && codigoCitaReag != null) {
 	            cargarDatosReagendar();
 	        }
+		 
+		 setLocationRelativeTo(null);
 	}
 
 	private void cargarPersona() {

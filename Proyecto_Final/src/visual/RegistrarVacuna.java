@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.awt.Font;
 import javax.swing.border.BevelBorder;
@@ -40,6 +41,10 @@ public class RegistrarVacuna extends JDialog {
 	private JRadioButton rdbtSi;
 	private JRadioButton rdbtNo;
 	private JLabel ingresar;
+	private int x1;
+	private int x2;
+	private int y1;
+	private int y2;
 
 	/**
 	 * Launch the application.
@@ -72,6 +77,23 @@ public class RegistrarVacuna extends JDialog {
 		contentPanel.add(fondo);
 
 		JPanel barra = new JPanel();
+		barra.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				x1= e.getX();
+				y1 = e.getY();
+			}
+		});
+		barra.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				//toma la posicion actual de la ventana
+				x2= arg0.getXOnScreen();
+				y2 = arg0.getYOnScreen();
+				//actualiza la posicion de la ventana
+				setLocation(x2-x1, y2-y1);
+			}
+		});
 		barra.setLayout(null);
 		barra.setBackground(new Color(45, 51, 107));
 		barra.setBounds(0, 0, 590, 25);
@@ -329,15 +351,17 @@ public class RegistrarVacuna extends JDialog {
 		Cancelar.add(label_12);
 
 		if(vac == null) {
-			Titulo = new JLabel("Registrar Vacuna");
+			Titulo.setText("Registrar Vacuna");
 			txtCodigo.setText("V-"+Clinica.getInstance().genVacuna);
 			ingresar.setText("Registrar");
 		}
 		else{
-			Titulo = new JLabel("Modificar Vacuna");
+			Titulo.setText("Modificar Vacuna");
 			cargar(vac);
 			ingresar.setText("Modificar");
 		}
+		
+		setLocationRelativeTo(null);
 	}
 
 	private void cargar(Vacuna vac) {

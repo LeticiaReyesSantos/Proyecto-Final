@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -33,6 +34,10 @@ public class MostrarReportes extends JDialog {
 	private JPanel stat1, stat2, stat3, stat4, stat5;
 	private Clinica clinica;
 	private Reporte reporte;
+	private int x1;
+	private int x2;
+	private int y1;
+	private int y2;
 
 	/**
 	 * Launch the application.
@@ -68,6 +73,24 @@ public class MostrarReportes extends JDialog {
 		fondo.setLayout(null);
 
 		JPanel barPanel = new JPanel();
+		barPanel.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				//toma la posicion actual de la ventana
+				x2= arg0.getXOnScreen();
+				y2 = arg0.getYOnScreen();
+				//actualiza la posicion de la ventana
+				setLocation(x2-x1, y2-y1);
+			}
+		});
+		barPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				//Toma la posicion actual del panel
+				x1= e.getX();
+				y1 = e.getY();
+			}
+		});
 		barPanel.setBounds(-96, 0, 985, 25);
 		fondo.add(barPanel);
 		barPanel.setLayout(null);
@@ -120,6 +143,7 @@ public class MostrarReportes extends JDialog {
 		tabs.setFont(new Font("Verdana", Font.PLAIN, 12));
 
 		graphs();
+		setLocationRelativeTo(null);
 
 	}
 
