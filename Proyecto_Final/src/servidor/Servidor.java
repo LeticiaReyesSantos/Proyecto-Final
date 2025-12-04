@@ -63,7 +63,6 @@ public class Servidor extends Thread {
 	private void manejarRespaldos(Socket sc) {
 		try {
 			DataInputStream in = new DataInputStream(sc.getInputStream());
-			String nombre = in.readUTF();
 			
 			
 			File backup = new File("Backup");
@@ -71,7 +70,7 @@ public class Servidor extends Thread {
 				backup.mkdir();
 			
 			
-			File archivo = genererarArchivoRespaldo(nombre, backup);
+			File archivo = genererarArchivoRespaldo(backup);
 
 
 			try (DataOutputStream ou = new DataOutputStream(new FileOutputStream(archivo))){;
@@ -95,11 +94,9 @@ public class Servidor extends Thread {
 			e.printStackTrace();
 		}
 		
-
-
 	}
 	
-	private File genererarArchivoRespaldo(String nombre, File carpeta) {
+	private File genererarArchivoRespaldo(File carpeta) {
 		int cont = 1;
 		File archivo;
 

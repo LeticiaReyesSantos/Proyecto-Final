@@ -162,6 +162,7 @@ public class CrearConsulta extends JDialog {
 				listarEnfermedades.setModal(true); 
 				listarEnfermedades.setLocationRelativeTo(null); 
 				listarEnfermedades.setVisible(true);
+				
 				enfermedadesSeleccionadas = listarEnfermedades.objectsSelected();
 				cargarSintomasByEnfermedad();
 				System.out.println(enfermedadesSeleccionadas.size());
