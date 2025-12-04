@@ -944,7 +944,7 @@ public class Principal2 extends JFrame {
 
 
 		for(Cita c: citas) {
-			if(c.getFecha().equals(LocalDate.now())) {
+			if(c.getFecha().equals(LocalDate.now()) && !c.isEstado()) {
 				Object[] fila = {c.getCodigo(), c.getPersona().getNombres()+" "+c.getPersona().getApellidos(), 
 						c.getFecha(), !c.isEstado() ? "Pendiente" : "Completada"};
 				model.addRow(fila);

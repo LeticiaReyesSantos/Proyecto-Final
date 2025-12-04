@@ -335,7 +335,6 @@ public class CrearConsulta extends JDialog {
 				JTextArea tratamientoArea = (JTextArea) scrollPane.getViewport().getView();
 				String tratamientoText = tratamientoArea.getText();
 				
-				  System.out.print("Debug 2");
 				if(Clinica.getInstance().crearConsulta(codigoCita, precio, sintomas, tratamientoText)) {
 					JOptionPane.showMessageDialog(null, "Se ha realizado la consulta con éxito");
 					dispose();
