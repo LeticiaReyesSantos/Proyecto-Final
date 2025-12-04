@@ -126,12 +126,12 @@ public class ListarPersonas extends JDialog {
 				dispose();
 			}
 			@Override
-			public void mouseEntered(MouseEvent e) {
-
+			public void mouseEntered(MouseEvent arg0) {
+				cerrarPanel.setBackground(Color.RED);
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-
+				cerrarPanel.setBackground(new Color(45, 51, 107));
 			}
 		});
 		cerrarPanel.setForeground(Color.BLACK);
@@ -182,10 +182,30 @@ public class ListarPersonas extends JDialog {
 		DetallarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				int selectedRow = table.getSelectedRow();
+				if (selectedRow >= 0) {
+					String codigo = table.getValueAt(selectedRow, 0).toString();
+					Persona persona = Clinica.getInstance().personaById(codigo);
+
+					if (persona != null) {
+						String info = "Información detallada:\n\n" +"Código: " + persona.getCodigo() + "\n" +"Nombre: " + persona.getNombres() + " " + persona.getApellidos() + "\n" +"Cédula: " + persona.getCedula() + "\n" +"Teléfono: " + persona.getTelefono() + "\n" +"Email: " + persona.getEmail() + "\n" +"Dirección: " + persona.getDireccion();
+
+						if (persona instanceof Medico) {
+							Medico medico = (Medico) persona;
+							info += "\nEspecialidad: " + medico.getEspecialidad() + "\n" +"Estado: " + (medico.isActivo() ? "Activo" : "Inactivo");
+						} else if (persona instanceof Paciente) {
+							Paciente paciente = (Paciente) persona;
+							info += "\nTipo de Sangre: " + paciente.getTipoSangre();
+						}
+						JOptionPane.showMessageDialog(null, info, "Detalles", JOptionPane.INFORMATION_MESSAGE);
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Seleccione una persona primero", "Advertencia", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				DetallarPanel.setBackground(new Color(45, 51, 107));
+				DetallarPanel.setBackground(new Color(100, 120, 180));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -210,9 +230,7 @@ public class ListarPersonas extends JDialog {
 					String id = table.getValueAt(table.getSelectedRow(), 0).toString();
 					Persona aux = Clinica.getInstance().personaById(id);
 
-					JOptionPane.showMessageDialog(null, "El usuario es: "+aux.getUser().getUserName()+" La contraseña es: "+aux.getUser().getPass());;
-
-
+					JOptionPane.showMessageDialog(null, "El usuario es: "+aux.getUser().getUserName()+" La contraseña es: "+aux.getUser().getPass());
 				}
 			}
 			@Override
@@ -264,6 +282,23 @@ public class ListarPersonas extends JDialog {
 		ModificarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				int selectedRow = table.getSelectedRow();
+				if (selectedRow >= 0) {
+					String id = table.getValueAt(selectedRow, 0).toString();
+					Persona persona = Clinica.getInstance().personaById(id);
+
+					if (persona != null) {
+						RegistrarPersona dialog = new RegistrarPersona(persona, 1);
+						dialog.setModal(true);
+						dialog.setVisible(true);
+
+						actualizarTableAdmin();
+						actualizarTableMedicosActivo();
+						actualizarTablePacientes();
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Seleccione una persona primero");
+				}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -299,40 +334,40 @@ public class ListarPersonas extends JDialog {
 		menuPanel.add(separator_3);
 		deshabilitarPanel = new JPanel();
 		deshabilitarPanel.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		        int selectedRow = table.getSelectedRow();
-		        
-		        if (selectedRow == -1) {JOptionPane.showMessageDialog(null, "Por favor, seleccione un médico primero", "Error", JOptionPane.WARNING_MESSAGE);
-		            return;
-		        }
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int selectedRow = table.getSelectedRow();
 
-		        String codigoMedico = (String) table.getValueAt(selectedRow, 0);
-		        String nombreMedico = (String) table.getValueAt(selectedRow, 1) + (String) table.getValueAt(selectedRow, 2);
-		        int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea desactivar al médico?\n" + nombreMedico + " (" + codigoMedico + ")\n\n","Confirmar Desactivación",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
-		        
-		        if (confirm == JOptionPane.YES_OPTION) {
-		            boolean resultado = Clinica.getInstance().desactivarMedico(codigoMedico);
-		            if (resultado) {
-		                JOptionPane.showMessageDialog(null, "Médico desactivado exitosamente\n", "Éxito",JOptionPane.INFORMATION_MESSAGE);
-		                actualizarTableMedicosActivo();
-		                actualizarTableMedicosInactivos();
-		            } else {
-		                JOptionPane.showMessageDialog(null, "No se puede desactivar el médico porque ya tiene citas.\n", "Error",JOptionPane.ERROR_MESSAGE);
-		            }
-		        }
-		    }
-		    @Override
+				if (selectedRow == -1) {JOptionPane.showMessageDialog(null, "Por favor, seleccione un médico primero", "Error", JOptionPane.WARNING_MESSAGE);
+				return;
+				}
+
+				String codigoMedico = (String) table.getValueAt(selectedRow, 0);
+				String nombreMedico = (String) table.getValueAt(selectedRow, 1) + (String) table.getValueAt(selectedRow, 2);
+				int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea desactivar al médico?\n" + nombreMedico + " (" + codigoMedico + ")\n\n","Confirmar Desactivación",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+
+				if (confirm == JOptionPane.YES_OPTION) {
+					boolean resultado = Clinica.getInstance().desactivarMedico(codigoMedico);
+					if (resultado) {
+						JOptionPane.showMessageDialog(null, "Médico desactivado exitosamente\n", "Éxito",JOptionPane.INFORMATION_MESSAGE);
+						actualizarTableMedicosActivo();
+						actualizarTableMedicosInactivos();
+					} else {
+						JOptionPane.showMessageDialog(null, "No se puede desactivar el médico porque ya tiene citas.\n", "Error",JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+			@Override
 			public void mouseEntered(MouseEvent e) {
-		    	deshabilitarPanel.setBackground(new Color(45, 51, 107));
+				deshabilitarPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
 				deshabilitarPanel.setBackground(new Color(120, 134, 199));
 			}
-		    
+
 		});
-		
+
 		deshabilitarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		deshabilitarPanel.setBackground(new Color(120, 134, 199));
 		deshabilitarPanel.setBounds(25, 176, 132, 35);
