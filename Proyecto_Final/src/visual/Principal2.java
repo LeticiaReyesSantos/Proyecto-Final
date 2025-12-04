@@ -38,6 +38,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.JobAttributes;
 import java.awt.event.MouseMotionAdapter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -951,6 +952,9 @@ public class Principal2 extends JFrame {
 							JOptionPane.showMessageDialog(null, "Se ha habilitado la vacuna");
 						}
 					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "No hay suficiente vacunas para solicitar");
 				}
 			}
 			@Override
