@@ -126,12 +126,12 @@ public class ListarPersonas extends JDialog {
 				dispose();
 			}
 			@Override
-			public void mouseEntered(MouseEvent e) {
-
+			public void mouseEntered(MouseEvent arg0) {
+				cerrarPanel.setBackground(Color.RED);
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-
+				cerrarPanel.setBackground(new Color(45, 51, 107));
 			}
 		});
 		cerrarPanel.setForeground(Color.BLACK);
@@ -178,8 +178,8 @@ public class ListarPersonas extends JDialog {
 		separator.setBounds(12, 41, 145, 2);
 		menuPanel.add(separator);
 
-		JPanel detallarPanel = new JPanel();
-		detallarPanel.addMouseListener(new MouseAdapter() {
+		JPanel DetallarPanel = new JPanel();
+		DetallarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int selectedRow = table.getSelectedRow();
@@ -197,7 +197,6 @@ public class ListarPersonas extends JDialog {
 							Paciente paciente = (Paciente) persona;
 							info += "\nTipo de Sangre: " + paciente.getTipoSangre();
 						}
-
 						JOptionPane.showMessageDialog(null, info, "Detalles", JOptionPane.INFORMATION_MESSAGE);
 					}
 				} else {
@@ -206,22 +205,22 @@ public class ListarPersonas extends JDialog {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				detallarPanel.setBackground(new Color(100, 120, 180));
+				DetallarPanel.setBackground(new Color(100, 120, 180));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				detallarPanel.setBackground(new Color(120, 134, 199));
+				DetallarPanel.setBackground(new Color(120, 134, 199));
 			}
 		});
-		detallarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		detallarPanel.setBackground(new Color(120, 134, 199));
-		detallarPanel.setBounds(25, 82, 132, 35);
-		menuPanel.add(detallarPanel);
+		DetallarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		DetallarPanel.setBackground(new Color(120, 134, 199));
+		DetallarPanel.setBounds(25, 82, 132, 35);
+		menuPanel.add(DetallarPanel);
 
 		JLabel label_2 = new JLabel("Detallar");
 		label_2.setForeground(Color.WHITE);
 		label_2.setFont(new Font("Verdana", Font.PLAIN, 14));
-		detallarPanel.add(label_2);
+		DetallarPanel.add(label_2);
 
 		JPanel verUsuarioPanel = new JPanel();
 		verUsuarioPanel.addMouseListener(new MouseAdapter() {
@@ -231,21 +230,18 @@ public class ListarPersonas extends JDialog {
 					String id = table.getValueAt(table.getSelectedRow(), 0).toString();
 					Persona aux = Clinica.getInstance().personaById(id);
 
-					JOptionPane.showMessageDialog(null, "El usuario es: "+aux.getUser().getUserName()+" La contraseña es: "+aux.getUser().getPass());;
-
-
+					JOptionPane.showMessageDialog(null, "El usuario es: "+aux.getUser().getUserName()+" La contraseña es: "+aux.getUser().getPass());
 				}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				verUsuarioPanel.setBackground(new Color(100, 120, 180));
+				verUsuarioPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
 				verUsuarioPanel.setBackground(new Color(120, 134, 199));
 			}
 		});
-
 		verUsuarioPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		verUsuarioPanel.setBackground(new Color(120, 134, 199));
 		verUsuarioPanel.setBounds(25, 254, 132, 35);
@@ -265,7 +261,7 @@ public class ListarPersonas extends JDialog {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				seleccionarPanel.setBackground(new Color(100, 120, 180));
+				seleccionarPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -282,27 +278,46 @@ public class ListarPersonas extends JDialog {
 		lblSeleccionar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		seleccionarPanel.add(lblSeleccionar);
 
-		JPanel modificarPanel = new JPanel();
-		modificarPanel.addMouseListener(new MouseAdapter() {
+		JPanel ModificarPanel = new JPanel();
+		ModificarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				int selectedRow = table.getSelectedRow();
+				if (selectedRow >= 0) {
+					String id = table.getValueAt(selectedRow, 0).toString();
+					Persona persona = Clinica.getInstance().personaById(id);
+
+					if (persona != null) {
+						RegistrarPersona dialog = new RegistrarPersona(persona, 1);
+						dialog.setModal(true);
+						dialog.setVisible(true);
+
+						actualizarTableAdmin();
+						actualizarTableMedicosActivo();
+						actualizarTablePacientes();
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Seleccione una persona primero");
+				}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
+				ModificarPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
+				ModificarPanel.setBackground(new Color(120, 134, 199));
 			}
 		});
-		modificarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		modificarPanel.setBackground(new Color(120, 134, 199));
-		modificarPanel.setBounds(25, 129, 132, 35);
-		menuPanel.add(modificarPanel);
+		ModificarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		ModificarPanel.setBackground(new Color(120, 134, 199));
+		ModificarPanel.setBounds(25, 129, 132, 35);
+		menuPanel.add(ModificarPanel);
 
 		JLabel lblModificar = new JLabel("Modificar");
 		lblModificar.setForeground(Color.WHITE);
 		lblModificar.setFont(new Font("Verdana", Font.PLAIN, 14));
-		modificarPanel.add(lblModificar);
+		ModificarPanel.add(lblModificar);
 
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setOrientation(SwingConstants.VERTICAL);
@@ -344,7 +359,11 @@ public class ListarPersonas extends JDialog {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				deshabilitarPanel.setBackground(Color.RED);
+				deshabilitarPanel.setBackground(new Color(45, 51, 107));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				deshabilitarPanel.setBackground(new Color(120, 134, 199));
 			}
 
 		});
@@ -389,10 +408,11 @@ public class ListarPersonas extends JDialog {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
+				volverPanel.setBackground(new Color(120, 134, 199));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-
+				volverPanel.setBackground(new Color(169, 181, 223));
 			}
 		});
 		volverPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -410,27 +430,29 @@ public class ListarPersonas extends JDialog {
 		fondo.add(textField);
 		textField.setColumns(10);
 
-		JPanel panel_1 = new JPanel();
-		panel_1.addMouseListener(new MouseAdapter() {
+		JPanel buscarPanel = new JPanel();
+		buscarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
+				buscarPanel.setBackground(new Color(120, 134, 199));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
+				buscarPanel.setBackground(new Color(169, 181, 223));
 			}
 		});
-		panel_1.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_1.setBackground(new Color(169, 181, 223));
-		panel_1.setBounds(676, 449, 85, 28);
-		fondo.add(panel_1);
+		buscarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		buscarPanel.setBackground(new Color(169, 181, 223));
+		buscarPanel.setBounds(676, 449, 85, 28);
+		fondo.add(buscarPanel);
 
 		JLabel lblBuscar = new JLabel("Buscar");
 		lblBuscar.setForeground(Color.BLACK);
 		lblBuscar.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel_1.add(lblBuscar);
+		buscarPanel.add(lblBuscar);
 
 		filtroBox = new JComboBox<String>(new DefaultComboBoxModel<>(new String[] {"Medico","Administrador"}));
 		filtroBox.addActionListener(new ActionListener() {
