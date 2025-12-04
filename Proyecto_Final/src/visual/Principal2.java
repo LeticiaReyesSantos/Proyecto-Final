@@ -157,7 +157,7 @@ public class Principal2 extends JFrame {
 
 		JPanel fondo = new JPanel();
 		fondo.setBackground(Color.WHITE);
-		fondo.setBounds(-390, 112, dim.width, dim.height);
+		fondo.setBounds(0, 0, dim.width, dim.height);
 		contentPane.add(fondo);
 		fondo.setLayout(null);
 

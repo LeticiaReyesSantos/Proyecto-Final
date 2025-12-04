@@ -416,14 +416,15 @@ public class Clinica implements Serializable {
 		int i = 0;
 
 		while(i<personas.size() && !valido) {
-			if(personas.get(i) instanceof Medico) {
+			if(!(personas.get(i) instanceof Paciente)) {
 				User user = personas.get(i).getUser();
 				if(user.getUserName().equals(usuario) && user.getPass().equals(pass)) {
 					personaLogueada = personas.get(i);
 					valido = true;
 				}
-				i++;
+				
 			}
+			i++;
 		}
 
 		return valido;
