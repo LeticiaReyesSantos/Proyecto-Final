@@ -490,19 +490,58 @@ public class Clinica implements Serializable {
 		return false;
 	}
 
-	public boolean crearConsulta(String codigoCita, Double precio, ArrayList<String> sintomas, String tratamiento) {
+	public boolean crearConsulta(String codigoCita, Double precio, ArrayList<String> sintomas, String tratamiento, ArrayList<Enfermedad> enfermedades, Vacuna vacAplicada) {
 	    boolean creada = false;
 	    Cita aux = buscarCitaByCode(codigoCita);
 
 	    if (aux != null && !aux.isEstado()) {
+	    	Paciente pac = (Paciente) aux.getPersona();
+	    	if(enfermedades == null) {
+	        	enfermedades = new ArrayList<>();
+	        }
 
-	        Paciente pac = (Paciente) aux.getPersona();
 	        Diagnostico diag = new Diagnostico("D-" + genDiagnostico, aux.getFecha(), sintomas, tratamiento);
-
+	        diag.setEnfDiagnosticadas(enfermedades);
+	        
 	        Consulta nuevo = new Consulta("CN-" + genCita,aux.getPersona(), aux.getMedico(),aux.getFecha(),precio,pac,false,diag);
 	        int index = citas.indexOf(aux);
 	        if (index != -1) {
 	            citas.set(index, nuevo);
+	        }
+	        
+	        ArrayList<Enfermedad> enfPaciente = pac.getEnfermedades();
+	        for (Enfermedad agregada : enfermedades) {
+				boolean existe = false;
+				 int i = 0;
+		            while (i < enfPaciente.size() && !existe) {
+		                if (enfPaciente.get(i).getCodigo().equals(agregada.getCodigo())) {
+		                    existe = true;
+		                }
+		                i++;
+		            }
+		            if(!existe) {
+		            	enfPaciente.add(agregada);
+		            }
+			}
+	        
+	        if (vacAplicada != null) {
+	            ArrayList<Vacuna> vacPaciente = pac.getVacunas();
+	            boolean tiene = false;
+	            int j = 0;
+	            while (j < vacPaciente.size() && !tiene) {
+	                if (vacPaciente.get(j).getCodigo().equals(vacAplicada.getCodigo())) {
+	                    tiene = true;
+	                }
+	                j++;
+	            }
+	            if (!tiene) {
+	                vacPaciente.add(vacAplicada);
+	            }
+	        }
+	        
+	        int indexCita = citas.indexOf(aux);
+	        if (indexCita != -1) {
+	            citas.set(indexCita, nuevo);
 	        }
 	        
 	        int indexMed = aux.getMedico().getHistorial().indexOf(aux);

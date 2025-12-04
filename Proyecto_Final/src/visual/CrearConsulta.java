@@ -193,6 +193,8 @@ public class CrearConsulta extends JDialog {
 				listarVacuna.setModal(true); 
 				listarVacuna.setLocationRelativeTo(null); 
 				listarVacuna.setVisible(true);
+				
+				vacunaSeleccionada = listarVacuna.getSelectedVacuna();
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -374,7 +376,7 @@ public class CrearConsulta extends JDialog {
 				JTextArea tratamientoArea = (JTextArea) scrollPane.getViewport().getView();
 				String tratamientoText = tratamientoArea.getText();
 				
-				if(Clinica.getInstance().crearConsulta(codigoCita, precio, sintomas, tratamientoText)) {
+				if(Clinica.getInstance().crearConsulta(codigoCita, precio, sintomas, tratamientoText, enfermedadesSeleccionadas, vacunaSeleccionada)) {
 					JOptionPane.showMessageDialog(null, "Se ha realizado la consulta con éxito");
 					dispose();
 				} else {
