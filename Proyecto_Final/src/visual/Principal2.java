@@ -563,7 +563,7 @@ public class Principal2 extends JFrame {
 		regEnfermedadPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				RegistrarEnfermedad regEnf = new RegistrarEnfermedad(null);
+				RegistrarEnfermedad regEnf = new RegistrarEnfermedad(0, null);
 				regEnf.setModal(true);
 				regEnf.setVisible(true);
 

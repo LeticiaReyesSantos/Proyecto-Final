@@ -254,6 +254,39 @@ public class ListarEnfermedades extends JDialog {
 		tratamientosPanel.add(lblVerTratamientos);
 
 		JPanel modificarPanel = new JPanel();
+		modificarPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int selectedRow = table.getSelectedRow();
+
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(null, 
+							"Por favor, seleccione una enfermedad primero", 
+							"Error", 
+							JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+
+				String codigoEnfermedad = (String) table.getValueAt(selectedRow, 0);
+				Enfermedad enfermedad = Clinica.getInstance().buscarEnfByCode(codigoEnfermedad);
+
+				if (enfermedad != null) {
+					RegistrarEnfermedad modificarDialog = new RegistrarEnfermedad(1, enfermedad);
+					modificarDialog.setModal(true);
+					modificarDialog.setLocationRelativeTo(null);
+					modificarDialog.setVisible(true);
+
+					actualizarTableSingle();
+					actualizarTableMultiple();
+
+					if (mode == 0) {
+						cambiarMode(0);
+					} else if (mode == 1) {
+						cambiarMode(1);
+					}
+				}
+			}
+		});
 		modificarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		modificarPanel.setBackground(new Color(120, 134, 199));
 		modificarPanel.setBounds(25, 180, 132, 35);
