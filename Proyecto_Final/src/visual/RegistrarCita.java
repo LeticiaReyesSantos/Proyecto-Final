@@ -524,11 +524,6 @@ public class RegistrarCita extends JDialog {
 		nombreField.setText(paciente.getNombres());
 		apellidoField.setText(paciente.getApellidos());
 		telefonoField.setText(paciente.getTelefono());
-
-		nombreField.setForeground(Color.white);
-		apellidoField.setForeground(Color.white);
-		telefonoField.setForeground(Color.white);
-
 	}
 
 	private void habilitarEdicionDeCampos() {
