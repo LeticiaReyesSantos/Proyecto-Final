@@ -412,23 +412,27 @@ public class Clinica implements Serializable {
 	}
 
 	public boolean confirmarLogin(String usuario, String pass) {
-		boolean valido = false;
-		int i = 0;
+	    boolean valido = false;
 
-		while(i<personas.size() && !valido) {
-			if(!(personas.get(i) instanceof Paciente)) {
-				User user = personas.get(i).getUser();
-				if(user.getUserName().equals(usuario) && user.getPass().equals(pass)) {
-					personaLogueada = personas.get(i);
-					valido = true;
-				}
+	    for (Persona p : personas) {
 
-			}
-			i++;
-		}
+	        User user = p.getUser();
+	        if (user == null) continue;
 
-		return valido;
+	        if (user.getUserName().equals(usuario) && user.getPass().equals(pass)) {
+	            if (p instanceof Medico) {
+	                if (!((Medico) p).isActivo()) {
+	                    return false;
+	                }
+	            }
+	            personaLogueada = p;
+	            valido = true;
+	        }
+	    }
+
+	    return valido;
 	}
+
 
 
 
@@ -490,7 +494,11 @@ public class Clinica implements Serializable {
 		if(aux != null && !(aux.isEstado())) {
 			Paciente pac = (Paciente) aux.getPersona();
 			Diagnostico diag = new Diagnostico("D-" +genDiagnostico, aux.getFecha(), sintomas, tratamiento);
-			aux = new Consulta("CN-" +genCita, aux.getPersona(), aux.getMedico(), aux.getFecha(), precio, pac, false, diag);
+			Consulta nuevo = new Consulta("CN-" +genCita, aux.getPersona(), aux.getMedico(), aux.getFecha(), precio, pac, false, diag);
+			
+			int index = citas.indexOf(aux);
+			citas.set(index, nuevo);
+			
 			addDiagnostico(diag);
 			aux.getMedico().addPaciente(pac);
 			aux.setEstado(true);

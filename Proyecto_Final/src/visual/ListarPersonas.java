@@ -321,6 +321,8 @@ public class ListarPersonas extends JDialog {
 		                JOptionPane.showMessageDialog(null, "No se puede desactivar el médico porque ya tiene citas.\n", "Error",JOptionPane.ERROR_MESSAGE);
 		            }
 		        }
+		        
+		        actualizarTableMedicosActivo();
 		    }
 		    @Override
 			public void mouseEntered(MouseEvent e) {
@@ -427,6 +429,7 @@ public class ListarPersonas extends JDialog {
 					actualizarTableAdmin();
 					habilitadoRadio.setVisible(false);
 					retiradoRadio.setVisible(false);
+					deshabilitarPanel.setVisible(false);
 				}
 				else {
 					actualizarTableMedicosActivo();

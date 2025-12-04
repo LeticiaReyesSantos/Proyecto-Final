@@ -28,6 +28,8 @@ import logico.Cita;
 import logico.Clinica;
 import logico.Medico;
 import logico.Persona;
+import logico.User;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import com.toedter.calendar.JDateChooser;
@@ -69,6 +71,7 @@ public class RegistrarCita extends JDialog {
 	private JLabel lblAgendar;
 	private JPanel volverPanel;
 	private JLabel lblVolver;
+	private Persona user = Clinica.getLoginUser();
 	/**
 	 * Launch the application.
 	 */
@@ -214,7 +217,7 @@ public class RegistrarCita extends JDialog {
 		medicoField = new JTextField();
 		medicoField.setBounds(404, 45, 190, 22);
 		generalPanel.add(medicoField);
-		medicoField.setEnabled(false);
+		medicoField.setEditable(false);
 		medicoField.setForeground(Color.black);
 		medicoField.setBackground(Color.white);
 		medicoField.setColumns(10);
@@ -438,6 +441,8 @@ public class RegistrarCita extends JDialog {
 		}
 
 		setLocationRelativeTo(null);
+		
+		cargarMedico();
 	}
 
 	private void cargarPersona() {
@@ -502,6 +507,10 @@ public class RegistrarCita extends JDialog {
 	}
 
 	private void agendarCita() {
+		
+		if(user.getUser().getTipo().equals("Medico"))
+			medico = (Medico)user;
+		
 		if(validarCampos()) {
 			LocalDate fecha = dateToLocalDate();
 
@@ -515,5 +524,13 @@ public class RegistrarCita extends JDialog {
 			JOptionPane.showMessageDialog(null, "Aún hay campos por rellenar");
 		}
 	}
+	
+	private void cargarMedico() {
+		if(user.getUser().getTipo().equals("Medico")) {
+			buscarMedicoPanel.setVisible(false);
+			medicoField.setText(user.getNombres()+" "+user.getApellidos());
+		}
+	}
+	
 }
 

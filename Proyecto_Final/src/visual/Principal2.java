@@ -100,8 +100,6 @@ public class Principal2 extends JFrame {
 	private JPanel configuracionPanel;
 	private JPanel loadRespaldoPanel;
 	private JLabel lblCargarRespaldo;
-	private JPanel changePassPanel;
-	private JLabel lblCambiarContrasea;
 	private JPanel changeUserPanel;
 	private JPanel salirPanel;
 	private JPanel respaldoPanel;
@@ -307,17 +305,6 @@ public class Principal2 extends JFrame {
 		lblCargarRespaldo.setForeground(Color.WHITE);
 		lblCargarRespaldo.setFont(new Font("Verdana", Font.PLAIN, 14));
 		loadRespaldoPanel.add(lblCargarRespaldo);
-
-		changePassPanel = new JPanel();
-		changePassPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		changePassPanel.setBackground(new Color(120, 134, 199));
-		changePassPanel.setBounds(12, 252, 229, 28);
-		configuracionPanel.add(changePassPanel);
-
-		lblCambiarContrasea = new JLabel("Cambiar contrase\u00F1a");
-		lblCambiarContrasea.setForeground(Color.WHITE);
-		lblCambiarContrasea.setFont(new Font("Verdana", Font.PLAIN, 14));
-		changePassPanel.add(lblCambiarContrasea);
 
 		JLabel lblNewLabel = new JLabel("Opciones");
 		lblNewLabel.setFont(new Font("Verdana", Font.PLAIN, 20));
@@ -911,8 +898,8 @@ public class Principal2 extends JFrame {
 				
 					consulta.setModal(true);
 					consulta.setVisible(true);
-					cargarCitasActuales();
 				}
+				cargarCitasActuales();
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -956,6 +943,8 @@ public class Principal2 extends JFrame {
 		reportePanel.setVisible(false);
 		label_3.setVisible(true);
 		consultaPanel.setVisible(true);
+		regMedicoPanel.setBounds(0, 0, 386, 67);
+		listMedicoPanel.setBounds(142, 333, 386, 67);
 		cargarCitasActuales();
 
 	}

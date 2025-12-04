@@ -20,6 +20,8 @@ import javax.swing.table.DefaultTableModel;
 import logico.Cita;
 import logico.Clinica;
 import logico.Consulta;
+import logico.Medico;
+import logico.Paciente;
 import logico.Persona;
 
 import java.awt.Font;
@@ -229,15 +231,51 @@ public class ListarConsultas extends JDialog {
 	}
 	//MANEJAR VISIBILIDAD DE LAS CONSULTAS
 	private void actualizar() {
-		Clinica cl = Clinica.getInstance();
-		model.setRowCount(0);
-		for (Cita cita : cl.getCitas()) {
-			if(cita instanceof Consulta) {
-				Consulta cons = (Consulta) cita;
-				Object[] fila = {cons.getCodigo(), cons.getPersona().getNombres(),cons.getMedico().getNombres(), cons.getFecha(), cons.getPrecio()};
-				model.addRow(fila);
-			}
-		}
+	    Clinica cl = Clinica.getInstance();
+	    model.setRowCount(0);
 
+	    for (Cita cita : cl.getCitas()) {
+
+	        if (cita instanceof Consulta) {
+	            Consulta cons = (Consulta) cita;
+
+	            boolean pertenece = false;
+
+	            // Si el usuario es médico
+	            if (user instanceof Medico) {
+	                if (cons.getMedico().equals(user))
+	                    pertenece = true;
+	            }
+
+	            // Si el usuario es paciente
+	            if (user instanceof Paciente) {
+	                if (cons.getPersona().equals(user))
+	                    pertenece = true;
+	            }
+
+	            // Si tiene enfermedades controladas
+	            boolean tieneControladas = false;
+
+	            if (cons.getDiagonistco() != null &&
+	               cons.getDiagonistco().getEnfDiagnosticadas() != null &&
+	               !cons.getDiagonistco().getEnfDiagnosticadas().isEmpty()) 
+	            {
+	                tieneControladas = true;
+	            }
+
+	            // AGREGAR SI CUMPLE ALGUNO DE LOS DOS
+	            if (pertenece || tieneControladas) {
+	                Object[] fila = {
+	                    cons.getCodigo(),
+	                    cons.getPersona().getNombres() + " " + cons.getPersona().getApellidos(),
+	                    cons.getMedico().getNombres() + " " + cons.getMedico().getApellidos(),
+	                    cons.getFecha(),
+	                    cons.getPrecio()
+	                };
+	                model.addRow(fila);
+	            }
+	        }
+	    }
 	}
+
 }
