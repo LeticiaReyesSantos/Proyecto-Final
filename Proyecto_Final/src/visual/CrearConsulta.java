@@ -166,6 +166,8 @@ public class CrearConsulta extends JDialog {
 				enfermedadesSeleccionadas = listarEnfermedades.objectsSelected();
 				cargarSintomasByEnfermedad();
 				System.out.println(enfermedadesSeleccionadas.size());
+				
+				
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {

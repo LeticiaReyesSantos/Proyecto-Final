@@ -464,7 +464,7 @@ public class ListarEnfermedades extends JDialog {
 		Clinica cl = Clinica.getInstance();
 		modelSingleSelection.setRowCount(0);
 		for (Enfermedad enf : cl.getEnfermedades()) {
-			Object[] fila = {enf.getCodigo(), enf.getNombre(), enf.getTipo(), enf.isControlada(), false};
+			Object[] fila = {enf.getCodigo(), enf.getNombre(), enf.getTipo(), enf.isControlada()};
 			modelSingleSelection.addRow(fila);
 		}
 	}
