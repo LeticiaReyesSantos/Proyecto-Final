@@ -20,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
 import logico.Cita;
 import logico.Clinica;
 import logico.Consulta;
+import logico.Enfermedad;
 import logico.Medico;
 import logico.Paciente;
 import logico.Persona;
@@ -96,7 +97,7 @@ public class ListarConsultas extends JDialog {
 				setLocation(x2-x1, y2-y1);
 			}
 		});
-		
+
 		barPanel.setBounds(0, 0, 989, 25);
 		fondo.add(barPanel);
 		barPanel.setLayout(null);
@@ -130,7 +131,7 @@ public class ListarConsultas extends JDialog {
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(0, 24, 169, 457);
 		fondo.add(panel);
-		
+
 		JPanel seleccionPanel = new JPanel();
 		seleccionPanel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -143,52 +144,52 @@ public class ListarConsultas extends JDialog {
 		seleccionPanel.setBackground(new Color(120, 134, 199));
 		seleccionPanel.setBounds(19, 232, 135, 35);
 		panel.add(seleccionPanel);
-		
+
 		JLabel label_1 = new JLabel("Seleccionar");
 		label_1.setForeground(Color.WHITE);
 		label_1.setFont(new Font("Verdana", Font.PLAIN, 14));
 		seleccionPanel.add(label_1);
-		
+
 		JLabel label_2 = new JLabel("Men\u00FA");
 		label_2.setForeground(new Color(169, 181, 223));
 		label_2.setFont(new Font("Verdana", Font.BOLD, 18));
 		label_2.setBounds(52, 16, 55, 23);
 		panel.add(label_2);
-		
+
 		JSeparator separator = new JSeparator();
 		separator.setForeground(new Color(45, 51, 107));
 		separator.setBackground(new Color(45, 51, 107));
 		separator.setBounds(9, 48, 145, 2);
 		panel.add(separator);
-		
+
 		JPanel diagnosticoPanel = new JPanel();
 		diagnosticoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		diagnosticoPanel.setBackground(new Color(120, 134, 199));
 		diagnosticoPanel.setBounds(22, 96, 132, 35);
 		panel.add(diagnosticoPanel);
-		
+
 		JLabel lblVerDiagn = new JLabel("Ver Diagn\u00F3stico");
 		lblVerDiagn.setForeground(Color.WHITE);
 		lblVerDiagn.setFont(new Font("Verdana", Font.PLAIN, 14));
 		diagnosticoPanel.add(lblVerDiagn);
-		
+
 		JPanel vacunaPanel = new JPanel();
 		vacunaPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		vacunaPanel.setBackground(new Color(120, 134, 199));
 		vacunaPanel.setBounds(22, 142, 132, 35);
 		panel.add(vacunaPanel);
-		
+
 		JLabel lblVerVacuna = new JLabel("Ver Vacuna");
 		lblVerVacuna.setForeground(Color.WHITE);
 		lblVerVacuna.setFont(new Font("Verdana", Font.PLAIN, 14));
 		vacunaPanel.add(lblVerVacuna);
-		
+
 		JLabel lblListaDeConsultas = new JLabel("LISTA DE CONSULTAS");
 		lblListaDeConsultas.setForeground(new Color(120, 134, 199));
 		lblListaDeConsultas.setFont(new Font("Verdana", Font.BOLD, 28));
 		lblListaDeConsultas.setBounds(448, 41, 373, 35);
 		fondo.add(lblListaDeConsultas);
-		
+
 		JPanel volverPanel = new JPanel();
 		volverPanel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -200,82 +201,80 @@ public class ListarConsultas extends JDialog {
 		volverPanel.setBackground(new Color(169, 181, 223));
 		volverPanel.setBounds(842, 437, 114, 28);
 		fondo.add(volverPanel);
-		
+
 		JLabel label_3 = new JLabel("Volver");
 		label_3.setForeground(Color.BLACK);
 		label_3.setFont(new Font("Verdana", Font.PLAIN, 14));
 		volverPanel.add(label_3);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(220, 107, 736, 309);
 		fondo.add(scrollPane);
-		
+
 		table = new JTable();
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		model = new DefaultTableModel(new Object[][] {
 		},
-		new String[] {
-			"C\u00F3digo ", "Paciente", "Medico", "Fecha", "Precio", "Seleccion"
+				new String[] {
+						"C\u00F3digo ", "Paciente", "Medico", "Fecha", "Precio", "Seleccion"
 		}
-	) {
-		Class[] columnTypes = new Class[] {
-			Object.class, Object.class, Object.class, Object.class, Object.class, Boolean.class
+				) {
+			Class[] columnTypes = new Class[] {
+					Object.class, Object.class, Object.class, Object.class, Object.class, Boolean.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
 		};
-		public Class getColumnClass(int columnIndex) {
-			return columnTypes[columnIndex];
-		}
-	};
 		table.setModel(model);
 		scrollPane.setViewportView(table);
 		actualizar();
+
+
 	}
 	//MANEJAR VISIBILIDAD DE LAS CONSULTAS
 	private void actualizar() {
-	    Clinica cl = Clinica.getInstance();
-	    model.setRowCount(0);
+		Clinica cl = Clinica.getInstance();
+		model.setRowCount(0);
 
-	    for (Cita cita : cl.getCitas()) {
+		for (Cita cita : cl.getCitas()) {
 
-	        if (cita instanceof Consulta) {
-	            Consulta cons = (Consulta) cita;
+			if (cita instanceof Consulta) {
+				Consulta cons = (Consulta) cita;
 
-	            boolean pertenece = false;
+				boolean mostrar = false;
 
-	            // Si el usuario es médico
-	            if (user instanceof Medico) {
-	                if (cons.getMedico().equals(user))
-	                    pertenece = true;
-	            }
+				if (cons.getMedico().equals(user)) {
+					mostrar = true;
+				}
 
-	            // Si el usuario es paciente
-	            if (user instanceof Paciente) {
-	                if (cons.getPersona().equals(user))
-	                    pertenece = true;
-	            }
 
-	            // Si tiene enfermedades controladas
-	            boolean tieneControladas = false;
+				if (cons.getDiagonistco() != null &&
+						cons.getDiagonistco().getEnfDiagnosticadas() != null) {
 
-	            if (cons.getDiagonistco() != null &&
-	               cons.getDiagonistco().getEnfDiagnosticadas() != null &&
-	               !cons.getDiagonistco().getEnfDiagnosticadas().isEmpty()) 
-	            {
-	                tieneControladas = true;
-	            }
+					int i = 0;
+					while (i < cons.getDiagonistco().getEnfDiagnosticadas().size() && !mostrar) {
+						Enfermedad enf = cons.getDiagonistco().getEnfDiagnosticadas().get(i);
+						if (enf.isControlada()) {
+							mostrar = true;
+						}
+						i++;
+					}
+				}
 
-	            // AGREGAR SI CUMPLE ALGUNO DE LOS DOS
-	            if (pertenece || tieneControladas) {
-	                Object[] fila = {
-	                    cons.getCodigo(),
-	                    cons.getPersona().getNombres() + " " + cons.getPersona().getApellidos(),
-	                    cons.getMedico().getNombres() + " " + cons.getMedico().getApellidos(),
-	                    cons.getFecha(),
-	                    cons.getPrecio()
-	                };
-	                model.addRow(fila);
-	            }
-	        }
-	    }
+				if (mostrar) {
+					Object[] fila = {
+							cons.getCodigo(),
+							cons.getPersona().getNombres() + " " + cons.getPersona().getApellidos(),
+							cons.getMedico().getNombres() + " " + cons.getMedico().getApellidos(),
+							cons.getFecha(),
+							cons.getPrecio()
+					};
+					model.addRow(fila);
+				}
+			}
+		}
 	}
+
 
 }

@@ -684,8 +684,9 @@ public class Principal2 extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				ListarCitas list = new ListarCitas();
-				list.setVisible(true);
 				list.setModal(true);
+				list.setVisible(true);
+				
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -1042,5 +1043,17 @@ public class Principal2 extends JFrame {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	
+	private void cerrarPaneles() {
+		regMedicoPanel.setVisible(false);
+		listMedicoPanel.setVisible(false);
+		agendarCitaPanel.setVisible(false);
+		listCitasPanel.setVisible(false);
+		registrarVacunaPanel.setVisible(false);
+		listVacunasPanel.setVisible(false);
+		regEnfermedadPanel.setVisible(false);
+		listEnfermedadPanel.setVisible(false);
 	}
 }

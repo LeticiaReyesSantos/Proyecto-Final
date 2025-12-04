@@ -191,13 +191,13 @@ public class RegistrarCita extends JDialog {
 		generalPanel.add(lblApellido);
 
 		nombreField = new JTextField();
-		nombreField.setEnabled(false);
+		nombreField.setEditable(false);
 		nombreField.setColumns(10);
 		nombreField.setBounds(12, 45, 190, 22);
 		generalPanel.add(nombreField);
 
 		apellidoField = new JTextField();
-		apellidoField.setEnabled(false);
+		apellidoField.setEditable(false);
 		apellidoField.setColumns(10);
 		apellidoField.setBounds(12, 111, 190, 22);
 		generalPanel.add(apellidoField);
@@ -355,7 +355,15 @@ public class RegistrarCita extends JDialog {
 		agendarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(medico.cantCitasDia(dateToLocalDate()) > medico.getMaxCitas()){
+			    LocalDate fecha = dateChooser.getDate().toInstant()              
+                        .atZone(java.time.ZoneId.systemDefault()) 
+                        .toLocalDate();   
+				
+			    if(user.getUser().getTipo().equals("Medico"))
+			    	medico = (Medico)user;
+			    
+			    
+				if(medico.cantCitasDia(fecha) > medico.getMaxCitas()){
 					JOptionPane.showMessageDialog(null, "El medico ha alcanzado el maximo citas para la fecha solicitada");
 					return;
 				}else if(mode == 1) {
@@ -434,7 +442,7 @@ public class RegistrarCita extends JDialog {
 		fondo.add(cedulaField);
 
 		telefonoField = new JFormattedTextField(maskTelefono);
-		telefonoField.setEnabled(false);
+		telefonoField.setEditable(false);
 		telefonoField.setBounds(12, 181, 190, 22);
 		generalPanel.add(telefonoField);
 
@@ -460,15 +468,15 @@ public class RegistrarCita extends JDialog {
 	}
 
 	private void habilitarEdicionDeCampos() {
-		nombreField.setEnabled(true);
-		apellidoField.setEnabled(true);
-		telefonoField.setEnabled(true);
+		nombreField.setEditable(true);
+		apellidoField.setEditable(true);
+		telefonoField.setEditable(true);
 	}
 
 	private void deshabilitarEdicionDeCampos() {
-		nombreField.setEnabled(false);
-		apellidoField.setEnabled(false);
-		telefonoField.setEnabled(false);
+		nombreField.setEditable(false);
+		apellidoField.setEditable(false);
+		telefonoField.setEditable(false);
 	}
 
 	private boolean validarCampos() {
@@ -534,6 +542,8 @@ public class RegistrarCita extends JDialog {
 			medicoField.setText(user.getNombres()+" "+user.getApellidos());
 		}
 	}
+	
+	
 	
 }
 

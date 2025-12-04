@@ -486,6 +486,13 @@ public class RegistrarPersona extends JDialog {
 		aceptarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
+				boolean cedulaUnica = Clinica.getInstance().cedulaUnica(cedulaField.getText());
+				if(!cedulaUnica && mode != 2) { 
+					mensajeLabel.setVisible(true);
+					return;
+				}
+				else mensajeLabel.setVisible(false);
 				if (mode == 0) {
 					if (camposGeneralesVacios()) {
 						JOptionPane.showMessageDialog(null, "Aún faltan campos generales por rellenar");
@@ -508,7 +515,10 @@ public class RegistrarPersona extends JDialog {
 				} 
 				else if (mode == 1) { 
 					registrarPaciente();
+				}else if (mode== 2) {
+				    modificarPersona();
 				}
+
 			}
 
 			@Override
@@ -583,17 +593,17 @@ public class RegistrarPersona extends JDialog {
 
 		if(person!= null && mode == 1 )
 			cargarRegistroPaciente();  
+		
+		if(person!= null && mode == 2)
+			cargarDatos();
 
 	}
 
 	private boolean camposGeneralesVacios() {
-		boolean cedulaUnica = Clinica.getInstance().cedulaUnica(cedulaField.getText());
-		if(!cedulaUnica) mensajeLabel.setVisible(true);
-		else mensajeLabel.setVisible(false);
 
 		return nombreField.getText().trim().isEmpty() || apellidoField.getText().trim().isEmpty() || cedulaField.getText().trim().isEmpty()  ||
 				telefonoField.getText().trim().isEmpty() || direccionField.getText().trim().isEmpty() 
-				|| correoField.getText().trim().isEmpty() || dateChooser.getDate() == null || !cedulaUnica || cedulaField.getText().trim().length()<13 
+				|| correoField.getText().trim().isEmpty() || dateChooser.getDate() == null || cedulaField.getText().trim().length()<13 
 				|| telefonoField.getText().trim().length() < 12;
 	}
 
@@ -765,5 +775,79 @@ public class RegistrarPersona extends JDialog {
 		cedulaField.setBackground(Color.WHITE);
 
 	}
+	
+	private void cargarDatos() {
+	    if (person == null) return;
+
+	    cedulaField.setText(person.getCedula());
+	    nombreField.setText(person.getNombres());
+	    apellidoField.setText(person.getApellidos());
+	    telefonoField.setText(person.getTelefono());
+	    direccionField.setText(person.getDireccion());
+	    correoField.setText(person.getEmail());
+	    if(person.getGenero() == 'M') mRadioBt.setSelected(true); 
+	    else fRadioBt.setSelected(true);
+	    
+	    java.util.Date fecha = java.sql.Date.valueOf(person.getFechaNacimiento());
+	    dateChooser.setDate(fecha);
+        dateChooser.setEnabled(false); 
+	    
+	   
+
+	    if (person instanceof Medico) {
+	        Medico med = (Medico) person;
+	        medicoRadio.setSelected(true);
+	        medicoRadio.setEnabled(false);
+	        
+	        especialidadField.setText(med.getEspecialidad());
+	        maxCitasSpinner.setValue(med.getMaxCitas());
+	        medicoPanel.setEnabled(false);
+	        especialidadField.setEditable(false);
+	        
+	    } else if(person instanceof Paciente) {
+	    	
+	    	sangreBox.setSelectedItem(((Paciente) person).getTipoSangre());
+	    	sangreBox.setEditable(false);
+	    }
+	    
+	    cedulaField.setEditable(false);
+	    nombreField.setEditable(false);
+	    apellidoField.setEditable(false);
+	    adminRadio.setEnabled(false);
+	    mRadioBt.setEnabled(false);
+	    fRadioBt.setEnabled(false);
+	    
+	}
+	
+	private void modificarPersona() {
+
+	    if (camposGeneralesVacios()) {
+	        JOptionPane.showMessageDialog(null, "Aún faltan campos generales por rellenar");
+	        return;
+	    }
+	    person.setCedula(cedulaField.getText());
+	    person.setNombres(nombreField.getText());
+	    person.setApellidos(apellidoField.getText());
+	    person.setTelefono(telefonoField.getText());
+	    person.setDireccion(direccionField.getText());
+	    person.setEmail(correoField.getText());
+
+
+	    if (person instanceof Medico) {
+	        if (camposMedicoVacios()) {
+	            JOptionPane.showMessageDialog(null, "Aún faltan campos del médico por rellenar");
+	            return;
+	        }
+
+	        Medico med = (Medico) person;
+	        med.setEspecialidad(especialidadField.getText());
+	        med.setMaxCitas((int)maxCitasSpinner.getValue());
+	    }
+
+	    JOptionPane.showMessageDialog(null, "Datos modificados correctamente.");
+	    dispose();
+	}
+
+
 }
 

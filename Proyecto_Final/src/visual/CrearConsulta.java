@@ -273,6 +273,14 @@ public class CrearConsulta extends JDialog {
 		panel.add(pacienteField);
 
 		JPanel panel_2 = new JPanel();
+		panel_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ListarConsultas lc = new ListarConsultas();
+				lc.setModal(true);
+				lc.setVisible(true);
+			}
+		});
 		panel_2.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_2.setBackground(new Color(120, 134, 199));
 		panel_2.setBounds(12, 361, 217, 28);

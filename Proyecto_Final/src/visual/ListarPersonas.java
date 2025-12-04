@@ -55,13 +55,14 @@ public class ListarPersonas extends JDialog {
 	private int y1;
 	private int y2;
 	private JPanel barPanel;
-	private JTextField textField;
+	private JTextField buscarField;
 	private JComboBox<String> filtroBox;
 	private JPanel deshabilitarPanel;
 	private JLabel lblDeshabilitar;
 	private ButtonGroup grupo1 = new ButtonGroup();
 	private JRadioButton habilitadoRadio;
 	private JRadioButton retiradoRadio;
+	private JPanel modificarPanel;
 
 	/**
 	 * Launch the application.
@@ -278,8 +279,8 @@ public class ListarPersonas extends JDialog {
 		lblSeleccionar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		seleccionarPanel.add(lblSeleccionar);
 
-		JPanel ModificarPanel = new JPanel();
-		ModificarPanel.addMouseListener(new MouseAdapter() {
+		modificarPanel = new JPanel();
+		modificarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int selectedRow = table.getSelectedRow();
@@ -288,13 +289,14 @@ public class ListarPersonas extends JDialog {
 					Persona persona = Clinica.getInstance().personaById(id);
 
 					if (persona != null) {
-						RegistrarPersona dialog = new RegistrarPersona(persona, 1);
+						RegistrarPersona dialog = new RegistrarPersona(persona, 2);
 						dialog.setModal(true);
 						dialog.setVisible(true);
+						if(user.getUser().getTipo().equals("Administrador")) {
+							actualizarTableAdmin();
+							actualizarTableMedicosActivo();
 
-						actualizarTableAdmin();
-						actualizarTableMedicosActivo();
-						actualizarTablePacientes();
+						}else actualizarTablePacientes();
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "Seleccione una persona primero");
@@ -302,22 +304,22 @@ public class ListarPersonas extends JDialog {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				ModificarPanel.setBackground(new Color(45, 51, 107));
+				modificarPanel.setBackground(new Color(45, 51, 107));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				ModificarPanel.setBackground(new Color(120, 134, 199));
+				modificarPanel.setBackground(new Color(120, 134, 199));
 			}
 		});
-		ModificarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		ModificarPanel.setBackground(new Color(120, 134, 199));
-		ModificarPanel.setBounds(25, 129, 132, 35);
-		menuPanel.add(ModificarPanel);
+		modificarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		modificarPanel.setBackground(new Color(120, 134, 199));
+		modificarPanel.setBounds(25, 129, 132, 35);
+		menuPanel.add(modificarPanel);
 
 		JLabel lblModificar = new JLabel("Modificar");
 		lblModificar.setForeground(Color.WHITE);
 		lblModificar.setFont(new Font("Verdana", Font.PLAIN, 14));
-		ModificarPanel.add(lblModificar);
+		modificarPanel.add(lblModificar);
 
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setOrientation(SwingConstants.VERTICAL);
@@ -334,71 +336,71 @@ public class ListarPersonas extends JDialog {
 		menuPanel.add(separator_3);
 		deshabilitarPanel = new JPanel();
 		deshabilitarPanel.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
+			@Override
+			public void mouseClicked(MouseEvent e) {
 
-		        int selectedRow = table.getSelectedRow();
+				int selectedRow = table.getSelectedRow();
 
-		        // Primero validamos selección
-		        if (selectedRow == -1) {
-		            JOptionPane.showMessageDialog(
-		                null,
-		                "Por favor, seleccione un médico primero",
-		                "Error",
-		                JOptionPane.WARNING_MESSAGE
-		            );
-		            return;
-		        }
+				// Primero validamos selección
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(
+							null,
+							"Por favor, seleccione un médico primero",
+							"Error",
+							JOptionPane.WARNING_MESSAGE
+							);
+					return;
+				}
 
-		        // Datos del médico
-		        String codigoMedico = (String) table.getValueAt(selectedRow, 0);
-		        String nombreMedico = (String) table.getValueAt(selectedRow, 1)
-		                               + " "
-		                               + (String) table.getValueAt(selectedRow, 2);
+				// Datos del médico
+				String codigoMedico = (String) table.getValueAt(selectedRow, 0);
+				String nombreMedico = (String) table.getValueAt(selectedRow, 1)
+						+ " "
+						+ (String) table.getValueAt(selectedRow, 2);
 
-		        // Confirmación
-		        int confirm = JOptionPane.showConfirmDialog(
-		            null,
-		            "¿Está seguro de que desea desactivar al médico?\n"
-		            + nombreMedico + " (" + codigoMedico + ")\n\n",
-		            "Confirmar Desactivación",
-		            JOptionPane.YES_NO_OPTION,
-		            JOptionPane.WARNING_MESSAGE
-		        );
+				// Confirmación
+				int confirm = JOptionPane.showConfirmDialog(
+						null,
+						"¿Está seguro de que desea desactivar al médico?\n"
+								+ nombreMedico + " (" + codigoMedico + ")\n\n",
+								"Confirmar Desactivación",
+								JOptionPane.YES_NO_OPTION,
+								JOptionPane.WARNING_MESSAGE
+						);
 
-		        if (confirm == JOptionPane.YES_OPTION) {
+				if (confirm == JOptionPane.YES_OPTION) {
 
-		            boolean resultado = Clinica.getInstance().desactivarMedico(codigoMedico);
+					boolean resultado = Clinica.getInstance().desactivarMedico(codigoMedico);
 
-		            if (resultado) {
-		                JOptionPane.showMessageDialog(
-		                    null,
-		                    "Médico desactivado exitosamente\n",
-		                    "Éxito",
-		                    JOptionPane.INFORMATION_MESSAGE
-		                );
-		                actualizarTableMedicosActivo();
-		                actualizarTableMedicosInactivos();
-		            } else {
-		                JOptionPane.showMessageDialog(
-		                    null,
-		                    "No se puede desactivar el médico porque ya tiene citas.",
-		                    "Error",
-		                    JOptionPane.ERROR_MESSAGE
-		                );
-		            }
-		        }
-		    }
+					if (resultado) {
+						JOptionPane.showMessageDialog(
+								null,
+								"Médico desactivado exitosamente\n",
+								"Éxito",
+								JOptionPane.INFORMATION_MESSAGE
+								);
+						actualizarTableMedicosActivo();
+						actualizarTableMedicosInactivos();
+					} else {
+						JOptionPane.showMessageDialog(
+								null,
+								"No se puede desactivar el médico porque ya tiene citas.",
+								"Error",
+								JOptionPane.ERROR_MESSAGE
+								);
+					}
+				}
+			}
 
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-		        deshabilitarPanel.setBackground(new Color(45, 51, 107));
-		    }
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				deshabilitarPanel.setBackground(new Color(45, 51, 107));
+			}
 
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-		        deshabilitarPanel.setBackground(new Color(120, 134, 199));
-		    }
+			@Override
+			public void mouseExited(MouseEvent e) {
+				deshabilitarPanel.setBackground(new Color(120, 134, 199));
+			}
 		});
 
 		deshabilitarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -458,15 +460,46 @@ public class ListarPersonas extends JDialog {
 		lblVolver.setFont(new Font("Verdana", Font.PLAIN, 14));
 		volverPanel.add(lblVolver);
 
-		textField = new JTextField();
-		textField.setBounds(361, 449, 303, 22);
-		fondo.add(textField);
-		textField.setColumns(10);
+		buscarField = new JTextField();
+		buscarField.addActionListener(e-> {
+
+			if(user.getUser().getTipo().equals("Administrador")) {
+				String especialidad = buscarField.getText().trim();
+				if(especialidad.isEmpty())
+					actualizarTableMedicosActivo();
+				else
+					filtrarMedicosPorEspecialidad(especialidad);
+			}else {
+				String cedula = buscarField.getText().trim();
+				if(cedula.isEmpty()) {
+					actualizarTablePacientes();
+				}else {
+					filtrarPacientesPorCedula(cedula);
+				}
+			}
+		});
+		buscarField.setBounds(361, 449, 303, 22);
+		fondo.add(buscarField);
+		buscarField.setColumns(10);
 
 		JPanel buscarPanel = new JPanel();
 		buscarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				if(user.getUser().getTipo().equals("Administrador")) {
+					String especialidad = buscarField.getText().trim();
+					if(especialidad.isEmpty())
+						actualizarTableMedicosActivo();
+					else
+						filtrarMedicosPorEspecialidad(especialidad);
+				}else {
+					String cedula = buscarField.getText().trim();
+					if(cedula.isEmpty()) {
+						actualizarTablePacientes();
+					}else {
+						filtrarPacientesPorCedula(cedula);
+					}
+				}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -493,6 +526,8 @@ public class ListarPersonas extends JDialog {
 				String seleccion = filtroBox.getSelectedItem().toString();
 				if(seleccion.equals("Administrador")) {
 					actualizarTableAdmin();
+					habilitadoRadio.setSelected(true);
+					retiradoRadio.setSelected(false);
 					habilitadoRadio.setVisible(false);
 					retiradoRadio.setVisible(false);
 					deshabilitarPanel.setVisible(false);
@@ -501,6 +536,7 @@ public class ListarPersonas extends JDialog {
 					actualizarTableMedicosActivo();
 					habilitadoRadio.setVisible(true);
 					retiradoRadio.setVisible(true);
+					deshabilitarPanel.setVisible(true);
 				}
 			}
 		});
@@ -515,8 +551,11 @@ public class ListarPersonas extends JDialog {
 		habilitadoRadio = new JRadioButton("En accion");
 		habilitadoRadio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(habilitadoRadio.isSelected()) 
+				if(habilitadoRadio.isSelected()) {
 					actualizarTableMedicosActivo();
+					deshabilitarPanel.setVisible(true);
+					modificarPanel.setVisible(true);
+				}
 			}
 		});
 		habilitadoRadio.setBackground(new Color(120, 134, 199));
@@ -527,8 +566,11 @@ public class ListarPersonas extends JDialog {
 		retiradoRadio = new JRadioButton("retirado");
 		retiradoRadio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(retiradoRadio.isSelected())
+				if(retiradoRadio.isSelected()) {
 					actualizarTableMedicosInactivos();
+					deshabilitarPanel.setVisible(false);
+					modificarPanel.setVisible(false);
+				}
 			}
 		});
 		retiradoRadio.setBackground(new Color(120, 134, 199));
@@ -578,7 +620,7 @@ public class ListarPersonas extends JDialog {
 		model.setRowCount(0);
 
 		for(Persona p: cl.getPersonas()) {
-			if(p.getUser().getTipo().equals("Administrador")) {
+			if(p.getUser()!= null && p.getUser().getTipo().equals("Administrador")) {
 				Object[] fila = {p.getCodigo(), p.getNombres(), p.getApellidos(), p.getCedula(), p.getEdad(), p.getGenero(), p.getTelefono()};
 				model.addRow(fila);
 			}
@@ -607,5 +649,48 @@ public class ListarPersonas extends JDialog {
 	private void cargarListaPacientes() {
 		tituloLabel.setText("Lista de pacientes");
 		actualizarTablePacientes();
+		filtroBox.setVisible(false);
+		deshabilitarPanel.setVisible(false);
+		habilitadoRadio.setVisible(false);
+		retiradoRadio.setVisible(false);
 	}
+
+	private void filtrarMedicosPorEspecialidad(String especialidad) {
+		Clinica cl = Clinica.getInstance();
+		model.setRowCount(0);
+
+		for (Persona p : cl.getPersonas()) {
+			if (p instanceof Medico) {
+				Medico m = (Medico) p;
+				if (m.getEspecialidad().equalsIgnoreCase(especialidad)) {
+					Object[] fila = { m.getCodigo(), m.getNombres(), m.getApellidos(), m.getCedula(), m.getEdad(), 
+							m.getGenero(), m.getTelefono(),  m.getEspecialidad()};
+
+					model.addRow(fila);
+				}
+			}
+		}
+	}
+	
+	private void filtrarPacientesPorCedula(String cedula) {
+	    Clinica cl = Clinica.getInstance();
+	    model.setRowCount(0);
+
+	    for (Persona p : cl.getPersonas()) {
+	        if (p instanceof Medico) {
+	            Medico m = (Medico) p;
+	            
+	            if (m.getCedula().equalsIgnoreCase(cedula)) {
+	                Object[] fila = new Object[]{m.getCodigo(), m.getNombres(), m.getApellidos(), 
+	                		m.getCedula(), m.getEdad(), m.getGenero(), m.getTelefono(), m.getEspecialidad()};
+
+	                model.addRow(fila);
+	            }
+	        }
+	    }
+	}
+
+
+
+
 }

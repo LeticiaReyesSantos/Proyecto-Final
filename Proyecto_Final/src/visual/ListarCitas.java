@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.time.LocalDate;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -22,6 +23,9 @@ import javax.swing.table.DefaultTableModel;
 
 import logico.Cita;
 import logico.Clinica;
+import logico.Consulta;
+import logico.Medico;
+import logico.Persona;
 import logico.Vacuna;
 
 import javax.swing.ListSelectionModel;
@@ -38,6 +42,8 @@ public class ListarCitas extends JDialog {
 	private JPanel barPanel;
 	private JTable table;
 	private DefaultTableModel model;
+
+	private Persona usuario = Clinica.getLoginUser();
 
 	/**
 	 * Launch the application.
@@ -185,7 +191,7 @@ public class ListarCitas extends JDialog {
 				reagendarCita.setModal(true);
 				reagendarCita.setLocationRelativeTo(null);
 				reagendarCita.setVisible(true);
-				actualizar();
+				actualizarAdmin();
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -227,7 +233,7 @@ public class ListarCitas extends JDialog {
 				if (confirmacion == JOptionPane.YES_OPTION) {
 					if (Clinica.getInstance().cancelarCita(codigoCita)) {
 						JOptionPane.showMessageDialog(null,"Cita cancelada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-						actualizar();
+						actualizarAdmin();
 
 					} else {
 						JOptionPane.showMessageDialog(null, "No se pudo cancelar la cita.\n" +"La cita ya fue completada o no existe.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -264,19 +270,22 @@ public class ListarCitas extends JDialog {
 		fondo.add(scrollPane);
 
 		table = new JTable();
-		model = new DefaultTableModel(new Object[][] {
-		},
+		model = new DefaultTableModel(
+				new Object[][] {
+					{null, null, null, null},
+				},
 				new String[] {
-						"Codigo", "Persona", "Medico", "Fecha", "Seleccion"
-		}
+						"Codigo", "Persona", "Medico", "Fecha"
+				}
 				) {
-			Class[] columnTypes = new Class[] {
-					Object.class, Object.class, Object.class, Object.class, Boolean.class
+			boolean[] columnEditables = new boolean[] {
+					false, false, false, false
 			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
 			}
 		};
+
 		table.setModel(model);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(table);
@@ -298,7 +307,12 @@ public class ListarCitas extends JDialog {
 			}
 		});
 
-		actualizar();
+		if (usuario instanceof Medico) {
+		    actualizarMedico();
+		} else {
+		    actualizarAdmin();
+		}
+
 
 		volverPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		volverPanel.setBackground(new Color(169, 181, 223));
@@ -311,14 +325,31 @@ public class ListarCitas extends JDialog {
 		volverPanel.add(label_2);
 	}
 
-	private void actualizar() {
+	private void actualizarAdmin() {
 		Clinica cl = Clinica.getInstance();
 		model.setRowCount(0);
 		for (Cita cita : cl.getCitas()) {
-			Object[] fila = {cita.getCodigo(), cita.getPersona().getNombres(),cita.getMedico().getNombres(), cita.getFecha(), cita.isEstado()? "FINALIZADA": "PENDIENTE"};
-			model.addRow(fila);
+			if(!(cita instanceof Consulta) && !cita.isEstado() && (cita.getFecha().isAfter(LocalDate.now()) || 
+					cita.getFecha().equals(LocalDate.now()))) {
+				Object[] fila = {cita.getCodigo(), cita.getPersona().getNombres(),cita.getMedico().getNombres(), cita.getFecha()};
+				model.addRow(fila);
+			}
 		}
+	}
 
+	private void actualizarMedico() {
+		Clinica cl = Clinica.getInstance();
+		model.setRowCount(0);
+		if(usuario instanceof Medico) {
+
+			for (Cita cita : usuario.getHistorial()) {
+				if(!(cita instanceof Consulta) && !cita.isEstado() && (cita.getFecha().isAfter(LocalDate.now()) || 
+						cita.getFecha().equals(LocalDate.now()))) {
+					Object[] fila = {cita.getCodigo(), cita.getPersona().getNombres(),cita.getMedico().getNombres(), cita.getFecha()};
+					model.addRow(fila);
+				}
+			}
+		}
 	}
 
 }

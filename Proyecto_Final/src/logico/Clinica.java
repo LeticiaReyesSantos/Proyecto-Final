@@ -502,7 +502,15 @@ public class Clinica implements Serializable {
 	        if (index != -1) {
 	            citas.set(index, nuevo);
 	        }
-
+	        
+	        int indexMed = aux.getMedico().getHistorial().indexOf(aux);
+	        if (indexMed != -1) {
+	            aux.getMedico().getHistorial().set(indexMed, nuevo);
+	        }
+	        int indexPac = pac.getHistorial().indexOf(aux);
+	        if (indexPac != -1) {
+	            pac.getHistorial().set(indexPac, nuevo);
+	        }
 	        addDiagnostico(diag);
 	        nuevo.getMedico().addPaciente(pac);
 	        nuevo.setEstado(true);
