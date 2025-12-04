@@ -78,6 +78,20 @@ public class RegistrarVacuna extends JDialog {
 		fondo.add(barra);
 		
 		JPanel BotonX = new JPanel();
+		BotonX.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				BotonX.setBackground(Color.RED);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				BotonX.setBackground(new Color(45, 51, 107));
+			}
+		});
 		BotonX.setForeground(Color.BLACK);
 		BotonX.setBackground(new Color(45, 51, 107));
 		BotonX.setBounds(551, 0, 39, 26);
