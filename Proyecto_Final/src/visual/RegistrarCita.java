@@ -240,7 +240,7 @@ public class RegistrarCita extends JDialog {
 			public void mouseEntered(MouseEvent e) {
 				buscarMedicoPanel.setBackground(new Color(45, 51, 107));
 				label_2.setForeground(Color.white);
-				
+
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -316,7 +316,7 @@ public class RegistrarCita extends JDialog {
 					habilitarEdicionDeCampos();
 					mensajeLabel.setVisible(true);
 				}
-				
+
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -327,7 +327,7 @@ public class RegistrarCita extends JDialog {
 			public void mouseExited(MouseEvent e) {
 				buscarPanel.setBackground(new Color(169, 181, 223));
 				lblBuscar.setForeground(Color.black);
-				
+
 			}
 		});
 		buscarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -352,7 +352,10 @@ public class RegistrarCita extends JDialog {
 		agendarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(mode == 1) {
+				if(medico.cantCitasDia(dateToLocalDate()) > medico.getMaxCitas()){
+					JOptionPane.showMessageDialog(null, "El medico ha alcanzado el maximo citas para la fecha solicitada");
+					return;
+				}else if(mode == 1) {
 					reagendarCita();
 				} else {
 					agendarCita();
