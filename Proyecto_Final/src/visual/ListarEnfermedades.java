@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -33,6 +34,9 @@ public class ListarEnfermedades extends JDialog {
 	private DefaultTableModel modelMultipleSelection;
 	private DefaultTableModel modelSingleSelection;
 
+	private	ArrayList<Enfermedad> enfermedades = new ArrayList<>();
+	private	ArrayList<Enfermedad> enfSeleccionadas = new ArrayList<>();
+
 	private int x1;
 	private int x2;
 	private int y1;
@@ -45,7 +49,7 @@ public class ListarEnfermedades extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			ListarEnfermedades dialog = new ListarEnfermedades(0);
+			ListarEnfermedades dialog = new ListarEnfermedades(0, new ArrayList<Enfermedad>());
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -57,12 +61,11 @@ public class ListarEnfermedades extends JDialog {
 	 * Create the dialog.
 	 */
 
-	public ListarEnfermedades() {
-		this(0);
-	}
 
-	public ListarEnfermedades(int mode) {
+
+	public ListarEnfermedades(int mode, ArrayList<Enfermedad> enf) {
 		setUndecorated(true);
+		this.enfSeleccionadas = enf;
 		setBounds(100, 100, 989, 481);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -187,8 +190,13 @@ public class ListarEnfermedades extends JDialog {
 		selectionPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(table.getSelectedRow()>-1)
+				if(mode == 1) {
+					actualizarSeleccionGlobal();
 					dispose();
+				}else {
+					if(table.getSelectedRow()>-1)
+						dispose();
+				}
 			}
 		});
 		selectionPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -255,7 +263,7 @@ public class ListarEnfermedades extends JDialog {
 		label_2.setForeground(Color.WHITE);
 		label_2.setFont(new Font("Verdana", Font.PLAIN, 14));
 		modificarPanel.add(label_2);
-		
+
 		//SINGLE SELECTION MODE MANEJAR
 		JPanel eliminarPanel = new JPanel();
 		eliminarPanel.addMouseListener(new MouseAdapter() {
@@ -289,7 +297,7 @@ public class ListarEnfermedades extends JDialog {
 		eliminarPanel.setBackground(new Color(120, 134, 199));
 		eliminarPanel.setBounds(25, 225, 132, 35);
 		panel.add(eliminarPanel);
-		
+
 		JLabel lblEliminar = new JLabel("Eliminar");
 		lblEliminar.setForeground(Color.WHITE);
 		lblEliminar.setFont(new Font("Verdana", Font.PLAIN, 14));
@@ -319,14 +327,14 @@ public class ListarEnfermedades extends JDialog {
 		};
 
 		modelSingleSelection = new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"C\u00F3digo", "Nombre", "Tipo", "Control"
-			}
-		) {
+				new Object[][] {
+				},
+				new String[] {
+						"C\u00F3digo", "Nombre", "Tipo", "Control"
+				}
+				) {
 			boolean[] columnEditables = new boolean[] {
-				false, false, false, false
+					false, false, false, false
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
@@ -391,20 +399,60 @@ public class ListarEnfermedades extends JDialog {
 			cargarMultipleSlection();
 		}
 	}
-	
+
 	private void cargarMultipleSlection() {
 		actualizarTableMultiple();
 	}
-	
+
 	private void cargarSingleSelection() {
 		actualizarTableSingle();
 	}
-	
+
 	public Enfermedad getSelectedEnfermedad() {
 		Enfermedad aux = null;
 		if(table.getSelectedRow() > -1) {
 			aux = Clinica.getInstance().buscarEnfByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
 		}
 		return aux;
+	}
+
+
+	private void cargarEnfermedades() {
+		actualizarSeleccionGlobal();	
+
+		modelMultipleSelection.setRowCount(0);
+
+		for(Enfermedad e: enfermedades) {
+			boolean check = enfSeleccionadas.contains(e);
+			Object[] fila = {e.getCodigo(), e.getNombre(), e.getTipo(), 
+					e.isControlada() ? "controlada" : "no controlada", check};
+			modelMultipleSelection.addRow(fila);
+		}		
+	}
+
+	public void actualizarSeleccionGlobal() {
+		for (int i = 0; i < modelMultipleSelection.getRowCount(); i++) {
+
+			boolean check = (boolean) modelMultipleSelection.getValueAt(i, 4);
+			String codigo = (String) modelMultipleSelection.getValueAt(i, 0);
+			Enfermedad e = Clinica.getInstance().buscarEnfByCode(codigo);
+
+			if (check && !enfSeleccionadas.contains(e)) {
+				enfSeleccionadas.add(e);
+			} else if (!check && enfSeleccionadas.contains(e)) {
+				enfSeleccionadas.remove(e);
+			}
+		}
+	}
+
+	private void desSelectedAll() {
+		for(int i= 0; i<modelMultipleSelection.getRowCount(); i++) {
+			modelMultipleSelection.setValueAt(false, i, 4);
+		}
+		actualizarSeleccionGlobal();
+	}
+
+	public ArrayList<Enfermedad>objectsSelected(){
+		return enfSeleccionadas;
 	}
 }

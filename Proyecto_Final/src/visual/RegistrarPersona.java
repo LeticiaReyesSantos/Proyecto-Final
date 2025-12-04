@@ -113,7 +113,7 @@ public class RegistrarPersona extends JDialog {
 	public RegistrarPersona() {
 		setUndecorated(true);
 		setBounds(100, 100, 845, 664);
-		setLocation(420, 250);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

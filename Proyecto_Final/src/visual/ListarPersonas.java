@@ -61,7 +61,7 @@ public class ListarPersonas extends JDialog {
 	private JLabel lblDeshabilitar;
 	private ButtonGroup grupo1 = new ButtonGroup();
 	private JRadioButton habilitadoRadio;
-	private JRadioButton retiradoRadios;
+	private JRadioButton retiradoRadio;
 
 	/**
 	 * Launch the application.
@@ -81,8 +81,9 @@ public class ListarPersonas extends JDialog {
 	 */
 	public ListarPersonas() {
 		setUndecorated(true);
-		setLocation(420, 250);
+		
 		setBounds(100, 100, 989, 481);
+		setLocation(320, 250);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -314,7 +315,7 @@ public class ListarPersonas extends JDialog {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(181, 122, 796, 323);
 		fondo.add(scrollPane);
-
+		
 		table = new JTable();
 		model = new DefaultTableModel(
 				new Object[][] {
@@ -322,12 +323,19 @@ public class ListarPersonas extends JDialog {
 				new String[] {
 						"ID", "Nombre", "Apellido", "Cedula", "Edad", "Genero", "Telefono"
 				}
-				);
+				) {
+			boolean[] columnEditables = new boolean[] {
+					false, false, false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		};
 		table.setModel(model);
 		scrollPane.setViewportView(table);
 
-		JPanel panel = new JPanel();
-		panel.addMouseListener(new MouseAdapter() {
+		JPanel volverPanel = new JPanel();
+		volverPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				dispose();
@@ -340,15 +348,15 @@ public class ListarPersonas extends JDialog {
 
 			}
 		});
-		panel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel.setBackground(new Color(169, 181, 223));
-		panel.setBounds(874, 449, 85, 28);
-		fondo.add(panel);
+		volverPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		volverPanel.setBackground(new Color(169, 181, 223));
+		volverPanel.setBounds(874, 449, 85, 28);
+		fondo.add(volverPanel);
 
 		JLabel lblVolver = new JLabel("Volver");
 		lblVolver.setForeground(Color.BLACK);
 		lblVolver.setFont(new Font("Verdana", Font.PLAIN, 14));
-		panel.add(lblVolver);
+		volverPanel.add(lblVolver);
 
 		textField = new JTextField();
 		textField.setBounds(361, 449, 303, 22);
@@ -381,10 +389,16 @@ public class ListarPersonas extends JDialog {
 		filtroBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String seleccion = filtroBox.getSelectedItem().toString();
-				if(seleccion.equals("Administrador"))
+				if(seleccion.equals("Administrador")) {
 					actualizarTableAdmin();
-				else
+					habilitadoRadio.setVisible(false);
+					retiradoRadio.setVisible(false);
+				}
+				else {
 					actualizarTableMedicosActivo();
+					habilitadoRadio.setVisible(true);
+					retiradoRadio.setVisible(true);
+				}
 			}
 		});
 		filtroBox.setBounds(226, 91, 125, 22);
@@ -398,9 +412,8 @@ public class ListarPersonas extends JDialog {
 		habilitadoRadio = new JRadioButton("En accion");
 		habilitadoRadio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(habilitadoRadio.isSelected()) {
-
-				}
+				if(habilitadoRadio.isSelected()) 
+					actualizarTableMedicosActivo();
 			}
 		});
 		habilitadoRadio.setBackground(new Color(120, 134, 199));
@@ -408,12 +421,18 @@ public class ListarPersonas extends JDialog {
 		habilitadoRadio.setBounds(361, 90, 85, 25);
 		fondo.add(habilitadoRadio);
 
-		retiradoRadios = new JRadioButton("retirado");
-		retiradoRadios.setBackground(new Color(120, 134, 199));
-		retiradoRadios.setBounds(458, 90, 85, 25);
-		fondo.add(retiradoRadios);
+		retiradoRadio = new JRadioButton("retirado");
+		retiradoRadio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(retiradoRadio.isSelected())
+					actualizarTableMedicosInactivos();
+			}
+		});
+		retiradoRadio.setBackground(new Color(120, 134, 199));
+		retiradoRadio.setBounds(458, 90, 85, 25);
+		fondo.add(retiradoRadio);
 
-		grupo1.add(retiradoRadios);
+		grupo1.add(retiradoRadio);
 		grupo1.add(habilitadoRadio);
 
 		actualizarTableMedicosActivo();

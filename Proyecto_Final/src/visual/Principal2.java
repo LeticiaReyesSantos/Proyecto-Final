@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 
 import logico.Cita;
 import logico.Clinica;
+import logico.Enfermedad;
 import logico.Persona;
 import servidor.Servidor;
 
@@ -103,6 +104,8 @@ public class Principal2 extends JFrame {
 	private JPanel respaldoPanel;
 
 	private Servidor servidor = new Servidor(9000);
+	private JPanel consultaPanel;
+	private JLabel lblIniciarConsulta;
 
 	/**
 	 * Launch the application.
@@ -368,7 +371,7 @@ public class Principal2 extends JFrame {
 		JLabel label_1 = new JLabel(usuario.getNombres()+" "+usuario.getApellidos());
 		label_1.setForeground(Color.WHITE);
 		label_1.setFont(new Font("Verdana", Font.PLAIN, 40));
-		label_1.setBounds(371, 13, 582, 41);
+		label_1.setBounds(371, 13, 957, 41);
 		bienvenidoPanel.add(label_1);
 
 		usuarioIcon = new JLabel("");
@@ -588,7 +591,7 @@ public class Principal2 extends JFrame {
 		listEnfermedadPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ListarEnfermedades listarEnfermedades = new ListarEnfermedades(0); //0 como single selection
+				ListarEnfermedades listarEnfermedades = new ListarEnfermedades(0, new ArrayList<Enfermedad>()); //0 como single selection
 				listarEnfermedades.setModal(true); 
 				listarEnfermedades.setVisible(true);
 			}
@@ -876,6 +879,37 @@ public class Principal2 extends JFrame {
 		img = icon.getImage().getScaledInstance(vacunaIcon.getWidth(), vacunaIcon.getHeight(), Image.SCALE_SMOOTH);
 		vacunaIcon.setIcon(new ImageIcon(img));
 		vacunaPanel.add(vacunaIcon);
+		
+		consultaPanel = new JPanel();
+		consultaPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(table.getSelectedRow()>-1) {
+					String id = table.getValueAt(table.getSelectedRow(), 0).toString();
+					CrearConsulta consulta = new CrearConsulta(id);
+					consulta.setModal(true);
+					consulta.setVisible(true);
+				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				consultaPanel.setBackground(new Color(120, 134, 199));
+			}
+		});
+		consultaPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		consultaPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		consultaPanel.setBackground(new Color(120, 134, 199));
+		consultaPanel.setBounds(1008, dim.height-150, 313, 61);
+		consultaPanel.setVisible(false);
+		fondo.add(consultaPanel);
+		
+		lblIniciarConsulta = new JLabel("Iniciar consulta");
+		lblIniciarConsulta.setForeground(Color.WHITE);
+		lblIniciarConsulta.setFont(new Font("Verdana", Font.PLAIN, 33));
+		consultaPanel.add(lblIniciarConsulta);
 		scrollPane.setVisible(false);
 
 		if(usuario.getUser().getTipo().equals("Medico"))
@@ -898,6 +932,7 @@ public class Principal2 extends JFrame {
 		enfermedadPanel.setVisible(false);
 		reportePanel.setVisible(false);
 		label_3.setVisible(true);
+		consultaPanel.setVisible(true);
 		cargarCitasActuales();
 
 	}
@@ -910,7 +945,7 @@ public class Principal2 extends JFrame {
 		for(Cita c: citas) {
 			if(c.getFecha().equals(LocalDate.now())) {
 				Object[] fila = {c.getCodigo(), c.getPersona().getNombres()+" "+c.getPersona().getApellidos(), 
-						c.getFecha(), c.isEstado() ? "Pendiente" : "Completada"};
+						c.getFecha(), !c.isEstado() ? "Pendiente" : "Completada"};
 				model.addRow(fila);
 			}
 		}
