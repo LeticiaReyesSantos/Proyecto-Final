@@ -6,6 +6,8 @@ import java.awt.BorderLayout;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,6 +30,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.JSeparator;
+import javax.swing.JFormattedTextField;
 
 public class RegistrarCita extends JDialog {
 
@@ -36,12 +39,10 @@ public class RegistrarCita extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-	private JTextField cedulaField;
 	private Persona paciente;
 	private Medico medico;
 	private JTextField nombreField;
 	private JTextField apellidoField;
-	private JTextField telefonoField;
 	private JTextField medicoField;
 	private JPanel buscarMedicoPanel;
 	private JPanel buscarPanel;
@@ -52,11 +53,15 @@ public class RegistrarCita extends JDialog {
 	private int mode =0;
 	private String codigoCitaReag;
 	private JPanel barPanel;
-	
+
 	private int x1;
 	private int x2;
 	private int y1;
 	private int y2;
+	private JFormattedTextField cedulaField;
+	private MaskFormatter maskCedula;
+	private MaskFormatter maskTelefono;
+	private JFormattedTextField telefonoField;
 	/**
 	 * Launch the application.
 	 */
@@ -73,16 +78,16 @@ public class RegistrarCita extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	
-	 public RegistrarCita() {
-	        this(0, null);
-	    }
-	 
+
+	public RegistrarCita() {
+		this(0, null);
+	}
+
 	public RegistrarCita(int mode, Cita cita) {
 		this.mode = mode;
 		if(mode ==1 && cita != null) {
 			this.codigoCitaReag = cita.getCodigo();
-			
+
 		}
 		setUndecorated(true);
 		setBounds(100, 100, 889, 500);
@@ -141,34 +146,12 @@ public class RegistrarCita extends JDialog {
 		label_1.setBounds(57, 121, 80, 16);
 		fondo.add(label_1);
 
-		cedulaField = new JTextField();
-		cedulaField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent arg0) {
-			}
-		});
-		cedulaField.addActionListener(e -> {
-			paciente = Clinica.getInstance().buscarPacienteByCedula(cedulaField.getText());
-			if(paciente != null){
-				cargarPersona();
-				deshabilitarEdicionDeCampos();
-				mensajeLabel.setVisible(false);
-			}else {
-				habilitarEdicionDeCampos();
-				mensajeLabel.setVisible(false);
-			}
-
-		});
-		cedulaField.setBounds(135, 121, 190, 22);
-		fondo.add(cedulaField);
-		cedulaField.setColumns(10);
-
 		String titulo = (mode == 1) ? "REAGENDAR CITA" : "REALIZAR CITAS";
-        JLabel lblCrearCitas = new JLabel(titulo);
-        lblCrearCitas.setForeground(new Color(120, 134, 199));
-        lblCrearCitas.setFont(new Font("Verdana", Font.BOLD, 28));
-        lblCrearCitas.setBounds(308, 51, 282, 35);
-        fondo.add(lblCrearCitas);
+		JLabel lblCrearCitas = new JLabel(titulo);
+		lblCrearCitas.setForeground(new Color(120, 134, 199));
+		lblCrearCitas.setFont(new Font("Verdana", Font.BOLD, 28));
+		lblCrearCitas.setBounds(308, 51, 282, 35);
+		fondo.add(lblCrearCitas);
 
 		JPanel generalPanel = new JPanel();
 		generalPanel.setLayout(null);
@@ -201,12 +184,6 @@ public class RegistrarCita extends JDialog {
 		apellidoField.setBounds(12, 111, 190, 22);
 		generalPanel.add(apellidoField);
 
-		telefonoField = new JTextField();
-		telefonoField.setEnabled(false);
-		telefonoField.setColumns(10);
-		telefonoField.setBounds(12, 181, 190, 22);
-		generalPanel.add(telefonoField);
-
 		JLabel lblTelefono = new JLabel("Telefono");
 		lblTelefono.setForeground(new Color(255, 255, 255));
 		lblTelefono.setFont(new Font("Verdana", Font.PLAIN, 18));
@@ -223,6 +200,8 @@ public class RegistrarCita extends JDialog {
 		medicoField.setBounds(404, 45, 190, 22);
 		generalPanel.add(medicoField);
 		medicoField.setEnabled(false);
+		medicoField.setForeground(Color.black);
+		medicoField.setBackground(Color.white);
 		medicoField.setColumns(10);
 
 		buscarMedicoPanel = new JPanel();
@@ -235,7 +214,7 @@ public class RegistrarCita extends JDialog {
 				medico = (Medico)listPerson.objectoSeleccionado();
 
 				if(medico != null && medico.isActivo()) {
-					 medicoField.setText(medico.getNombres() + " " + medico.getApellidos());
+					medicoField.setText(medico.getNombres() + " " + medico.getApellidos());
 				}else {
 					JOptionPane.showMessageDialog(null, "El médico no existe", "Error", JOptionPane.ERROR_MESSAGE);
 					medicoField.setText("");
@@ -258,42 +237,44 @@ public class RegistrarCita extends JDialog {
 		lblHoraEstimadaDe.setFont(new Font("Verdana", Font.BOLD, 18));
 		lblHoraEstimadaDe.setBounds(404, 111, 103, 16);
 		generalPanel.add(lblHoraEstimadaDe);
-		
+
 		dateChooser = new JDateChooser();
 		dateChooser.setBounds(404, 146, 152, 22);
 		calendario.set(LocalDate.now().getYear(), LocalDate.now().getMonthValue()-1, LocalDate.now().getDayOfMonth());
 		dateChooser.setMinSelectableDate(calendario.getTime());
 		generalPanel.add(dateChooser);
-		
+
 		JSeparator separator = new JSeparator();
 		separator.setForeground(new Color(45, 51, 107));
 		separator.setBackground(new Color(45, 51, 107));
 		separator.setBounds(12, 67, 190, 7);
 		generalPanel.add(separator);
-		
+
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setForeground(new Color(45, 51, 107));
 		separator_1.setBackground(new Color(45, 51, 107));
 		separator_1.setBounds(12, 134, 190, 7);
 		generalPanel.add(separator_1);
-		
+
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setForeground(new Color(45, 51, 107));
 		separator_2.setBackground(new Color(45, 51, 107));
 		separator_2.setBounds(12, 203, 190, 7);
 		generalPanel.add(separator_2);
-		
+
 		JSeparator separator_3 = new JSeparator();
 		separator_3.setForeground(new Color(45, 51, 107));
 		separator_3.setBackground(new Color(45, 51, 107));
 		separator_3.setBounds(404, 67, 190, 7);
 		generalPanel.add(separator_3);
-		
+
 		JSeparator separator_4 = new JSeparator();
 		separator_4.setForeground(new Color(45, 51, 107));
 		separator_4.setBackground(new Color(45, 51, 107));
 		separator_4.setBounds(404, 169, 152, 7);
 		generalPanel.add(separator_4);
+
+
 
 		buscarPanel = new JPanel();
 		buscarPanel.addMouseListener(new MouseAdapter() {
@@ -331,11 +312,11 @@ public class RegistrarCita extends JDialog {
 		agendarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				 if(mode == 1) {
-	                    reagendarCita();
-	                } else {
-	                    agendarCita();
-	                }
+				if(mode == 1) {
+					reagendarCita();
+				} else {
+					agendarCita();
+				}
 
 			}
 		});
@@ -345,10 +326,10 @@ public class RegistrarCita extends JDialog {
 		fondo.add(agendarPanel);
 
 		String txtButton = (mode == 1) ? "Reagendar" : "Agendar";
-        JLabel lblAgendar = new JLabel(txtButton);
-        lblAgendar.setForeground(new Color(0, 0, 0));
-        lblAgendar.setFont(new Font("Verdana", Font.PLAIN, 14));
-        agendarPanel.add(lblAgendar);
+		JLabel lblAgendar = new JLabel(txtButton);
+		lblAgendar.setForeground(new Color(0, 0, 0));
+		lblAgendar.setFont(new Font("Verdana", Font.PLAIN, 14));
+		agendarPanel.add(lblAgendar);
 
 		JPanel panel_2 = new JPanel();
 		panel_2.addMouseListener(new MouseAdapter() {
@@ -366,10 +347,32 @@ public class RegistrarCita extends JDialog {
 		lblVolver.setForeground(new Color(0, 0, 0));
 		lblVolver.setFont(new Font("Verdana", Font.PLAIN, 14));
 		panel_2.add(lblVolver);
-		
-		 if (mode == 1 && codigoCitaReag != null) {
-	            cargarDatosReagendar();
-	        }
+
+
+
+		try {
+			maskCedula = new MaskFormatter("###-#######-#");
+		}catch(Exception e) {
+		}
+
+		try {
+			maskTelefono = new MaskFormatter("###-###-####");
+		}catch(Exception e) {
+
+		}
+
+		cedulaField = new JFormattedTextField(maskCedula);
+		cedulaField.setBounds(132, 121, 205, 22);
+		fondo.add(cedulaField);
+
+		telefonoField = new JFormattedTextField(maskTelefono);
+		telefonoField.setEnabled(false);
+		telefonoField.setBounds(12, 181, 190, 22);
+		generalPanel.add(telefonoField);
+
+		if (mode == 1 && codigoCitaReag != null) {
+			cargarDatosReagendar();
+		}
 	}
 
 	private void cargarPersona() {
@@ -397,56 +400,56 @@ public class RegistrarCita extends JDialog {
 
 	private boolean validarCampos() {
 		return !nombreField.getText().isEmpty() && !apellidoField.getText().isEmpty() && !telefonoField.getText().isEmpty() &&
-				!cedulaField.getText().isEmpty() && !medicoField.getText().isEmpty() && dateChooser.getDate() != null;
+				!cedulaField.getText().isEmpty() && !medicoField.getText().isEmpty() && dateChooser.getDate() != null && 
+				Clinica.getInstance().cedulaUnica(cedulaField.getText());
 	}
-	
+
 	private LocalDate dateToLocalDate() {
 		return dateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
-	
-	private void cargarDatosReagendar() {
-        Cita cita = Clinica.getInstance().buscarCitaByCode(codigoCitaReag);
-        if (cita != null) {
-            paciente = cita.getPersona();
-            cedulaField.setText(paciente.getCedula());
-            cedulaField.setEnabled(false);
-            cargarPersona();
-            
-            medico = cita.getMedico();
-            medicoField.setText(medico.getNombres() + " " + medico.getApellidos());
-            buscarPanel.setVisible(false);
-        }
-    }
-	
-	 private void reagendarCita() {
-	        if(validarCampos()) {
-	            LocalDate fecha = dateToLocalDate();
-	            
-	            if(Clinica.getInstance().reagendarCita(fecha, codigoCitaReag)) {
-	                JOptionPane.showMessageDialog(null, "Se ha reagendado la cita con éxito");
-	                dispose();
-	            } else {
-	                JOptionPane.showMessageDialog(null, "No se pudo reagendar la cita");
-	            }
-	        } else {
-	            JOptionPane.showMessageDialog(null, "Aún hay campos por rellenar");
-	        }
-	    }
-	 
-	 private void agendarCita() {
-	        if(validarCampos()) {
-	            LocalDate fecha = dateToLocalDate();
-	            
-	            if(Clinica.getInstance().hacerCita(cedulaField.getText(), nombreField.getText(), apellidoField.getText(), telefonoField.getText(), medico, fecha)) {
-	                JOptionPane.showMessageDialog(null, "Se ha guardado la cita con éxito");
-	                dispose();
-	            }else {
-	                JOptionPane.showMessageDialog(null, "Ha surgido un error al guardar la cita");
-	            }
-	        }else {
-	            JOptionPane.showMessageDialog(null, "Aún hay campos por rellenar");
-	        }
-	    }
 
+	private void cargarDatosReagendar() {
+		Cita cita = Clinica.getInstance().buscarCitaByCode(codigoCitaReag);
+		if (cita != null) {
+			paciente = cita.getPersona();
+			cedulaField.setText(paciente.getCedula());
+			cedulaField.setEnabled(false);
+			cargarPersona();
+
+			medico = cita.getMedico();
+			medicoField.setText(medico.getNombres() + " " + medico.getApellidos());
+			buscarPanel.setVisible(false);
+		}
+	}
+
+	private void reagendarCita() {
+		if(validarCampos()) {
+			LocalDate fecha = dateToLocalDate();
+
+			if(Clinica.getInstance().reagendarCita(fecha, codigoCitaReag)) {
+				JOptionPane.showMessageDialog(null, "Se ha reagendado la cita con éxito");
+				dispose();
+			} else {
+				JOptionPane.showMessageDialog(null, "No se pudo reagendar la cita");
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Aún hay campos por rellenar");
+		}
+	}
+
+	private void agendarCita() {
+		if(validarCampos()) {
+			LocalDate fecha = dateToLocalDate();
+
+			if(Clinica.getInstance().hacerCita(cedulaField.getText(), nombreField.getText(), apellidoField.getText(), telefonoField.getText(), medico, fecha)) {
+				JOptionPane.showMessageDialog(null, "Se ha guardado la cita con éxito");
+				dispose();
+			}else {
+				JOptionPane.showMessageDialog(null, "Ha surgido un error al guardar la cita");
+			}
+		}else {
+			JOptionPane.showMessageDialog(null, "Aún hay campos por rellenar");
+		}
+	}
 }
 

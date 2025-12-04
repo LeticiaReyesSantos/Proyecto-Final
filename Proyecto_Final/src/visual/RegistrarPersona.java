@@ -486,29 +486,29 @@ public class RegistrarPersona extends JDialog {
 		aceptarPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-			    if (mode == 0) {
-			        if (camposGeneralesVacios()) {
-			            JOptionPane.showMessageDialog(null, "Aún faltan campos generales por rellenar");
-			            return;
-			        }
+				if (mode == 0) {
+					if (camposGeneralesVacios()) {
+						JOptionPane.showMessageDialog(null, "Aún faltan campos generales por rellenar");
+						return;
+					}
 
-			        if (user.getTipo().equals("Administrador")) {
-			            if (medicoRadio.isSelected()) {
-			                if (camposMedicoVacios()) {
-			                    JOptionPane.showMessageDialog(null, "Aún faltan campos del médico por rellenar");
-			                    return;
-			                }
-			                registrarMedico();
-			                return;
-			            }
+					if (user.getTipo().equals("Administrador")) {
+						if (medicoRadio.isSelected()) {
+							if (camposMedicoVacios()) {
+								JOptionPane.showMessageDialog(null, "Aún faltan campos del médico por rellenar");
+								return;
+							}
+							registrarMedico();
+							return;
+						}
 
-			            registrarAdmin();
-			            return;
-			        }
-			    } 
-			    else if (mode == 1) { 
-			        registrarPaciente();
-			    }
+						registrarAdmin();
+						return;
+					}
+				} 
+				else if (mode == 1) { 
+					registrarPaciente();
+				}
 			}
 
 			@Override
@@ -580,9 +580,9 @@ public class RegistrarPersona extends JDialog {
 
 		if(user.getTipo().equals("Medico"))
 			panelPacienteShow();
-		
+
 		if(person!= null && mode == 1 )
-			 cargarRegistroPaciente();  
+			cargarRegistroPaciente();  
 
 	}
 
@@ -593,7 +593,8 @@ public class RegistrarPersona extends JDialog {
 
 		return nombreField.getText().trim().isEmpty() || apellidoField.getText().trim().isEmpty() || cedulaField.getText().trim().isEmpty()  ||
 				telefonoField.getText().trim().isEmpty() || direccionField.getText().trim().isEmpty() 
-				|| correoField.getText().trim().isEmpty() || dateChooser.getDate() == null || !cedulaUnica || telefonoField.getText().trim().length() < 12;
+				|| correoField.getText().trim().isEmpty() || dateChooser.getDate() == null || !cedulaUnica || cedulaField.getText().trim().length()<13 
+				|| telefonoField.getText().trim().length() < 12;
 	}
 
 	private boolean camposMedicoVacios() {
@@ -762,7 +763,7 @@ public class RegistrarPersona extends JDialog {
 		cedulaField.setEnabled(false);
 		cedulaField.setDisabledTextColor(Color.BLACK);
 		cedulaField.setBackground(Color.WHITE);
-		
+
 	}
 }
 

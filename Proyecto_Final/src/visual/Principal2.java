@@ -193,6 +193,7 @@ public class Principal2 extends JFrame {
 		respaldoPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				Clinica.getInstance().save();
 				realizarRespaldo();
 			}
 			@Override
@@ -952,7 +953,6 @@ public class Principal2 extends JFrame {
 	}
 
 	private void realizarRespaldo() {
-
 
 		File archivo = new File("clinica.dat");
 		try (Socket sc = new Socket("127.0.0.1", 9000)){

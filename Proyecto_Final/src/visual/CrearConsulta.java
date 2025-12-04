@@ -292,7 +292,7 @@ public class CrearConsulta extends JDialog {
 		panel_1.add(codigoField);
 		codigoField.setText("CN-"+Clinica.getInstance().genCita);
 
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		scrollPane.setBounds(35, 114, 473, 84);
 		panel_1.add(scrollPane);
 
@@ -321,7 +321,8 @@ public class CrearConsulta extends JDialog {
 					RegistrarPersona regiPersona = new RegistrarPersona(persona, 1);
 					regiPersona.setModal(true);
 					regiPersona.setVisible(true);
-					//persona = Clinica.getInstance().getPersonas().get(Clinica.getInstance().getPersonas().size()-1);
+					persona = Clinica.getInstance().getPersonas().get(Clinica.getInstance().getPersonas().size()-1);
+					cita.setPersona(persona);
 				}
 				
 		        if (!(persona instanceof Paciente)) {
@@ -333,13 +334,15 @@ public class CrearConsulta extends JDialog {
 				double precio = ((Number) precioSpinner.getValue()).doubleValue();
 				JTextArea tratamientoArea = (JTextArea) scrollPane.getViewport().getView();
 				String tratamientoText = tratamientoArea.getText();
-
+				
+				  System.out.print("Debug 2");
 				if(Clinica.getInstance().crearConsulta(codigoCita, precio, sintomas, tratamientoText)) {
 					JOptionPane.showMessageDialog(null, "Se ha realizado la consulta con éxito");
 					dispose();
 				} else {
 					JOptionPane.showMessageDialog(null, "Ha surgido un error al realizar la consulta");
 				}
+				
 
 			}
 		});
