@@ -86,7 +86,7 @@ public class ListarVacuna extends JDialog {
 				setLocation(x2-x1, y2-y1);
 			}
 		});
-		
+
 		barPanel.setBounds(0, 0, 989, 25);
 		fondo.add(barPanel);
 		barPanel.setLayout(null);
@@ -202,7 +202,33 @@ public class ListarVacuna extends JDialog {
 		JPanel modificarPanel = new JPanel();
 		modificarPanel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void mouseClicked(MouseEvent e) {
+				int selectedRow = table.getSelectedRow();
+				if (selectedRow != -1) {
+					String codigo = (String) table.getValueAt(selectedRow, 0);
+					Clinica cl = Clinica.getInstance();
+
+					Vacuna vacunaSeleccionada = null;
+					int i = 0;
+					boolean encontrada = false;
+					while (i < cl.getVacunas().size() && !encontrada) {
+						Vacuna vac = cl.getVacunas().get(i);
+						if (vac.getCodigo().equals(codigo)) {
+							vacunaSeleccionada = vac;
+							encontrada = true;
+						}
+						i++;
+					}
+
+					if (vacunaSeleccionada != null) {
+						RegistrarVacuna dialog = new RegistrarVacuna(vacunaSeleccionada, 1);
+						dialog.setModal(true);
+						dialog.setVisible(true);
+						actualizar();
+					} 
+				} else {
+					JOptionPane.showMessageDialog(null, "Seleccione una vacuna primero");
+				}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -211,9 +237,9 @@ public class ListarVacuna extends JDialog {
 			@Override
 			public void mouseExited(MouseEvent e) {
 				modificarPanel.setBackground(new Color(120, 134, 199));
-			}
-			
+			}		
 		});
+
 		modificarPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		modificarPanel.setBackground(new Color(120, 134, 199));
 		modificarPanel.setBounds(25, 129, 132, 35);
@@ -319,7 +345,7 @@ public class ListarVacuna extends JDialog {
 		fondo.add(volverPanel);
 
 		actualizar();
-		
+
 		JLabel label_3 = new JLabel("Volver");
 		label_3.setForeground(Color.BLACK);
 		label_3.setFont(new Font("Verdana", Font.PLAIN, 14));

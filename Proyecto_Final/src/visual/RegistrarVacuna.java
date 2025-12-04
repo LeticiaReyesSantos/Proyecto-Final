@@ -45,13 +45,15 @@ public class RegistrarVacuna extends JDialog {
 	private int x2;
 	private int y1;
 	private int y2;
+	private int mode;
+	private Vacuna vac;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistrarVacuna dialog = new RegistrarVacuna(null);
+			RegistrarVacuna dialog = new RegistrarVacuna(null, 0);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -62,7 +64,9 @@ public class RegistrarVacuna extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistrarVacuna(Vacuna vac) {
+	public RegistrarVacuna(Vacuna vac, int mode) {
+		this.mode = mode;
+		this.vac = vac;
 		setUndecorated(true);
 		setBounds(100, 100, 590, 540);
 		getContentPane().setLayout(new BorderLayout());
@@ -289,20 +293,21 @@ public class RegistrarVacuna extends JDialog {
 					descripcion = "No hay descripcion actualmente";
 
 				if(txtNombre.getText().trim().isEmpty() || enfermedad == null) {
-					JOptionPane.showMessageDialog(null, "Existen campos invalidos, asegure de llenar la información");
+					JOptionPane.showMessageDialog(null, "Aun hay campos por llenar");
 				}else {
-					if(vac == null) {
+					if(mode == 0) { 
 						Vacuna aux = new Vacuna(txtCodigo.getText(), txtNombre.getText(), enfermedad, descripcion);
 						aux.setControlada(enfermedad.isControlada());
 						Clinica.getInstance().addVacuna(aux);
 						JOptionPane.showMessageDialog(null, "Se ha registrado con exito la vacuna "+aux.getCodigo());
 						limpiar();
-					}else {
-						vac.setControlada(enfermedad.isControlada());
-						vac.setDescripcion(descripcion);
-						vac.setEnfermedad(enfermedad);
-						JOptionPane.showMessageDialog(null, "Se ha modificado con exito la enfermedad "+vac.getCodigo());
-						dispose();
+					} else if(mode == 1) { 
+						if(vac != null) {
+							if(Clinica.getInstance().modificarVacuna(vac.getCodigo(), descripcion)) {
+								JOptionPane.showMessageDialog(null, "Se ha modificado con exito la vacuna "+vac.getCodigo());
+								dispose();
+							}
+						}
 					}
 				}
 			}
@@ -350,17 +355,16 @@ public class RegistrarVacuna extends JDialog {
 		label_12.setFont(new Font("Verdana", Font.PLAIN, 14));
 		Cancelar.add(label_12);
 
-		if(vac == null) {
+		if(mode == 1 && vac != null) {
+			Titulo.setText("Modificar Vacuna");
+			cargar(vac);
+			ingresar.setText("Modificar");
+			txtNombre.setEnabled(false);
+		} else {
 			Titulo.setText("Registrar Vacuna");
 			txtCodigo.setText("V-"+Clinica.getInstance().genVacuna);
 			ingresar.setText("Registrar");
 		}
-		else{
-			Titulo.setText("Modificar Vacuna");
-			cargar(vac);
-			ingresar.setText("Modificar");
-		}
-		
 		setLocationRelativeTo(null);
 	}
 

@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import logico.Clinica;
+import logico.Enfermedad;
 import logico.Medico;
 import logico.Paciente;
 import logico.Persona;
@@ -21,6 +22,7 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -412,6 +414,54 @@ public class ListarPersonas extends JDialog {
 		lblDeshabilitar.setForeground(Color.WHITE);
 		lblDeshabilitar.setFont(new Font("Verdana", Font.PLAIN, 14));
 		deshabilitarPanel.add(lblDeshabilitar);
+		
+		JPanel verEnfPanel = new JPanel();
+		verEnfPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			    int selectedRow = table.getSelectedRow();
+			    if (selectedRow >= 0) {
+			        String id = table.getValueAt(selectedRow, 0).toString();
+			        Persona pers = Clinica.getInstance().personaById(id);
+			        
+			        if (pers instanceof Paciente) {
+			            Paciente pac = (Paciente) pers;
+			            ArrayList<Enfermedad> enf = pac.getEnfermedades();
+			            
+			            if (enf.isEmpty()) {
+			                JOptionPane.showMessageDialog(null, "El paciente no tiene enfermedades diagnosticadas", "Enfermedades del Paciente",  JOptionPane.INFORMATION_MESSAGE);
+			            } else {
+			                String mensaje = "Enfermedades de " + pac.getNombres() + " " + pac.getApellidos() + ":\n\n";
+			                for (Enfermedad enfermedad : enf) {
+			                    mensaje = mensaje + " " + enfermedad.getNombre() + " (" + enfermedad.getCodigo() + ")\n" + "  Tipo: " + enfermedad.getTipo() + "\n" + "  Estado: " + (enfermedad.isControlada() ? "Controlada" : "Sin controlar") + "\n\n";
+			                }
+			                JOptionPane.showMessageDialog(null, mensaje,"Enfermedades del Paciente - " + pac.getCodigo(), JOptionPane.INFORMATION_MESSAGE);
+			            }
+			        }
+			    } else {
+			        JOptionPane.showMessageDialog(null, "Seleccione un paciente primero","Advertencia", JOptionPane.WARNING_MESSAGE);
+			    }
+			}
+			@Override
+		    public void mouseEntered(MouseEvent e) {
+		        verEnfPanel.setBackground(new Color(45, 51, 107));
+		    }
+		    
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+		        verEnfPanel.setBackground(new Color(120, 134, 199));
+		    }
+				});
+		
+		verEnfPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		verEnfPanel.setBackground(new Color(120, 134, 199));
+		verEnfPanel.setBounds(25, 211, 132, 35);
+		menuPanel.add(verEnfPanel);
+		
+		JLabel lblVerEnfermedades = new JLabel("Ver Enfermedades");
+		lblVerEnfermedades.setForeground(Color.WHITE);
+		lblVerEnfermedades.setFont(new Font("Verdana", Font.PLAIN, 14));
+		verEnfPanel.add(lblVerEnfermedades);
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(181, 122, 796, 323);
@@ -582,8 +632,16 @@ public class ListarPersonas extends JDialog {
 
 		actualizarTableMedicosActivo();
 
-		if(user.getUser().getTipo().equals("Medico"))
+		if(user.getUser().getTipo().equals("Medico")) {
 			cargarListaPacientes();
+		    verEnfPanel.setVisible(true);
+		}
+			
+		
+		if(user.getUser().getTipo().equals("Administrador")) {
+			verEnfPanel.setVisible(false);
+			actualizarTableMedicosActivo();
+		}
 	}
 
 
@@ -689,8 +747,4 @@ public class ListarPersonas extends JDialog {
 	        }
 	    }
 	}
-
-
-
-
 }

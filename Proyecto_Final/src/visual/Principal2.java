@@ -747,7 +747,7 @@ public class Principal2 extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (configuracionPanel.isVisible()) return;
-				RegistrarVacuna regVacuna = new RegistrarVacuna(null);
+				RegistrarVacuna regVacuna = new RegistrarVacuna(null, 0);
 				regVacuna.setModal(true); 
 				regVacuna.setVisible(true);
 			}
