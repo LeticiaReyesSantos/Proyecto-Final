@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: clinica-poo-db
+    environment:
+      POSTGRES_DB: clinica
+      POSTGRES_USER: clinica_user
+      POSTGRES_PASSWORD: clinica_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - clinica_data:/var/lib/postgresql/data
+
+volumes:
+  clinica_data:

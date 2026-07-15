@@ -1,0 +1,30 @@
+# ==== IntelliJ ====
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/shelf/
+out/
+
+# ==== Compilados / build ====
+*.class
+target/
+build/
+
+# ==== Eclipse ====
+.settings/
+.classpath
+.project
+
+# ==== Datos====
+clinica.dat
+Backup/
+
+# ==== Sistema operativo ====
+.DS_Store
+Thumbs.db
+
+# ==== Logs ====
+*.log
+
+# ==== Docker ====
+.env
