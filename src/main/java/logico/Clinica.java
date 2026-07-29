@@ -1,5 +1,9 @@
 package logico;
 
+import dao.MedicoDAO;
+import dao.PersonaDAO;
+import dao.UsuarioDAO;
+
 import java.io.FileInputStream;
 
 import java.io.FileNotFoundException;
@@ -412,25 +416,25 @@ public class Clinica implements Serializable {
 	}
 
 	public boolean confirmarLogin(String usuario, String pass) {
-	    boolean valido = false;
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		String codigoPersona = usuarioDAO.autenticar(usuario, pass);
 
-	    for (Persona p : personas) {
+		if (codigoPersona == null) {
+			return false;
+		}
 
-	        User user = p.getUser();
-	        if (user == null) continue;
+		MedicoDAO medicoDAO = new MedicoDAO();
+		if (medicoDAO.esMedico(codigoPersona) && !medicoDAO.isActivo(codigoPersona)) {
+			return false;
+		}
 
-	        if (user.getUserName().equals(usuario) && user.getPass().equals(pass)) {
-	            if (p instanceof Medico) {
-	                if (!((Medico) p).isActivo()) {
-	                    return false;
-	                }
-	            }
-	            personaLogueada = p;
-	            valido = true;
-	        }
-	    }
+		PersonaDAO personaDAO = new PersonaDAO();
+		Persona p = personaDAO.buscarPorCodigo(codigoPersona);
 
-	    return valido;
+		if (p == null) return false;
+
+		personaLogueada = p;
+		return true;
 	}
 
 
