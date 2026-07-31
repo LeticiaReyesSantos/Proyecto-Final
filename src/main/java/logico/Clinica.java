@@ -1,8 +1,6 @@
 package logico;
 
-import dao.MedicoDAO;
-import dao.PersonaDAO;
-import dao.UsuarioDAO;
+import dao.*;
 
 import java.io.FileInputStream;
 
@@ -12,6 +10,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,12 +71,24 @@ public class Clinica implements Serializable {
 	}
 
 	public void addPersona(Persona aux) {
-		personas.add(aux);
-		if(aux instanceof Medico) {
+		PersonaDAO personaDAO = new PersonaDAO();
+		personaDAO.insertar(aux);
+
+		if (aux.getUser() != null) {
+			UsuarioDAO usuarioDAO = new UsuarioDAO();
+			usuarioDAO.insertar(aux.getUser().getUserName(), aux.getUser().getPass(),
+					aux.getUser().getTipo(), aux.getCodigo());
+		}
+
+		if (aux instanceof Medico) {
+			new MedicoDAO().insertar((Medico) aux);
 			genMedico++;
-		}else if (aux instanceof Paciente) {
+		} else if (aux instanceof Paciente) {
+			new PacienteDAO().insertar((Paciente) aux);
 			genPaciente++;
 		}
+
+		personas.add(aux);
 	}
 
 	public ArrayList<Diagnostico> getDiagnosticos() {
@@ -86,12 +100,8 @@ public class Clinica implements Serializable {
 		genDiagnostico++;
 	}
 
-	public ArrayList<Enfermedad> getEnfermedades() {
-		return enfermedades;
-	}
-
 	public void addEnfermedad(Enfermedad aux) {
-		enfermedades.add(aux);
+		new EnfermedadDAO().insertar(aux);
 		genEnfermedad++;
 	}
 
@@ -102,11 +112,11 @@ public class Clinica implements Serializable {
 
 
 	public ArrayList<Cita> getCitas() {
-		return citas;
+		return new CitaDAO().listarTodas();
 	}
 
 	public void addCita(Cita aux) {
-		citas.add(aux);
+		new CitaDAO().insertar(aux);
 		genCita++;
 	}
 
@@ -125,44 +135,56 @@ public class Clinica implements Serializable {
 
 
 	public Paciente buscarPacienteByCedula(String cedula) {
-		for (Persona p : personas) {
-			if(p instanceof Paciente) {
-				Paciente pac = (Paciente) p;
-				if(pac.getCedula().equalsIgnoreCase(cedula)) {
-					return pac;
-				}
+		String sql = "SELECT per.codigo, per.cedula, per.nombres, per.apellidos, per.fecha_nacimiento, " +
+				"per.genero, per.telefono, per.direccion, per.email, pac.tipo_sangre " +
+				"FROM PACIENTE pac JOIN PERSONA per ON pac.codigo = per.codigo " +
+				"WHERE per.cedula ILIKE ?";
+
+		try (Connection con = dao.ConnectionDB.obtenerConexion();
+			 PreparedStatement stmt = con.prepareStatement(sql)) {
+
+			stmt.setString(1, cedula);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				return new Paciente(
+						rs.getString("codigo"),
+						rs.getString("cedula"),
+						rs.getString("nombres"),
+						rs.getString("apellidos"),
+						rs.getDate("fecha_nacimiento").toLocalDate(),
+						rs.getString("genero").charAt(0),
+						rs.getString("telefono"),
+						rs.getString("direccion"),
+						rs.getString("email"),
+						rs.getString("tipo_sangre"),
+						null
+				);
 			}
+			return null;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 
 	public Persona personaById(String id) {
-		Persona aux = null;
-		boolean val = false;
-		int i = 0;
-
-		while(i<personas.size() && !val) {
-			if(personas.get(i).getCodigo().equals(id)) {
-				aux = personas.get(i);
-				val = true;
-			}
-
-			i++;
-		}
-		return aux;
+		return new PersonaDAO().buscarPorCodigo(id);
 	}
 
 	public boolean cedulaUnica(String cedula) {
-		boolean unico = true;
-		int i = 0;
-
-		while(i<personas.size() && unico) {
-			if(personas.get(i).getCedula().equals(cedula))
-				unico = false;
-
-			i++;
+		String sql = "SELECT COUNT(*) FROM PERSONA WHERE cedula = ?";
+		try (Connection con = dao.ConnectionDB.obtenerConexion();
+			 PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setString(1, cedula);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return rs.getInt(1) == 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
 		}
-		return unico;
 	}
 
 	//Buscar los medicos de la misma especialidad para buscar cual se adapta a la fecha de la persona
@@ -191,22 +213,18 @@ public class Clinica implements Serializable {
 		return meddisp;
 	}
 
-	public boolean hacerCita (String cedula, String nombre, String apellido, String telefono, Medico med, LocalDate fecha) {
+	public boolean hacerCita(String cedula, String nombre, String apellido, String telefono, Medico med, LocalDate fecha) {
 		boolean realizado = false;
-		Persona aux = buscarPacienteByCedula(cedula);
-		if(aux != null) {
-			Cita cita = new Cita("C-"+genCita, aux, med , fecha); 
+		Paciente aux = buscarPacienteByCedula(cedula);
+
+		if (aux != null) {
+			Cita cita = new Cita("C-" + genCita, aux, med, fecha);
 			addCita(cita);
-			med.addHistorial(cita);
-			aux.addHistorial(cita);
 			realizado = true;
-		}else if(aux == null){
-			aux = new Persona("", cedula, nombre, apellido, LocalDate.now(), ' ', telefono, "", "", null);
-			Cita cita = new Cita("C-"+genCita, aux, med , fecha);
-			addCita(cita); 
-			med.addHistorial(cita);
-			aux.addHistorial(cita);
-			realizado = true;
+		} else {
+			// Nota: en el original se creaba una Persona genérica si no existía.
+			// Con BD, para simplificar, solo permitimos agendar si el paciente ya existe.
+			realizado = false;
 		}
 		return realizado;
 	}
@@ -216,28 +234,14 @@ public class Clinica implements Serializable {
 	 * Retorna: Cita*/
 
 	public Cita buscarCitaByCode(String code) {
-		int index = 0;
-		Cita found = null;
-		while(found == null && index < citas.size()) {
-			if(citas.get(index).getCodigo().equalsIgnoreCase(code)) {
-				found = citas.get(index);
-			}
-			index++;
-		}
-		return found;
+		return new CitaDAO().buscarPorCodigo(code);
 	}
 
 	/*Funcion: buscarCitasByMedico
 	 * Parametro: Medico medico
 	 * Retorna: Citas*/
 	public ArrayList<Cita> buscarCitasByMedico(Medico medico) {
-		ArrayList<Cita> todasLasCitas = new ArrayList<>();
-		for (Cita cita : citas) {
-			if(cita.getMedico().equals(medico)) {
-				todasLasCitas.add(cita);
-			}
-		}
-		return todasLasCitas;
+		return new CitaDAO().listarPorMedico(medico.getCodigo());
 	}
 
 	/*Funcion: buscarCitasByPaciente
@@ -273,37 +277,26 @@ public class Clinica implements Serializable {
 	 * Parametro: codigo de enfermedad
 	 * Retorna: Boolean*/
 	public boolean marcarEnfermedadControlada(String code) {
-		for (Enfermedad enf : enfermedades) {
-			if(enf.getCodigo().equalsIgnoreCase(code)) {
-				enf.setControlada(true);
-				return true;
-			}
-		}
-		return false;
+		return new EnfermedadDAO().marcarControlada(code);
 	}
+
 
 	/*Funcion: getEnfermedadesControladas
 	 * Retorna: Lista de enfb controladas*/
-	public ArrayList<Enfermedad> getEnfermedadesControladas(){
-		ArrayList<Enfermedad> lista = new ArrayList<>();
-		for (Enfermedad enf : enfermedades) {
-			if(enf.isControlada()) {
-				lista.add(enf);
-			}
-		}
-		return lista;
+	public ArrayList<Enfermedad> getEnfermedadesControladas() {
+		return new EnfermedadDAO().listarControladas(true);
 	}
+
+
+	public ArrayList<Enfermedad> getEnfermedades() {
+		return new EnfermedadDAO().listarTodas();
+	}
+
 
 	/*Funcion: getEnfermedadesSinControlar
 	 * Retorna: Lista de enfb sin controlar*/
-	public ArrayList<Enfermedad> getEnfermedadesSinControlar(){
-		ArrayList<Enfermedad> lista = new ArrayList<>();
-		for (Enfermedad enf : enfermedades) {
-			if(!enf.isControlada()) {
-				lista.add(enf);
-			}
-		}
-		return lista;
+	public ArrayList<Enfermedad> getEnfermedadesSinControlar() {
+		return new EnfermedadDAO().listarControladas(false);
 	}
 
 	/*Funcion: dispCitaByFecha
@@ -345,9 +338,8 @@ public class Clinica implements Serializable {
 
 	public boolean cancelarCita(String code) {
 		Cita c = buscarCitaByCode(code);
-		if(c != null && !c.isEstado()) {
-			citas.remove(c);
-			return true;
+		if (c != null && !c.isEstado()) {
+			return new CitaDAO().eliminar(code);
 		}
 		return false;
 	}
@@ -483,13 +475,8 @@ public class Clinica implements Serializable {
 
 	public boolean reagendarCita(LocalDate fecha, String codigoCita) {
 		Cita aux = buscarCitaByCode(codigoCita);
-		if(aux != null) {
-			if(!(aux.isEstado()&& aux.getFecha() != fecha)){
-				if(fecha.isAfter(aux.getFecha())) {
-					aux.setFecha(fecha);
-					return true;
-				}
-			}
+		if (aux != null && fecha.isAfter(aux.getFecha())) {
+			return new CitaDAO().actualizarFecha(codigoCita, fecha);
 		}
 		return false;
 	}
@@ -610,24 +597,12 @@ public class Clinica implements Serializable {
 	}
 
 	public Enfermedad buscarEnfByCode(String code) {
-		for (Enfermedad enf : enfermedades) {
-			if(enf.getCodigo().equalsIgnoreCase(code)) {
-				return enf;
-			}
-		}
-		return null;
+		return new EnfermedadDAO().buscarPorCodigo(code);
 	}
 
 
 	public boolean modificarEnfermedad(String codigo, String nuevoTratamiento, boolean nuevoControl, ArrayList<String> nuevosSintomas) {
-		Enfermedad enf = buscarEnfByCode(codigo);
-		if(enf!= null) {
-			enf.setTratamiento(nuevoTratamiento);
-			enf.setControlada(nuevoControl);
-			enf.setSintomas(nuevosSintomas);
-			return true;
-		}
-		return false;
+		return new EnfermedadDAO().actualizar(codigo, nuevoTratamiento, nuevoControl, nuevosSintomas);
 	}
 
 	public Vacuna buscarVacByCode(String code) {
@@ -680,20 +655,10 @@ public class Clinica implements Serializable {
 	}
 
 	public boolean eliminarEnfermedad(String codeEnf) {
-		Enfermedad enf = buscarEnfByCode(codeEnf);
-		for (Persona pers : personas) {
-			if(pers instanceof Paciente) {
-				Paciente pac = (Paciente) pers;
-				for (Enfermedad enfermedad : pac.getEnfermedades()) {
-					if(enfermedad.getCodigo().equalsIgnoreCase(codeEnf)) {
-						return false;
-					}
-				}
-			}
-		}
-		enfermedades.remove(enf);
-		return true;
+		return new EnfermedadDAO().eliminar(codeEnf);
 	}
+
+
 
 
 	//IMPLEMENTACION DE HASHMAPS PARA REPORTES
