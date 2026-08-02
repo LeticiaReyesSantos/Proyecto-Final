@@ -16,10 +16,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Image;
 import java.awt.event.MouseMotionAdapter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 
 import javax.swing.ImageIcon;
@@ -87,28 +83,6 @@ public class Login extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				FileOutputStream clinicaEscritura;
-				ObjectOutputStream clinicaWritter;
-
-
-				if(!Clinica.load()) {
-					try {
-						clinicaEscritura = new  FileOutputStream("clinica.dat");
-						clinicaWritter = new ObjectOutputStream(clinicaEscritura);
-						User aux = new User("Administrador", "Admin", "Admin");
-						Persona person = new Persona("Ad-01","","Admin","",LocalDate.now(), 'N', "000000", "", "", aux);
-						Clinica.getInstance().addPersona(person);
-						clinicaWritter.writeObject(Clinica.getInstance());
-						clinicaEscritura.close();
-						clinicaWritter.close();
-
-					}catch (FileNotFoundException e1) {
-					}catch (IOException e1) {
-						// TODO: handle exception
-					}
-				}
-
-
 				try {
 					Login frame = new Login();
 					frame.setVisible(true);

@@ -1,19 +1,16 @@
 package visual;
 
-
 import java.awt.EventQueue;
-
-
-
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
+import dao.CitaDAO;
+import dao.MedicoDAO;
 import logico.Cita;
 import logico.Clinica;
 import logico.Consulta;
@@ -22,7 +19,6 @@ import logico.Medico;
 import logico.Paciente;
 import logico.Persona;
 import logico.Vacuna;
-import servidor.Servidor;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -39,27 +35,16 @@ import java.awt.event.MouseEvent;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.MouseMotionAdapter;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.net.Socket;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JSeparator;
-
-
 
 
 public class Principal2 extends JFrame {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -100,13 +85,9 @@ public class Principal2 extends JFrame {
 	private JLabel label_3;
 
 	private JPanel configuracionPanel;
-	private JPanel loadRespaldoPanel;
-	private JLabel lblCargarRespaldo;
 	private JPanel changeUserPanel;
 	private JPanel salirPanel;
-	private JPanel respaldoPanel;
 
-	private Servidor servidor = new Servidor(9000);
 	private JPanel consultaPanel;
 	private JLabel lblIniciarConsulta;
 	private JLabel Solicitar;
@@ -117,7 +98,6 @@ public class Principal2 extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -135,12 +115,10 @@ public class Principal2 extends JFrame {
 	 * Create the frame.
 	 */
 	public Principal2() {
-		Clinica.load();
-		servidor.iniciar();
 
 		setResizable(false);
 		if (isDesignTime()) {
-			dim = new Dimension(1400, 900); 
+			dim = new Dimension(1400, 900);
 		} else {
 			dim = getToolkit().getScreenSize();
 		}
@@ -178,10 +156,8 @@ public class Principal2 extends JFrame {
 		barPanel.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
-				//toma la posicion actual de la ventana
 				x2= arg0.getXOnScreen();
 				y2 = arg0.getYOnScreen();
-				//actualiza la posicion de la ventana
 				setLocation(x2-x1, y2-y1);
 			}
 		});
@@ -193,44 +169,14 @@ public class Principal2 extends JFrame {
 		fondo.add(configuracionPanel);
 		configuracionPanel.setLayout(null);
 
-		respaldoPanel = new JPanel();
-		respaldoPanel.setBounds(12, 85, 229, 28);
-		configuracionPanel.add(respaldoPanel);
-		respaldoPanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				Clinica.getInstance().save();
-				realizarRespaldo();
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				respaldoPanel.setBackground(new Color(0, 0, 128));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				respaldoPanel.setBackground(new Color(120, 134, 199));
-			}
-
-		});
-		respaldoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		respaldoPanel.setBackground(new Color(120, 134, 199));
-
-		JLabel lblRespaldo = new JLabel("Hacer Respaldo");
-		lblRespaldo.setForeground(Color.WHITE);
-		lblRespaldo.setFont(new Font("Verdana", Font.PLAIN, 14));
-		respaldoPanel.add(lblRespaldo);
-
 		changeUserPanel = new JPanel();
-		changeUserPanel.setBounds(12, 293, 229, 28);
+		changeUserPanel.setBounds(12, 85, 229, 28);
 		configuracionPanel.add(changeUserPanel);
 		changeUserPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Clinica.getInstance().save();
-				servidor.detener();
 				Login login = new Login();
 				login.setVisible(true);
-
 				dispose();
 			}
 			@Override
@@ -251,13 +197,11 @@ public class Principal2 extends JFrame {
 		changeUserPanel.add(lblCerrarSesion);
 
 		salirPanel = new JPanel();
-		salirPanel.setBounds(12, 334, 229, 28);
+		salirPanel.setBounds(12, 126, 229, 28);
 		configuracionPanel.add(salirPanel);
 		salirPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Clinica.getInstance().save();
-				servidor.detener();
 				dispose();
 			}
 			@Override
@@ -276,40 +220,6 @@ public class Principal2 extends JFrame {
 		lblSalir.setForeground(Color.WHITE);
 		lblSalir.setFont(new Font("Verdana", Font.PLAIN, 14));
 		salirPanel.add(lblSalir);
-
-		loadRespaldoPanel = new JPanel();
-		loadRespaldoPanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				File archivo = buscarRespaldo();
-				if(archivo!= null) {
-					int respuesta  = JOptionPane.showConfirmDialog(null, "Estas seguro de querer sobreescribir el archivo actual?");
-
-					if(respuesta == JOptionPane.YES_OPTION) {
-						Clinica.getInstance().save();
-						cargarRespaldo(archivo);
-						cargarCitasActuales();
-					}
-				}
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				loadRespaldoPanel.setBackground(new Color(0, 0, 128));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				loadRespaldoPanel.setBackground(new Color(120, 134, 199));
-			}
-		});
-		loadRespaldoPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		loadRespaldoPanel.setBackground(new Color(120, 134, 199));
-		loadRespaldoPanel.setBounds(12, 126, 229, 28);
-		configuracionPanel.add(loadRespaldoPanel);
-
-		lblCargarRespaldo = new JLabel("Cargar Respaldo");
-		lblCargarRespaldo.setForeground(Color.WHITE);
-		lblCargarRespaldo.setFont(new Font("Verdana", Font.PLAIN, 14));
-		loadRespaldoPanel.add(lblCargarRespaldo);
 
 		JLabel lblNewLabel = new JLabel("Opciones");
 		lblNewLabel.setFont(new Font("Verdana", Font.PLAIN, 20));
@@ -331,8 +241,6 @@ public class Principal2 extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				dispose();
-				Clinica.getInstance().save();
-				servidor.detener();
 			}
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -588,8 +496,8 @@ public class Principal2 extends JFrame {
 		listEnfermedadPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ListarEnfermedades listarEnfermedades = new ListarEnfermedades(0, new ArrayList<Enfermedad>()); //0 como single selection
-				listarEnfermedades.setModal(true); 
+				ListarEnfermedades listarEnfermedades = new ListarEnfermedades(0, new ArrayList<Enfermedad>());
+				listarEnfermedades.setModal(true);
 				listarEnfermedades.setVisible(true);
 			}
 			@Override
@@ -662,7 +570,6 @@ public class Principal2 extends JFrame {
 				RegistrarCita regCita = new RegistrarCita();
 				regCita.setModal(true);
 				regCita.setVisible(true);
-				Clinica.getInstance().save();
 				cargarCitasActuales();
 			}
 			@Override
@@ -752,7 +659,7 @@ public class Principal2 extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (configuracionPanel.isVisible()) return;
 				RegistrarVacuna regVacuna = new RegistrarVacuna(null,0);
-				regVacuna.setModal(true); 
+				regVacuna.setModal(true);
 				regVacuna.setVisible(true);
 			}
 			@Override
@@ -782,7 +689,7 @@ public class Principal2 extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (configuracionPanel.isVisible()) return;
 				ListarVacuna listVac = new ListarVacuna();
-				listVac.setModal(true); 
+				listVac.setModal(true);
 				listVac.setVisible(true);
 			}
 
@@ -819,7 +726,7 @@ public class Principal2 extends JFrame {
 				new String[] {
 						"Codigo", "Persona", "Fecha", "Estado"
 				}
-				) {
+		) {
 			boolean[] columnEditables = new boolean[] {
 					false, false, false, false
 			};
@@ -845,9 +752,9 @@ public class Principal2 extends JFrame {
 				if(!listVacunasPanel.isVisible()) {
 					if(usuario.getUser().getTipo().equals("Administrador"))
 						registrarVacunaPanel.setVisible(true);
-					else 
+					else
 						solicitarVacuna.setVisible(true);
-					
+
 					listVacunasPanel.setVisible(true);
 				}else {
 					registrarVacunaPanel.setVisible(false);
@@ -901,7 +808,7 @@ public class Principal2 extends JFrame {
 							RegistrarPersona regiPersona = new RegistrarPersona(paciente, 1);
 							regiPersona.setModal(true);
 							regiPersona.setVisible(true);
-							paciente = Clinica.getInstance().getPersonas().get(Clinica.getInstance().getPersonas().size()-1);
+							paciente = Clinica.getInstance().personaById(paciente.getCodigo());
 							cita.setPersona(paciente);
 						}
 					}
@@ -931,7 +838,7 @@ public class Principal2 extends JFrame {
 		lblIniciarConsulta.setForeground(Color.WHITE);
 		lblIniciarConsulta.setFont(new Font("Verdana", Font.PLAIN, 33));
 		consultaPanel.add(lblIniciarConsulta);
-		
+
 		solicitarVacuna = new JPanel();
 		solicitarVacuna.addMouseListener(new MouseAdapter() {
 			@Override
@@ -942,12 +849,13 @@ public class Principal2 extends JFrame {
 					list.setVisible(true);
 					Vacuna vac = list.getSelectedVacuna();
 					medico = (Medico) Clinica.getInstance().personaById(usuario.getCodigo());
-					
+
 					if(vac != null) {
-						if(medico.getVacunasMedicos().contains(vac)) {
-							JOptionPane.showInternalMessageDialog(null, "Ya posee la vacuna habilitada");
+						MedicoDAO medicoDAO = new MedicoDAO();
+						if(medicoDAO.tieneVacuna(medico.getCodigo(), vac.getCodigo())) {
+							JOptionPane.showMessageDialog(null, "Ya posee la vacuna habilitada");
 						}else {
-							medico.addVacuna(vac);
+							medicoDAO.asignarVacuna(medico.getCodigo(), vac.getCodigo());
 							JOptionPane.showMessageDialog(null, "Se ha habilitado la vacuna");
 						}
 					}
@@ -968,7 +876,7 @@ public class Principal2 extends JFrame {
 		solicitarVacuna.setBackground(new Color(169, 181, 223));
 		solicitarVacuna.setBounds(1132, 466, 386, 67);
 		fondo.add(solicitarVacuna);
-		
+
 		Solicitar = new JLabel("Solicitar");
 		Solicitar.setForeground(Color.WHITE);
 		solicitarVacuna.setVisible(false);
@@ -978,7 +886,6 @@ public class Principal2 extends JFrame {
 
 		if(usuario.getUser().getTipo().equals("Medico"))
 			cargarMedico();
-
 
 	}
 
@@ -1006,104 +913,14 @@ public class Principal2 extends JFrame {
 
 	private void cargarCitasActuales() {
 		model.setRowCount(0);
-		ArrayList<Cita> citas = usuario.getHistorial();
+		ArrayList<Cita> citas = new CitaDAO().listarPorPersonaOMedico(usuario.getCodigo(), LocalDate.now());
 
-		Persona usuarioActualizado = Clinica.getInstance().personaById(usuario.getCodigo());
-
-		if (usuarioActualizado != null) {
-			citas = usuarioActualizado.getHistorial();
-
-			for(Cita c: citas) {
-				if(c.getFecha().equals(LocalDate.now()) && !(c instanceof Consulta)) {
-					Object[] fila = {c.getCodigo(), c.getPersona().getNombres()+" "+c.getPersona().getApellidos(), 
-							c.getFecha(), !c.isEstado() ? "Pendiente" : "Completada"};
-					model.addRow(fila);
-				}
-			}
+		for (Cita c : citas) {
+			Object[] fila = {c.getCodigo(), c.getPersona().getNombres()+" "+c.getPersona().getApellidos(),
+					c.getFecha(), !c.isEstado() ? "Pendiente" : "Completada"};
+			model.addRow(fila);
 		}
 	}
-
-	private void realizarRespaldo() {
-
-		File archivo = new File("clinica.dat");
-		try (Socket sc = new Socket("127.0.0.1", 9000)){
-
-
-
-			DataOutputStream ou = new DataOutputStream(sc.getOutputStream());
-			DataInputStream in = new DataInputStream(sc.getInputStream());
-			FileInputStream f = new FileInputStream(archivo);
-
-			ou.writeUTF(archivo.getName());
-			int unByte;
-
-			while((unByte = f.read())!= -1) {
-				ou.write(unByte);
-			}
-
-			ou.flush();
-			sc.shutdownOutput();
-			String respuesta = in.readUTF();
-			JOptionPane.showMessageDialog(this, "Respaldo completado: " + respuesta);
-			f.close();
-			in.close();
-			ou.close();
-
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(this, "Error al enviar respaldo: " + e.getMessage());
-			e.printStackTrace();
-		}
-
-	}
-
-
-	private File buscarRespaldo() {
-		File archivo = new File("Backup");
-		File archivoSeleccionado = null;
-		if(!archivo.exists() || archivo.list().length <=0) {
-			JOptionPane.showMessageDialog(null, "No existen respaldos ahora mismo");
-			return archivoSeleccionado;
-		}
-
-		JFileChooser chooser = new JFileChooser();
-		chooser.setDialogTitle("Selecciona un archivo");
-		chooser.setCurrentDirectory(archivo);
-		FileNameExtensionFilter filtro = new FileNameExtensionFilter("Respaldos .dat", "dat");
-		chooser.setFileFilter(filtro);
-		int resultado = chooser.showOpenDialog(null);
-
-
-		if (resultado == JFileChooser.APPROVE_OPTION) {
-			archivoSeleccionado = chooser.getSelectedFile();
-		}
-
-		return archivoSeleccionado;
-	}
-
-	private void cargarRespaldo(File archivo) {
-
-		if(archivo != null) {
-			ObjectInputStream objeto;
-			FileInputStream file;
-
-			try {
-				file = new FileInputStream(archivo);
-				objeto = new ObjectInputStream(file);
-				Clinica aux = (Clinica)objeto.readObject();
-				Clinica.setClinica(aux);
-				objeto.close();
-				file.close();
-				JOptionPane.showMessageDialog(null, "Se ha cargado con exito");
-			}catch (FileNotFoundException e) {
-				// TODO: handle exception
-			}catch (IOException e) {
-
-			}catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 
 	private void cerrarPaneles() {
 		regMedicoPanel.setVisible(false);

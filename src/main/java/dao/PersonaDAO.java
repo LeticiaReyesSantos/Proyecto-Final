@@ -1,5 +1,7 @@
 package dao;
 
+import logico.Medico;
+import logico.Paciente;
 import logico.Persona;
 import logico.User;
 
@@ -97,5 +99,80 @@ public class PersonaDAO {
         }
 
         return p;
+    }
+
+    public Persona buscarPersonaCompleta(String codigo) {
+        String sql = "SELECT per.*, pac.tipo_sangre, med.especialidad, med.max_citas, med.activo " +
+                "FROM PERSONA per " +
+                "LEFT JOIN PACIENTE pac ON per.codigo = pac.codigo " +
+                "LEFT JOIN MEDICO med ON per.codigo = med.codigo " +
+                "WHERE per.codigo = ?";
+
+        try (Connection con = ConnectionDB.obtenerConexion();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, codigo);
+            ResultSet rs = stmt.executeQuery();
+
+            if (!rs.next()) return null;
+
+            User user = cargarUsuario(codigo);
+
+            if (rs.getString("tipo_sangre") != null || existeEnTabla(codigo, "PACIENTE")) {
+                return new Paciente(
+                        rs.getString("codigo"), rs.getString("cedula"), rs.getString("nombres"),
+                        rs.getString("apellidos"), rs.getDate("fecha_nacimiento").toLocalDate(),
+                        rs.getString("genero").charAt(0), rs.getString("telefono"),
+                        rs.getString("direccion"), rs.getString("email"),
+                        rs.getString("tipo_sangre"), user
+                );
+            }
+
+            if (existeEnTabla(codigo, "MEDICO")) {
+                Medico m = new Medico(
+                        rs.getString("codigo"), rs.getString("cedula"), rs.getString("nombres"),
+                        rs.getString("apellidos"), rs.getDate("fecha_nacimiento").toLocalDate(),
+                        rs.getString("genero").charAt(0), rs.getString("telefono"),
+                        rs.getString("direccion"), rs.getString("email"),
+                        rs.getString("especialidad"), rs.getInt("max_citas"), user
+                );
+                m.setActivo(rs.getBoolean("activo"));
+                return m;
+            }
+
+            // Ni Paciente ni Medico (ej. Administrador)
+            return new Persona(
+                    rs.getString("codigo"), rs.getString("cedula"), rs.getString("nombres"),
+                    rs.getString("apellidos"), rs.getDate("fecha_nacimiento").toLocalDate(),
+                    rs.getString("genero").charAt(0), rs.getString("telefono"),
+                    rs.getString("direccion"), rs.getString("email"), user
+            );
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private boolean existeEnTabla(String codigo, String tabla) throws SQLException {
+        String sql = "SELECT 1 FROM " + tabla + " WHERE codigo = ?";
+        try (Connection con = ConnectionDB.obtenerConexion();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, codigo);
+            return stmt.executeQuery().next();
+        }
+    }
+
+    private User cargarUsuario(String codigoPersona) throws SQLException {
+        String sql = "SELECT nombre_usuario, contrasena, tipo FROM USUARIO WHERE codigo_persona = ?";
+        try (Connection con = ConnectionDB.obtenerConexion();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, codigoPersona);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User(rs.getString("tipo"), rs.getString("nombre_usuario"), rs.getString("contrasena"));
+            }
+            return null;
+        }
     }
 }

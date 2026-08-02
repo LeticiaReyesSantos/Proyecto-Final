@@ -53,6 +53,52 @@ public class Clinica implements Serializable {
 		enfermedades = new ArrayList<>();
 		vacunas = new ArrayList<>();
 		citas = new ArrayList<>();
+
+		genMedico = obtenerSiguienteCodigo("MEDICO");
+		genPaciente = obtenerSiguienteCodigo("PACIENTE");
+		genDiagnostico = obtenerSiguienteCodigo("DIAGNOSTICO");
+		genEnfermedad = obtenerSiguienteCodigo("ENFERMEDAD");
+		genVacuna = obtenerSiguienteCodigo("VACUNA");
+		genCita = obtenerSiguienteCodigo("CITA");
+		genAdmin = obtenerSiguienteCodigoAdmin();
+	}
+
+	private int obtenerSiguienteCodigo(String tabla) {
+		String sql = "SELECT codigo FROM " + tabla;
+		int max = 0;
+		try (Connection con = dao.ConnectionDB.obtenerConexion();
+			 PreparedStatement stmt = con.prepareStatement(sql);
+			 ResultSet rs = stmt.executeQuery()) {
+			while (rs.next()) {
+				String numStr = rs.getString("codigo").replaceAll("[^0-9]", "");
+				if (!numStr.isEmpty()) {
+					int num = Integer.parseInt(numStr);
+					if (num > max) max = num;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return max + 1;
+	}
+
+	private int obtenerSiguienteCodigoAdmin() {
+		String sql = "SELECT per.codigo FROM PERSONA per JOIN USUARIO u ON per.codigo = u.codigo_persona WHERE u.tipo = 'Administrador'";
+		int max = 0;
+		try (Connection con = dao.ConnectionDB.obtenerConexion();
+			 PreparedStatement stmt = con.prepareStatement(sql);
+			 ResultSet rs = stmt.executeQuery()) {
+			while (rs.next()) {
+				String numStr = rs.getString("codigo").replaceAll("[^0-9]", "");
+				if (!numStr.isEmpty()) {
+					int num = Integer.parseInt(numStr);
+					if (num > max) max = num;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return max + 1;
 	}
 
 	public static void setClinica(Clinica aux) {
@@ -67,8 +113,22 @@ public class Clinica implements Serializable {
 	}
 
 	public ArrayList<Persona> getPersonas() {
-		return personas;
+		ArrayList<Persona> lista = new ArrayList<>();
+		String sql = "SELECT codigo FROM PERSONA";
+		try (Connection con = dao.ConnectionDB.obtenerConexion();
+			 PreparedStatement stmt = con.prepareStatement(sql);
+			 ResultSet rs = stmt.executeQuery()) {
+			PersonaDAO dao = new PersonaDAO();
+			while (rs.next()) {
+				lista.add(dao.buscarPersonaCompleta(rs.getString("codigo")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lista;
 	}
+
+
 
 	public void addPersona(Persona aux) {
 		PersonaDAO personaDAO = new PersonaDAO();
@@ -91,6 +151,7 @@ public class Clinica implements Serializable {
 		personas.add(aux);
 	}
 
+
 	public ArrayList<Diagnostico> getDiagnosticos() {
 		return diagnosticos;
 	}
@@ -105,12 +166,6 @@ public class Clinica implements Serializable {
 		genEnfermedad++;
 	}
 
-
-	public ArrayList<Vacuna> getVacunas() {
-		return vacunas;
-	}
-
-
 	public ArrayList<Cita> getCitas() {
 		return new CitaDAO().listarTodas();
 	}
@@ -124,15 +179,9 @@ public class Clinica implements Serializable {
 		this.citas = citas;
 	}
 
-	public void addVacuna(Vacuna aux) {
-		vacunas.add(aux);
-		genVacuna++;
-	}
-
 	public void addAdmin() {
 		genAdmin++;
 	}
-
 
 	public Paciente buscarPacienteByCedula(String cedula) {
 		String sql = "SELECT per.codigo, per.cedula, per.nombres, per.apellidos, per.fecha_nacimiento, " +
@@ -188,25 +237,29 @@ public class Clinica implements Serializable {
 	}
 
 	//Buscar los medicos de la misma especialidad para buscar cual se adapta a la fecha de la persona
-	public ArrayList<Medico> medicosByEspecialidad(String especialidad){
-		ArrayList<Medico> MedicosEspecialidad = new ArrayList<>();
-		for (Persona p: personas) {
-			if(p instanceof Medico) {
-				Medico med = (Medico) p;
-				if(med.getEspecialidad().equalsIgnoreCase(especialidad)) {
-					MedicosEspecialidad.add(med);
-				}
+	public ArrayList<Medico> medicosByEspecialidad(String especialidad) {
+		ArrayList<Medico> lista = new ArrayList<>();
+		String sql = "SELECT codigo FROM MEDICO WHERE especialidad ILIKE ? AND activo = true";
+		try (Connection con = dao.ConnectionDB.obtenerConexion();
+			 PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setString(1, especialidad);
+			ResultSet rs = stmt.executeQuery();
+			PersonaDAO dao = new PersonaDAO();
+			while (rs.next()) {
+				lista.add((Medico) dao.buscarPersonaCompleta(rs.getString("codigo")));
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		return MedicosEspecialidad;
+		return lista;
 	}
 
 	//Busca los medicos disponibles para la fecha solicitada
-	public ArrayList<Medico> disponible(String especialidad ,LocalDate fecha) {
+	public ArrayList<Medico> disponible(String especialidad, LocalDate fecha) {
 		ArrayList<Medico> meddisp = new ArrayList<>();
-		ArrayList<Medico> MedEsp = medicosByEspecialidad(especialidad);
-		for (Medico med : MedEsp) {
-			if(med.isPosible(fecha)) {
+		ArrayList<Medico> medEsp = medicosByEspecialidad(especialidad);
+		for (Medico med : medEsp) {
+			if (med.isPosible(fecha)) {
 				meddisp.add(med);
 			}
 		}
@@ -217,15 +270,22 @@ public class Clinica implements Serializable {
 		boolean realizado = false;
 		Paciente aux = buscarPacienteByCedula(cedula);
 
-		if (aux != null) {
-			Cita cita = new Cita("C-" + genCita, aux, med, fecha);
+		if (aux == null) {
+			String codigoGenerico = "P-" + System.currentTimeMillis();
+			Persona nuevaPersona = new Persona(codigoGenerico, cedula, nombre, apellido,
+					LocalDate.now(), ' ', telefono, "", "", null);
+
+			new PersonaDAO().insertar(nuevaPersona);
+
+			Cita cita = new Cita("C-" + genCita, nuevaPersona, med, fecha);
 			addCita(cita);
 			realizado = true;
 		} else {
-			// Nota: en el original se creaba una Persona genérica si no existía.
-			// Con BD, para simplificar, solo permitimos agendar si el paciente ya existe.
-			realizado = false;
+			Cita cita = new Cita("C-" + genCita, aux, med, fecha);
+			addCita(cita);
+			realizado = true;
 		}
+
 		return realizado;
 	}
 
@@ -313,25 +373,6 @@ public class Clinica implements Serializable {
 		return disponibles;
 	}
 
-	/*Funcion: pacientesByMedico
-	 * Parametros: Medico med
-	 * Retorna: Pacientes de ese medico*/
-	public ArrayList<Paciente> pacientesByMedico(Medico med){
-		ArrayList<Paciente> lista = new ArrayList<>();
-		for (Cita c : citas) {
-			if( c instanceof Consulta) {
-				Consulta cons = (Consulta) c;
-				if(cons.getMedico().equals(med)) {
-					Paciente p = (Paciente) cons.getPersona();
-					if(!lista.contains(p)) {
-						lista.add(p);
-					}
-				}
-			}
-		}
-		return lista;
-	}
-
 	/*Funcion: cancelarCita
 	 * Parametros:codigo
 	 * Retorna: boolean -> true cancelada, false-> no se pudo cancelar*/
@@ -356,49 +397,18 @@ public class Clinica implements Serializable {
 		return lista;
 	}
 
-	/*Funcion: historialConsultasByPaciente
-	 * Parametros: Paciente
-	 * Retorna: lista*/
-	public ArrayList<Consulta> historialConsultaByPaciente(Paciente pac){
-		ArrayList<Consulta> historial = new ArrayList<>(); //el historial se ira desarrollando a medida que se creen las consultas
-		for (Cita cita : pac.getHistorial()) {
-			if(cita instanceof Consulta) {
-				Consulta cons = (Consulta) cita;
-				historial.add(cons);
-			}
-		}
-		return historial;
+
+	public ArrayList<Consulta> historialConsultaByPaciente(Paciente pac) {
+		return new ConsultaDAO().listarPorPaciente(pac.getCodigo());
 	}
 
-	//REVISAR
-	/*Funcion: historialPacienteByMed
-	 * Parametro: Paciente, Medico
-	 * Retorna: lista*/
-	public ArrayList<Consulta> historialPacienteByMed(Paciente p, Medico med){
-		ArrayList<Consulta> lista = new ArrayList<>();
-		for (Cita cita : p.getHistorial()) {
-			if(cita instanceof Consulta) {
-				Consulta cons = (Consulta) cita;
-				if(cons.getMedico().equals(med)) {
-					lista.add(cons);
-				}
-			}
-		}
-		return lista;
+	public ArrayList<Consulta> historialPacienteByMed(Paciente p, Medico med) {
+		return new ConsultaDAO().listarPorPacienteYMedico(p.getCodigo(), med.getCodigo());
 	}
 
-	/*Funcion: getVacunasControladas
-	 * Retorna: Lista*/
-	public ArrayList<Vacuna> getVacunasControladas(){
-		ArrayList<Vacuna> controladas = new ArrayList<>();
-		for (Vacuna vacuna : vacunas) {
-			if(vacuna.isControlada()) {
-				controladas.add(vacuna);
-			}
-		}
-		return controladas;
+	public ArrayList<Paciente> pacientesByMedico(Medico med) {
+		return new ConsultaDAO().listarPacientesPorMedico(med.getCodigo());
 	}
-
 	public static Persona getLoginUser() {
 		return personaLogueada;
 	}
@@ -481,88 +491,47 @@ public class Clinica implements Serializable {
 		return false;
 	}
 
-	public boolean crearConsulta(String codigoCita, Double precio, ArrayList<String> sintomas, String tratamiento, ArrayList<Enfermedad> enfermedades, Vacuna vacAplicada) {
-	    boolean creada = false;
-	    Cita aux = buscarCitaByCode(codigoCita);
+	public boolean crearConsulta(String codigoCita, Double precio, ArrayList<String> sintomas,
+								 String tratamiento, ArrayList<Enfermedad> enfermedades, Vacuna vacAplicada) {
 
-	    if (aux != null && !aux.isEstado()) {
-	    	Paciente pac = (Paciente) aux.getPersona();
-	    	if(enfermedades == null) {
-	        	enfermedades = new ArrayList<>();
-	        }
+		Cita aux = buscarCitaByCode(codigoCita);
+		if (aux == null || aux.isEstado()) return false;
 
-	        Diagnostico diag = new Diagnostico("D-" + genDiagnostico, aux.getFecha(), sintomas, tratamiento);
-	        diag.setEnfDiagnosticadas(enfermedades);
-	        
-	        Consulta nuevo = new Consulta("CN-" + genCita,aux.getPersona(), aux.getMedico(),aux.getFecha(),precio,pac,false,diag);
-	        int index = citas.indexOf(aux);
-	        if (index != -1) {
-	            citas.set(index, nuevo);
-	        }
-	        
-	        ArrayList<Enfermedad> enfPaciente = pac.getEnfermedades();
-	        for (Enfermedad agregada : enfermedades) {
-				boolean existe = false;
-				 int i = 0;
-		            while (i < enfPaciente.size() && !existe) {
-		                if (enfPaciente.get(i).getCodigo().equals(agregada.getCodigo())) {
-		                    existe = true;
-		                }
-		                i++;
-		            }
-		            if(!existe) {
-		            	enfPaciente.add(agregada);
-		            }
-			}
-	        
-	        if (vacAplicada != null) {
-	            ArrayList<Vacuna> vacPaciente = pac.getVacunas();
-	            boolean tiene = false;
-	            int j = 0;
-	            while (j < vacPaciente.size() && !tiene) {
-	                if (vacPaciente.get(j).getCodigo().equals(vacAplicada.getCodigo())) {
-	                    tiene = true;
-	                }
-	                j++;
-	            }
-	            if (!tiene) {
-	                vacPaciente.add(vacAplicada);
-	            }
-	        }
-	        
-	        int indexCita = citas.indexOf(aux);
-	        if (indexCita != -1) {
-	            citas.set(indexCita, nuevo);
-	        }
-	        
-	        int indexMed = aux.getMedico().getHistorial().indexOf(aux);
-	        if (indexMed != -1) {
-	            aux.getMedico().getHistorial().set(indexMed, nuevo);
-	        }
-	        int indexPac = pac.getHistorial().indexOf(aux);
-	        if (indexPac != -1) {
-	            pac.getHistorial().set(indexPac, nuevo);
-	        }
-	        addDiagnostico(diag);
-	        nuevo.getMedico().addPaciente(pac);
-	        nuevo.setEstado(true);
+		Paciente pac = (Paciente) aux.getPersona();
+		if (enfermedades == null) enfermedades = new ArrayList<>();
 
-	        creada = true;
-	    }
+		String codigoDiagnostico = "D-" + genDiagnostico;
 
-	    return creada;
+		boolean creada = new ConsultaDAO().crearConsulta(
+				codigoCita, precio, sintomas, tratamiento, enfermedades, vacAplicada,
+				pac.getCodigo(), codigoDiagnostico
+		);
+
+		if (creada) {
+			genDiagnostico++;
+		}
+
+		return creada;
 	}
+
+
 
 	public boolean modificarPersona(String id, String nuevaDireccion, String nuevoTelefono, String nuevoEmail) {
-		Persona pers = personaById(id);
-		if(pers != null) {
-			pers.setTelefono(nuevoTelefono);
-			pers.setDireccion(nuevaDireccion);
-			pers.setEmail(nuevoEmail);
-			return true;
+		String sql = "UPDATE PERSONA SET telefono = ?, direccion = ?, email = ? WHERE codigo = ?";
+		try (Connection con = dao.ConnectionDB.obtenerConexion();
+			 PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setString(1, nuevoTelefono);
+			stmt.setString(2, nuevaDireccion);
+			stmt.setString(3, nuevoEmail);
+			stmt.setString(4, id);
+			return stmt.executeUpdate() > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
+
+
 
 	public boolean visibilidadConsulta(Consulta cons) {
 		boolean esVisible = false;
@@ -605,53 +574,16 @@ public class Clinica implements Serializable {
 		return new EnfermedadDAO().actualizar(codigo, nuevoTratamiento, nuevoControl, nuevosSintomas);
 	}
 
-	public Vacuna buscarVacByCode(String code) {
-		for (Vacuna vac : vacunas) {
-			if(vac.getCodigo().equalsIgnoreCase(code)) {
-				return vac;
-			}
-		}
-		return null;
-	}
-
-	public boolean modificarVacuna(String codigo, String nuevaDescripcion) {
-		Vacuna vac = buscarVacByCode(codigo);
-		if(vac!= null) {
-			vac.setDescripcion(nuevaDescripcion);
-			return true;
-		}
-		return false;
-	}
 
 	public boolean desactivarMedico(String codigoMedico) {
-		Persona pers = personaById(codigoMedico);
-		if(pers instanceof Medico) {
-			Medico med = (Medico) pers;
-			for (Cita cita : med.historial) {
-				if(!cita.isEstado() && !cita.getFecha().isBefore(LocalDate.now())) {
-					return false;
-				}
-			}
-			med.setActivo(false);
-			return true;
-		}
-		return false;
-	}
-
-	public boolean eliminarVacuna(String codigoVac) {
-		Vacuna vac = buscarVacByCode(codigoVac);
-		for (Persona pers : personas) {
-			if(pers instanceof Paciente) {
-				Paciente pac = (Paciente) pers;
-				for (Vacuna vacunasPac : pac.getVacunas()) {
-					if(vacunasPac.getCodigo().equalsIgnoreCase(codigoVac)) {
-						return false;
-					}
-				}
+		CitaDAO citaDAO = new CitaDAO();
+		ArrayList<Cita> citas = citaDAO.listarPorMedico(codigoMedico);
+		for (Cita c : citas) {
+			if (!c.isEstado() && !c.getFecha().isBefore(LocalDate.now())) {
+				return false;
 			}
 		}
-		vacunas.remove(vac);
-		return true;
+		return new MedicoDAO().desactivar(codigoMedico);
 	}
 
 	public boolean eliminarEnfermedad(String codeEnf) {
@@ -743,5 +675,39 @@ public class Clinica implements Serializable {
 						LinkedHashMap::new
 						));
 	}
+
+
+	public ArrayList<Vacuna> getVacunas() {
+		return new VacunaDAO().listarTodas();
+	}
+
+	public void addVacuna(Vacuna aux) {
+		new VacunaDAO().insertar(aux);
+		genVacuna++;
+	}
+
+	public Vacuna buscarVacByCode(String code) {
+		return new VacunaDAO().buscarPorCodigo(code);
+	}
+
+	public boolean modificarVacuna(String codigo, String nuevaDescripcion) {
+		return new VacunaDAO().actualizarDescripcion(codigo, nuevaDescripcion);
+	}
+
+	public boolean eliminarVacuna(String codigoVac) {
+		return new VacunaDAO().eliminar(codigoVac);
+	}
+
+	public ArrayList<Vacuna> getVacunasControladas() {
+		ArrayList<Vacuna> controladas = new ArrayList<>();
+		for (Vacuna vacuna : getVacunas()) {
+			if (vacuna.isControlada()) {
+				controladas.add(vacuna);
+			}
+		}
+		return controladas;
+	}
+
+
 
 }

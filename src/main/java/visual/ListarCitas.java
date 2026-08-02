@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Font;
+import java.util.ArrayList;
 import javax.swing.JSeparator;
 import javax.swing.border.BevelBorder;
 import javax.swing.JScrollPane;
@@ -369,16 +370,12 @@ public class ListarCitas extends JDialog {
 	}
 
 	private void actualizarMedico() {
-		Clinica cl = Clinica.getInstance();
 		model.setRowCount(0);
-		if(usuario instanceof Medico) {
-
-			for (Cita cita : usuario.getHistorial()) {
-				if(!(cita instanceof Consulta) && !cita.isEstado() && (cita.getFecha().isAfter(LocalDate.now()) || 
-						cita.getFecha().equals(LocalDate.now()))) {
-					Object[] fila = {cita.getCodigo(), cita.getPersona().getNombres(),cita.getMedico().getNombres(), cita.getFecha()};
-					model.addRow(fila);
-				}
+		if (usuario instanceof Medico) {
+			ArrayList<Cita> citas = new dao.CitaDAO().listarPendientesPorMedico(usuario.getCodigo());
+			for (Cita cita : citas) {
+				Object[] fila = {cita.getCodigo(), cita.getPersona().getNombres(), cita.getMedico().getNombres(), cita.getFecha()};
+				model.addRow(fila);
 			}
 		}
 	}

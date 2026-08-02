@@ -84,13 +84,7 @@ public class Medico extends Persona {
 	}
 
 	public int cantCitasDia(LocalDate fecha) {
-		int cant = 0;
-		for (Cita cita : historial) {
-			if(!cita.isEstado() && cita.fecha.equals(fecha)) {
-				cant++;
-			}
-		}
-		return cant;
+		return new dao.CitaDAO().cantCitasDia(this.getCodigo(), fecha);
 	}
 
 	public ArrayList<Vacuna> getVacunasMedicos() {

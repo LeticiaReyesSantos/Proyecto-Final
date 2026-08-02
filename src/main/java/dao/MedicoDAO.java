@@ -71,4 +71,32 @@ public class MedicoDAO {
             return false;
         }
     }
+
+
+    public boolean asignarVacuna(String codigoMedico, String codigoVacuna) {
+        String sql = "INSERT INTO MEDICO_VACUNA (codigo_medico, codigo_vacuna) VALUES (?, ?) ON CONFLICT DO NOTHING";
+        try (Connection con = ConnectionDB.obtenerConexion();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, codigoMedico);
+            stmt.setString(2, codigoVacuna);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean tieneVacuna(String codigoMedico, String codigoVacuna) {
+        String sql = "SELECT 1 FROM MEDICO_VACUNA WHERE codigo_medico = ? AND codigo_vacuna = ?";
+        try (Connection con = ConnectionDB.obtenerConexion();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, codigoMedico);
+            stmt.setString(2, codigoVacuna);
+            return stmt.executeQuery().next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

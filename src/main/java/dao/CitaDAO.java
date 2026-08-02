@@ -136,9 +136,41 @@ public class CitaDAO {
         }
     }
 
+    public ArrayList<Cita> listarPorPersonaOMedico(String codigo, LocalDate fecha) {
+        ArrayList<Cita> lista = new ArrayList<>();
+        String sql = "SELECT * FROM CITA WHERE (codigo_persona = ? OR codigo_medico = ?) " +
+                "AND fecha = ? AND codigo NOT IN (SELECT codigo FROM CONSULTA)";
+        try (Connection con = ConnectionDB.obtenerConexion();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, codigo);
+            stmt.setString(2, codigo);
+            stmt.setDate(3, Date.valueOf(fecha));
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) lista.add(mapear(rs));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    public ArrayList<Cita> listarPendientesPorMedico(String codigoMedico) {
+        ArrayList<Cita> lista = new ArrayList<>();
+        String sql = "SELECT * FROM CITA WHERE codigo_medico = ? AND estado = false " +
+                "AND fecha >= CURRENT_DATE AND codigo NOT IN (SELECT codigo FROM CONSULTA)";
+        try (Connection con = ConnectionDB.obtenerConexion();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, codigoMedico);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) lista.add(mapear(rs));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
     private Cita mapear(ResultSet rs) throws SQLException {
         PersonaDAO personaDAO = new PersonaDAO();
-        Persona persona = personaDAO.buscarPorCodigo(rs.getString("codigo_persona"));
+        Persona persona = personaDAO.buscarPersonaCompleta(rs.getString("codigo_persona"));
         Persona medicoPersona = personaDAO.buscarPorCodigo(rs.getString("codigo_medico"));
 
         Medico medico = new Medico(
